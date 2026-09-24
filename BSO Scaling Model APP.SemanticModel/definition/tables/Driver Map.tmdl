@@ -1,0 +1,111 @@
+table 'Driver Map'
+	lineageTag: 56e22c2f-d628-4490-b3ba-817c574444cc
+
+	measure 'Selected Driver Split' = ```
+			
+			VAR SubstreamAbbrev =
+			    SELECTEDVALUE('Driver Map'[Substream Abbreviation])
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        SubstreamAbbrev = "SD", SELECTEDVALUE('Driver Map'[Driver Name]),
+			        SubstreamAbbrev = "ES", SELECTEDVALUE('Driver Map'[Driver Name]),
+			        SELECTEDVALUE('Driver Map'[Driver Family])
+			    )
+			
+			```
+		lineageTag: ca9db643-5568-4af6-b65e-87ee8efa521e
+
+	column 'Driver ID'
+		dataType: string
+		lineageTag: 404d8690-2fd8-4cf6-8a16-948f66d3d37e
+		summarizeBy: none
+		sourceColumn: Driver ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Version
+		dataType: string
+		lineageTag: a84a0239-853f-4fef-8f2c-4816e8dff1b8
+		summarizeBy: none
+		sourceColumn: Version
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Driver Name'
+		dataType: string
+		lineageTag: 2ea12318-a27e-462f-b865-c8779aafcfb1
+		summarizeBy: none
+		sourceColumn: Driver Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Driver Family'
+		dataType: string
+		lineageTag: 98770f56-fbe4-4588-84c1-ac55b03dc196
+		summarizeBy: none
+		sourceColumn: Driver Family
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Service Region'
+		dataType: string
+		lineageTag: 1a3cf10e-60bf-418a-92de-962e2090fef2
+		summarizeBy: none
+		sourceColumn: Service Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stream Abbreviation'
+		dataType: string
+		lineageTag: dc52385f-2760-4bc4-a0d5-33fd2e5f15b4
+		summarizeBy: none
+		sourceColumn: Stream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: fb1ad2f3-96fc-417d-af3b-fcef258d8bb1
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+		sortByColumn: 'Stream Abbreviation'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Functional Domain'
+		dataType: string
+		lineageTag: 2355a7f2-2f68-4148-bb28-748e463aa3f8
+		summarizeBy: none
+		sourceColumn: Functional Domain
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weight
+		dataType: double
+		lineageTag: 49593863-38dc-4c4d-81f3-80e12a8869f7
+		summarizeBy: sum
+		sourceColumn: Weight
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Driver Map' = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows(null),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"1d1ebcb0-7e1e-4303-b742-3817a202b865" = Workspaces{[workspaceId="1d1ebcb0-7e1e-4303-b742-3817a202b865"]}[Data],
+				    #"2ead87da-5db1-4b70-80d0-7afc95ed7102" = #"1d1ebcb0-7e1e-4303-b742-3817a202b865"{[dataflowId="2ead87da-5db1-4b70-80d0-7afc95ed7102"]}[Data],
+				    #"Driver Map_" = #"2ead87da-5db1-4b70-80d0-7afc95ed7102"{[entity="Driver Map",version=""]}[Data]
+				in
+				    #"Driver Map_"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

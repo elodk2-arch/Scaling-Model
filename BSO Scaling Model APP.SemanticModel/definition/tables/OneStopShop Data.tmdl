@@ -1,0 +1,239 @@
+table 'OneStopShop Data'
+	lineageTag: dff5ceea-444d-41c0-8c0f-d12234fe37a5
+
+	column report_effective_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d82dad14-370b-46a3-bcc5-2f799d1494d1
+		summarizeBy: none
+		sourceColumn: report_effective_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column supervisory_organization_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 88902f28-d9e4-4794-845b-a1563d46c3fa
+		summarizeBy: sum
+		sourceColumn: supervisory_organization_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supervisory_organization_name
+		dataType: string
+		lineageTag: 8046d37c-776a-406c-9f3f-f962de9ec1c3
+		summarizeBy: none
+		sourceColumn: supervisory_organization_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column supervisory_organization_l1_name
+		dataType: string
+		lineageTag: f70d6330-f02c-4f8f-9a6a-3b3797b92870
+		summarizeBy: none
+		sourceColumn: supervisory_organization_l1_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column supervisory_organization_l2_name
+		dataType: string
+		lineageTag: a93b69c1-a10b-4ca1-a800-c22fed788bce
+		summarizeBy: none
+		sourceColumn: supervisory_organization_l2_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column supervisory_organization_l3_name
+		dataType: string
+		lineageTag: f0cf48e5-f8ef-4bde-aa2d-ddb8cbc4712c
+		summarizeBy: none
+		sourceColumn: supervisory_organization_l3_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_id
+		dataType: string
+		lineageTag: 966b3b26-c95f-41fb-a4b2-a4f833b0b17d
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_identifier
+		dataType: string
+		lineageTag: 206a4de1-94e6-4b59-937e-f5ecb31f711e
+		summarizeBy: none
+		sourceColumn: location_identifier
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_name
+		dataType: string
+		lineageTag: d700243a-0b33-47c1-bbef-4b2c92b9d83f
+		summarizeBy: none
+		sourceColumn: location_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_hierarchy_l4
+		dataType: string
+		lineageTag: 328116ca-9098-4a88-911f-f965c38684c9
+		summarizeBy: none
+		sourceColumn: location_hierarchy_l4
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 14d197e7-5c38-4b06-b1fd-54f6246a3404
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column cost_center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2bb8a5cb-0214-435a-ae10-9334016c74e1
+		summarizeBy: sum
+		sourceColumn: cost_center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 05151b8f-86f2-4934-9196-a6cdf9b07d4c
+		summarizeBy: sum
+		sourceColumn: company_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_level_group
+		dataType: string
+		lineageTag: 1671f2c4-b308-49a8-89c4-d009cd18ca10
+		summarizeBy: none
+		sourceColumn: job_level_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_level
+		dataType: string
+		lineageTag: 0a67f181-449b-47d9-b3ec-395b6ca62dca
+		summarizeBy: none
+		sourceColumn: job_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_people_leader
+		dataType: string
+		lineageTag: cbf69234-2b08-4928-8d85-90ea4b2aa232
+		summarizeBy: none
+		sourceColumn: is_people_leader
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_family_group
+		dataType: string
+		lineageTag: 7995bfbc-0f49-4aa7-80f0-4b9593583581
+		summarizeBy: none
+		sourceColumn: job_family_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_family
+		dataType: string
+		lineageTag: 49805352-54a2-4926-8cb2-307aecfe52e0
+		summarizeBy: none
+		sourceColumn: job_family
+
+		annotation SummarizationSetBy = Automatic
+
+	column worker_type
+		dataType: string
+		lineageTag: 3f4b0e5a-38ac-407b-bb42-8e0c3997e4ac
+		summarizeBy: none
+		sourceColumn: worker_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_type
+		dataType: string
+		lineageTag: 854ab33e-3f9c-4445-828b-55262825dee0
+		summarizeBy: none
+		sourceColumn: employee_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_type
+		dataType: string
+		lineageTag: 38d36e45-5019-442a-9e82-18da9ff4219f
+		summarizeBy: none
+		sourceColumn: time_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 0af076a9-eb8c-4c02-b112-3df2bb8c2282
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column headcount
+		dataType: int64
+		formatString: 0
+		lineageTag: fe8f21b1-b173-4bc3-b453-3ec228a18e1b
+		summarizeBy: sum
+		sourceColumn: headcount
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_workforce
+		dataType: int64
+		lineageTag: 0ae6d8c9-6ab2-441d-ab56-c163bb896357
+		summarizeBy: sum
+		sourceColumn: total_workforce
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fte
+		dataType: double
+		lineageTag: bdc56d01-02ee-45ad-9ed7-ff20895f4eaa
+		summarizeBy: sum
+		sourceColumn: fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_fte
+		dataType: double
+		lineageTag: af94d056-ba15-4988-b37e-3eb04d618c77
+		summarizeBy: sum
+		sourceColumn: active_fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'OneStopShop Data' = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("lego-ssc-prod.cloud.databricks.com", "/sql/1.0/warehouses/ce1fc668649eb0a3", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0"]),
+				    people_data_nonconfidential_Database = Source{[Name="people_data_nonconfidential",Kind="Database"]}[Data],
+				    workforce_data_gold_Schema = people_data_nonconfidential_Database{[Name="workforce_data_gold",Kind="Schema"]}[Data],
+				    headcount_and_fte_by_month_Table = workforce_data_gold_Schema{[Name="headcount_and_fte_by_month",Kind="Table"]}[Data]
+				in
+				    headcount_and_fte_by_month_Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

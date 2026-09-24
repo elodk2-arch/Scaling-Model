@@ -1,0 +1,56 @@
+expression Headcount_Mock1 =
+		let
+		    Source = #table(
+		        {"Year", "MonthNumber", "Total Headcount"},
+		        {
+		            {2024, 1, 100},
+		            {2024, 2, 105},
+		            {2024, 3, 110},
+		            {2024, 4, 120},
+		            {2024, 5, 115},
+		            {2024, 6, 118},
+		            {2024, 7, 122},
+		            {2024, 8, 125},
+		            {2024, 9, 128},
+		            {2024, 10, 130},
+		            {2024, 11, 132},
+		            {2024, 12, 30835},
+		            {2025, 1, 30835},
+		            {2025, 2, 30653},
+		            {2025, 3, 30991},
+		            {2025, 4, 31134},
+		            {2025, 5, 31269},
+		            {2025, 6, 31661},
+		            {2025, 7, 31963},
+		            {2025, 8, 32441},
+		            {2025, 9, 32937},
+		            {2025, 10, 33450},
+		            {2025, 11, 33594},
+		            {2025, 12, 33526},
+		            {2026, 1, 33170},
+		            {2026, 2, 33262},
+		            {2026, 3, 33597},
+		            {2026, 4, 33765},
+		            {2026, 5, 34113},
+		            {2026, 6, null},
+		            {2026, 7, null},
+		            {2026, 8, null},
+		            {2026, 9, null},
+		            {2026, 10, null},
+		            {2026, 11, null},
+		            {2026, 12, 35617}
+		        }
+		    ),
+		    Typed = Table.TransformColumnTypes(Source, {
+		        {"Year", Int64.Type},
+		        {"MonthNumber", Int64.Type},
+		        {"Total Headcount", type number}
+		    })
+		in
+		    Typed
+	lineageTag: 475509de-7a1b-450f-9bda-5ac9db3b314b
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

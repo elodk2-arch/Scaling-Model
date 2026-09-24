@@ -1,0 +1,43 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "7287f1c299d7c1a70f66",
+  "position": {
+    "x": 321.75809900132617,
+    "y": 546.86405586078115,
+    "z": 3000,
+    "height": 160.25548729329617,
+    "width": 153.39630301226015,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Headcount_Data_Finance"
+                        }
+                      },
+                      "Property": "brand_retail_actuals"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(People_data_finance.brand_retail_actuals)",
+              "nativeQueryRef": "Sum of brand_retail_actuals"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

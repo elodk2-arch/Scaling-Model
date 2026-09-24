@@ -1,0 +1,202 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY25SU11",
+      "reportVersionAtImport": {
+        "visual": "2.4.0",
+        "report": "3.0.0",
+        "page": "2.3.0"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY25SU11",
+          "path": "BaseThemes/CY25SU11.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Activity_scaled_+_Efficiency8246389249007666.png",
+          "path": "Activity_scaled_+_Efficiency8246389249007666.png",
+          "type": "Image"
+        },
+        {
+          "name": "Adj._variance_incl._5__efficie30712048414591886.png",
+          "path": "Adj._variance_incl._5__efficie30712048414591886.png",
+          "type": "Image"
+        },
+        {
+          "name": "clear_filter-Light33686724536500634.png",
+          "path": "clear_filter-Light33686724536500634.png",
+          "type": "Image"
+        },
+        {
+          "name": "controls-Light28092688160273793.png",
+          "path": "controls-Light28092688160273793.png",
+          "type": "Image"
+        },
+        {
+          "name": "contruction-workers8288545653558798.png",
+          "path": "contruction-workers8288545653558798.png",
+          "type": "Image"
+        },
+        {
+          "name": "home-Light14264494600982802.png",
+          "path": "home-Light14264494600982802.png",
+          "type": "Image"
+        },
+        {
+          "name": "LEGO-logo-1601916272046536116.png",
+          "path": "LEGO-logo-1601916272046536116.png",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds14878581237119226.svg",
+          "path": "PBIX_Backgrounds14878581237119226.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds2126303876818073.svg",
+          "path": "PBIX_Backgrounds2126303876818073.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds21942263257737937.svg",
+          "path": "PBIX_Backgrounds21942263257737937.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds22069989051907724.svg",
+          "path": "PBIX_Backgrounds22069989051907724.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds2791845833625133.svg",
+          "path": "PBIX_Backgrounds2791845833625133.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds3121924020048835.svg",
+          "path": "PBIX_Backgrounds3121924020048835.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds31914478773872434.svg",
+          "path": "PBIX_Backgrounds31914478773872434.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds3458837605655525.svg",
+          "path": "PBIX_Backgrounds3458837605655525.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds38513007931819565.svg",
+          "path": "PBIX_Backgrounds38513007931819565.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds5069879688456063.svg",
+          "path": "PBIX_Backgrounds5069879688456063.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds5585132858999773.svg",
+          "path": "PBIX_Backgrounds5585132858999773.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds6109295319991507.svg",
+          "path": "PBIX_Backgrounds6109295319991507.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds7260238566134488.svg",
+          "path": "PBIX_Backgrounds7260238566134488.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds8384344749670503.svg",
+          "path": "PBIX_Backgrounds8384344749670503.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds9406880974182239.svg",
+          "path": "PBIX_Backgrounds9406880974182239.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Regular3716673742381217.png",
+          "path": "Regular3716673742381217.png",
+          "type": "Image"
+        },
+        {
+          "name": "Screenshot_2026-02-17_0954219566246903718538.png",
+          "path": "Screenshot_2026-02-17_0954219566246903718538.png",
+          "type": "Image"
+        },
+        {
+          "name": "status-information-Light669517339250028.png",
+          "path": "status-information-Light669517339250028.png",
+          "type": "Image"
+        },
+        {
+          "name": "Variance_incl._Efficiency22668816206781106.png",
+          "path": "Variance_incl._Efficiency22668816206781106.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true,
+    "queryLimitOption": "Premium",
+    "customMemoryLimit": "1048576",
+    "customTimeoutLimit": "225"
+  }
+}

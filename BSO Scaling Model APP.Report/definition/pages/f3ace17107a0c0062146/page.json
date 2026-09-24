@@ -1,0 +1,90 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "f3ace17107a0c0062146",
+  "displayName": "Stream Overview Year",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'PBIX Backgrounds.svg'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "PBIX_Backgrounds2791845833625133.svg"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "260L"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "39e9ac3328a74839e04a",
+      "target": "334e5aadd1e0e03c29af",
+      "type": "NoFilter"
+    },
+    {
+      "source": "39e9ac3328a74839e04a",
+      "target": "23cee4f4e66b6209f14d",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d03e171aa91925ef7b22",
+      "target": "23cee4f4e66b6209f14d",
+      "type": "DataFilter"
+    },
+    {
+      "source": "39e9ac3328a74839e04a",
+      "target": "9b900c452f2910dbb6df",
+      "type": "NoFilter"
+    },
+    {
+      "source": "39e9ac3328a74839e04a",
+      "target": "6890ea4ec362e393a220",
+      "type": "NoFilter"
+    }
+  ]
+}

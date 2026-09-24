@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "0a1f0bb700d5b18906da",
+  "position": {
+    "x": 399.99999999999994,
+    "y": 188.18181818181816,
+    "z": 6000,
+    "height": 312.72727272727269,
+    "width": 631.81818181818176,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "What is the Scaling Model?",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The Scaling Model is a Power BI report that shows how activities, efficiency, and accuracy shift when work scales up or down. It’s not a forecast crystal ball — it’s a structured way to compare current performance with scaled scenarios, so the impact is clear at a glance."
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "In short: it’s a "
+                  },
+                  {
+                    "value": "trusted and approved model",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": " to forecast future BSO resource needs, aligned with the expected activity levels across the LEGO Group."
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Who should use it?",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The main audience is the "
+                  },
+                  {
+                    "value": "BSO LT",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": ", who use it to decide where to place headcount during the year, making sure no stream is overstaffed or running on fumes. The stream-specific views are also valuable for "
+                  },
+                  {
+                    "value": "regional managers",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": ", giving them a way to dive deeper into their own drivers and data without waiting for someone else to crunch the numbers."
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

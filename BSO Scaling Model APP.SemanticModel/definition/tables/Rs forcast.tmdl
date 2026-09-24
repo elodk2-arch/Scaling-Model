@@ -1,0 +1,1172 @@
+table 'Rs forcast'
+	lineageTag: c69b8dad-76dc-4a7a-9870-e9109f2b4c61
+
+	measure 'RS Total Selector' = ```
+			
+			
+			VAR ResumeValue =
+			    [Resumes received (total) (Actual vs forecast)]
+			
+			VAR InterviewValue =
+			    [Total Interviews All (Actual vs Forecast)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))    
+			
+			    
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			    VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resumes"))
+			    ) = DriverCount
+			
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    -- All selected drivers are Resume
+			    AllResume,
+			        ResumeValue,
+			
+			    -- All selected drivers are Interview
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    ResumeValue * 0.53 + InterviewValue * 0.47
+			)
+			```
+		lineageTag: 3c25e3cf-61fc-468c-9e29-a2865bec435a
+
+	measure 'Resumes received (total) (Actual vs forecast)' =
+			
+			
+			[Resumes Received (Salaried + CSE) (Actual vs Forecast)] + [Resumes Received (Hourly) (Actual vs Forecast)]
+		lineageTag: 28badcdd-70de-4cda-a072-2f6e15d893b4
+
+	measure 'Resumes Received (Salaried + CSE) (Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]), -- 1. Loop through ALL calendar months
+			    
+			    VAR _CurrentYearMonth = DateTable[YearMonth]
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    // m-1
+			    VAR _PrevYearMonth1 =
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    // m-2
+			    VAR _PrevYear1 = LEFT(_PrevYearMonth1, 4)
+			    VAR _PrevMonth1 = RIGHT(_PrevYearMonth1, 2)
+			
+			    VAR _PrevYearMonth2 =
+			        IF(
+			            _PrevMonth1 = "01",
+			            (_PrevYear1 - 1) & "-12",
+			            _PrevYear1 & "-" & FORMAT(VALUE(_PrevMonth1) - 1, "00")
+			        )
+			
+			    VAR _Actuals = [Actual Resumes Recived (Salaried + CSE + Executive)]  
+			
+			    VAR _Bmanual =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]), -- 2. Pulling from Driver Data
+			            REMOVEFILTERS('Driver Map'), 
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- 3. Virtual relation to overcome the role-playing reporting date
+			            REMOVEFILTERS(DateTable),
+			            TREATAS(
+			                { _CurrentYearMonth },
+			                'Driver Data'[Reporting Date]
+			            )
+			        )
+			
+			    // Ratio for m-1
+			    VAR _ResumeRatio_M1 =
+			        CALCULATE(
+			            [Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)],
+			            REMOVEFILTERS(DateTable), -- 4. Clean date tables for lookups
+			            DateTable[YearMonth] = _PrevYearMonth1
+			        )
+			
+			    // Ratio for m-2
+			    VAR _ResumeRatio_M2 =
+			        CALCULATE(
+			            [Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)],
+			            REMOVEFILTERS(DateTable),
+			            DateTable[YearMonth] = _PrevYearMonth2
+			        )
+			
+			    // Fallback to January if both are 0
+			    VAR _FallbackResumeRatio =
+			        CALCULATE(
+			            [Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)],
+			            REMOVEFILTERS(DateTable),
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    // Average of the two months
+			    VAR _AvgResumeRatio =
+			        VAR _R1 = IF(_ResumeRatio_M1 = 0, BLANK(), _ResumeRatio_M1)
+			        VAR _R2 = IF(_ResumeRatio_M2 = 0, BLANK(), _ResumeRatio_M2)
+			        RETURN
+			            IF(
+			                _R1 = BLANK() && _R2 = BLANK(),
+			                _FallbackResumeRatio,
+			                DIVIDE(_R1 + _R2, IF(_R1 <> BLANK() && _R2 <> BLANK(), 2, 1))
+			            )
+			
+			    VAR _Forecast =
+			        _Bmanual * _AvgResumeRatio
+			
+			    RETURN
+			        IF(ISBLANK(_Actuals) || _Actuals = 0, _Forecast, _Actuals)
+			)
+			```
+		lineageTag: 041cc7f9-225c-4cfe-8031-93fe058886de
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Actual Resumes Recived (Salaried + CSE + Executive)' = ```
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Driver Map'[Version] = "Manual",
+			    'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			)
+			
+			```
+		lineageTag: eeaff211-19a2-404e-af29-623f9fa00535
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			    ),
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE"
+			    )
+			)
+			
+			```
+		lineageTag: daea7e2f-5809-4203-b453-e906c705d883
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes Received (Hourly) (Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]), -- SWAPPED: Now loops through ALL months in your calendar
+			    
+			    VAR _CurrentYearMonth = DateTable[YearMonth] -- SWAPPED: Evaluates current calendar month
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    // m-1
+			    VAR _PrevYearMonth1 =
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    // m-2
+			    VAR _PrevYear1 = LEFT(_PrevYearMonth1, 4)
+			    VAR _PrevMonth1 = RIGHT(_PrevYearMonth1, 2)
+			
+			    VAR _PrevYearMonth2 =
+			        IF(
+			            _PrevMonth1 = "01",
+			            (_PrevYear1 - 1) & "-12",
+			            _PrevYear1 & "-" & FORMAT(VALUE(_PrevMonth1) - 1, "00")
+			        )
+			
+			    VAR _Actuals = [Actual Resumes Recived (Hourly)]  
+			
+			VAR _Bmanual =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]), 
+			            REMOVEFILTERS('Driver Map'), 
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Hourly",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- VIRTUALLY PASS THE DATE FILTER WITHOUT A RELATIONSHIP:
+			            REMOVEFILTERS(DateTable), -- Clears the native active relationship filter
+			            TREATAS(
+			                { _CurrentYearMonth }, -- The single YearMonth string from the current SUMX row
+			                'Driver Data'[Reporting Date] -- Injects it directly into your driver data column
+			            )
+			        )
+			
+			    // Ratio for m-1
+			    VAR _ResumeRatio_M1 =
+			        CALCULATE(
+			            [Resumes received (Hourly) / Activated Recruitments (Hourly)],
+			            REMOVEFILTERS(DateTable), -- Clear date filters to look backward
+			            DateTable[YearMonth] = _PrevYearMonth1
+			        )
+			
+			    // Ratio for m-2
+			    VAR _ResumeRatio_M2 =
+			        CALCULATE(
+			            [Resumes received (Hourly) / Activated Recruitments (Hourly)],
+			            REMOVEFILTERS(DateTable), -- Clear date filters to look backward
+			            DateTable[YearMonth] = _PrevYearMonth2
+			        )
+			
+			    // Fallback to January if both are 0
+			    VAR _FallbackResumeRatio =
+			        CALCULATE(
+			            [Resumes received (Hourly) / Activated Recruitments (Hourly)],
+			            REMOVEFILTERS(DateTable), -- Clear date filters for the fallback
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    // Average of the two months
+			    VAR _AvgResumeRatio =
+			        VAR _R1 = IF(_ResumeRatio_M1 = 0, BLANK(), _ResumeRatio_M1)
+			        VAR _R2 = IF(_ResumeRatio_M2 = 0, BLANK(), _ResumeRatio_M2)
+			        RETURN
+			            IF(
+			                _R1 = BLANK() && _R2 = BLANK(),
+			                _FallbackResumeRatio,
+			                DIVIDE(_R1 + _R2, IF(_R1 <> BLANK() && _R2 <> BLANK(), 2, 1))
+			            )
+			
+			    VAR _Forecast =
+			        _Bmanual * _AvgResumeRatio
+			
+			RETURN
+			        IF(_Actuals > 0, _Actuals, _Forecast)
+			)
+			```
+		lineageTag: 262f23c5-8c44-4d1b-9739-3469d0ae1aba
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Actual Resumes Recived (Hourly)' = ```
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Driver Map'[Version] = "Manual",
+			    'Driver Map'[Driver Name] = "Resumes Received - Hourly"
+			)
+			
+			```
+		lineageTag: a9210d78-17b0-4dfd-8c43-18e54ea4b4a8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes received (Hourly) / Activated Recruitments (Hourly)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Resumes Received - Hourly"
+			    ),
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Activated Recruitments - Hourly"
+			    )
+			)
+			
+			```
+		lineageTag: cede84de-71a5-40b8-be96-d395a4b52d44
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Total (Automated) Selector' = ```
+			
+			
+			VAR ResumeValue =
+			    [Resumes Received (Salaried + CSE) (Actual vs Forecast)]
+			
+			VAR InterviewValue =
+			    [Interviews Scheduled (automation, Salaried + CSE) (Actual vs Forecast)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))    
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resumes"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    AllResume,
+			        ResumeValue,
+			
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    (ResumeValue + InterviewValue) / 2
+			)
+			```
+		lineageTag: 6764750b-3da9-4ba9-88a3-0b23b239233b
+
+	measure 'Interviews Scheduled (automation, Salaried + CSE) (Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]),
+			    
+			    VAR _CurrentYearMonth = DateTable[YearMonth]
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    VAR _PrevYearMonth =
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    VAR _Actuals = [Auto Interviews Scheduled]
+			
+			    VAR _Bmanual =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]), -- 1. Pulling from Driver Data
+			            REMOVEFILTERS('Driver Map'),
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- 2. Direct virtual mapping to bridge the non-active relationship
+			            REMOVEFILTERS(DateTable),
+			            TREATAS(
+			                { _CurrentYearMonth },
+			                'Driver Data'[Reporting Date]
+			            )
+			        )
+			
+			    VAR _PrevManualRate =
+			        CALCULATE(
+			            [Interviews manual rate (actual only)],
+			            REMOVEFILTERS(DateTable), -- 3. Clear context to look at m-1
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    VAR _PrevInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- 4. Clear context to look at m-1
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    VAR _FallbackManualRate =
+			        CALCULATE(
+			            [Interviews manual rate (actual only)],
+			            REMOVEFILTERS(DateTable), -- 5. Clear context to look at Jan
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FallbackInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- 6. Clear context to look at Jan
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FinalManualRate =
+			        IF(_PrevManualRate = 0 || ISBLANK(_PrevManualRate), _FallbackManualRate, _PrevManualRate)
+			
+			    VAR _FinalInterviewRatio =
+			        IF(_PrevInterviewRatio = 0 || ISBLANK(_PrevInterviewRatio), _FallbackInterviewRatio, _PrevInterviewRatio)
+			
+			    VAR _Forecast =
+			        _Bmanual * (1 - _FinalManualRate) * _FinalInterviewRatio
+			
+			    RETURN
+			        IF(ISBLANK(_Actuals) || _Actuals = 0, _Forecast, _Actuals)
+			)
+			```
+		lineageTag: 5edee47a-e8a8-41b6-a8ad-fe75b60cc5b1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Auto Interviews Scheduled' = ```
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Driver Map'[Version] = "Auto"
+			)
+			
+			```
+		lineageTag: f6c3d0b9-fc76-4a3b-b1ab-d57f7bf68974
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Interviews manual rate (actual only)' = ```
+			
+			DIVIDE(
+			    [Manual Interviews Scheduled],
+			    [Total Interviews Scheduled]
+			)
+			
+			```
+		lineageTag: a0f53faf-9887-4fff-abfa-adec3e273233
+
+	measure 'Manual Interviews Scheduled' = ```
+			
+			VAR Result =
+			    CALCULATE(
+			        SUM('Driver Data'[Value]),
+			        'Driver Map'[Version] = "Manual"
+			    )
+			RETURN
+			    IF(
+			        ISBLANK(Result),
+			        BLANK(),
+			        Result
+			    )
+			    
+			
+			```
+		lineageTag: f8a62ff8-9839-410d-8780-ea16f6f0ba01
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Interviews Scheduled' = ```
+			
+			[Manual Interviews Scheduled] + [Auto Interviews Scheduled]
+			
+			```
+		lineageTag: a96ccb35-5f03-42d8-9212-103d901d6c5a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM('Driver Data'[Value]),
+			        'Driver Map'[Driver Name] = "Interviews Scheduled - Salaried + CSE"
+			    ),
+			    CALCULATE(
+			        SUM('Driver Data'[Value]),
+			        'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE"
+			    )
+			)
+			
+			```
+		lineageTag: 64240197-35ad-4bd8-bcf8-cd304ac679bc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Total (Manual) Selector' = ```
+			
+			
+			VAR ResumeValue =
+			    [Resumes Received (Hourly) (Actual vs Forecast)]
+			
+			VAR InterviewValue =
+			    [Total Interviews Manual (Actual vs Forecast)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))    
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resumes"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    AllResume,
+			        ResumeValue,
+			
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    (ResumeValue + InterviewValue) / 2
+			)
+			```
+		lineageTag: 0d1f3905-d29b-408c-bf33-aa29ec223407
+
+	measure 'Total Interviews Manual (Actual vs Forecast)' =
+			
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]),
+			
+			    + [Interviews Scheduled (manual, Salaried + CSE )(Actual vs Forecast)]
+			    + [Interviews Scheduled (manual, Hourly) (Actual vs Forecast)]
+			    + [Interviews Scheduled (manual, Executive)(Actual vs Forecast)]
+			)
+		lineageTag: 109f484f-a610-4344-aca6-8cfcb6c2b1b9
+
+	measure 'Interviews Scheduled (manual, Salaried + CSE )(Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]),
+			
+			    VAR _CurrentYearMonth = DateTable[YearMonth]
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    VAR _PrevYearMonth =
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    VAR _Actuals =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]),
+			            REMOVEFILTERS('Driver Map'),
+			            'Driver Map'[Driver Name] = "Interviews Scheduled - Salaried + CSE",
+			            'Driver Map'[Version] = "Manual",
+			            KEEPFILTERS(DateTable) -- Ensures actuals align with your active calendar relationship
+			        )
+			
+			    VAR _Bmanual =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]),
+			            REMOVEFILTERS('Driver Map'),
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- Virtual date mapping to jump across your inactive Reporting Date relationship
+			            REMOVEFILTERS(DateTable),
+			            TREATAS(
+			                { _CurrentYearMonth },
+			                'Driver Data'[Reporting Date]
+			            )
+			        )
+			
+			    VAR _PrevManualRate =
+			        CALCULATE(
+			            [Interviews manual rate (actual only)],
+			            REMOVEFILTERS(DateTable), -- Clears context to successfully fetch M-1
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    VAR _PrevInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- Clears context to successfully fetch M-1
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    VAR _FallbackManualRate =
+			        CALCULATE(
+			            [Interviews manual rate (actual only)],
+			            REMOVEFILTERS(DateTable), -- Clears context to fetch January fallback
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FallbackInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- Clears context to fetch January fallback
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FinalManualRate =
+			        IF(_PrevManualRate = 0 || ISBLANK(_PrevManualRate), _FallbackManualRate, _PrevManualRate)
+			
+			    VAR _FinalInterviewRatio =
+			        IF(_PrevInterviewRatio = 0 || ISBLANK(_PrevInterviewRatio), _FallbackInterviewRatio, _PrevInterviewRatio)
+			
+			    VAR _Forecast =
+			        _Bmanual * _FinalManualRate * _FinalInterviewRatio
+			
+			    RETURN
+			        IF(ISBLANK(_Actuals) || _Actuals = 0, _Forecast, _Actuals)
+			)
+			```
+		lineageTag: 66e37ced-9598-4862-8c76-8f4127c0fc5b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Interviews All (Actual vs Forecast)' =
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]),
+			    [Interviews Scheduled (automation, Salaried + CSE) (Actual vs Forecast)]
+			    + [Interviews Scheduled (manual, Salaried + CSE )(Actual vs Forecast)]
+			    + [Interviews Scheduled (manual, Hourly) (Actual vs Forecast)]
+			    + [Interviews Scheduled (manual, Executive)(Actual vs Forecast)]
+			)
+		lineageTag: d2437024-5a84-4671-bd25-e1970abc4cba
+
+	measure 'Interviews Scheduled (manual, Hourly) (Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]),
+			
+			    VAR _CurrentYearMonth = DateTable[YearMonth] -- FIXED: Replaced SELECTEDVALUE to respect the SUMX row loop
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    VAR _PrevYearMonth =
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    VAR _Actuals =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]),
+			            REMOVEFILTERS('Driver Map'), -- Changed ALL to REMOVEFILTERS for consistency
+			            'Driver Map'[Driver Name] = "Interviews Scheduled - Hourly",
+			            'Driver Map'[Version] = "Manual",
+			            
+			            -- Keep the active date table relationship active for actuals context
+			            KEEPFILTERS(DateTable) 
+			        )
+			
+			    VAR _Bmanual =
+			        CALCULATE(
+			            SUM('Driver Data'[Value]),
+			            REMOVEFILTERS('Driver Map'),
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Hourly",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- FIXED: Added virtual mapping to bridge the non-active reporting date relationship
+			            REMOVEFILTERS(DateTable),
+			            TREATAS(
+			                { _CurrentYearMonth },
+			                'Driver Data'[Reporting Date]
+			            )
+			        )
+			
+			    VAR _PrevInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- FIXED: Added date clear for background lookups
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    VAR _FallbackInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- FIXED: Added date clear for fallback lookups
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FinalInterviewRatio =
+			        IF(_PrevInterviewRatio = 0 || ISBLANK(_PrevInterviewRatio), _FallbackInterviewRatio, _PrevInterviewRatio)
+			
+			    VAR _Forecast =
+			        _Bmanual * _FinalInterviewRatio
+			
+			    RETURN
+			        IF(ISBLANK(_Actuals) || _Actuals = 0, _Forecast, _Actuals)
+			)
+			```
+		lineageTag: 017c982a-6884-4ff4-93e4-7bcfd992e4a4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Interviews Scheduled (manual, Executive)(Actual vs Forecast)' = ```
+			
+			SUMX(
+			    VALUES(DateTable[YearMonth]), -- Added iteration loop for total rows and charts
+			    
+			    VAR _CurrentYearMonth = DateTable[YearMonth]
+			    VAR _CurrentYear = LEFT(_CurrentYearMonth, 4)
+			    VAR _CurrentMonth = RIGHT(_CurrentYearMonth, 2)
+			
+			    VAR _PrevYearMonth = 
+			        IF(
+			            _CurrentMonth = "01",
+			            (_CurrentYear - 1) & "-12",
+			            _CurrentYear & "-" & FORMAT(VALUE(_CurrentMonth) - 1, "00")
+			        )
+			
+			    -- Actual data (uses current context of the loop)
+			    VAR _Actuals = 
+			        CALCULATE(
+			            SUM('Fact_Actuals'[Value]),
+			            ALL('Driver Map'),
+			            'Driver Map'[Driver Name] = "Interviews Scheduled - Executive",
+			            'Driver Map'[Version] = "Manual"
+			        )
+			
+			    -- Bmanual for current month (Executive)
+			    VAR _Bmanual = 
+			        CALCULATE(
+			            SUM('Driver Data'[Value]), -- Fixed to point to Driver Data
+			            REMOVEFILTERS('Driver Map'),
+			            'Driver Map'[Driver Name] = "Activated Recruitments - Executive",
+			            'Driver Map'[Version] = "Trigger",
+			            
+			            -- Direct virtual mapping to bridge the non-active relationship
+			            REMOVEFILTERS(DateTable),
+			            TREATAS(
+			                { _CurrentYearMonth },
+			                'Driver Data'[Reporting Date]
+			            )
+			        )
+			
+			    -- Interview ratio from previous month
+			    VAR _PrevInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- Fixed filter block
+			            DateTable[YearMonth] = _PrevYearMonth
+			        )
+			
+			    -- Fallback to January
+			    VAR _FallbackInterviewRatio =
+			        CALCULATE(
+			            [Interviews Scheduled (Salaried + CSE) / Activated recruitments (Salaried + CSE )],
+			            REMOVEFILTERS(DateTable), -- Fixed filter block
+			            DateTable[YearMonth] = _CurrentYear & "-01"
+			        )
+			
+			    VAR _FinalInterviewRatio = 
+			        IF(_PrevInterviewRatio = 0 || ISBLANK(_PrevInterviewRatio), _FallbackInterviewRatio, _PrevInterviewRatio)
+			
+			    VAR _Forecast = _Bmanual * _FinalInterviewRatio
+			
+			    RETURN
+			        IF(ISBLANK(_Actuals) || _Actuals = 0, _Forecast, _Actuals)
+			)
+			```
+		lineageTag: 405139a6-c4de-4f29-a361-bdc6d9828c2a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Interviews manual rate (real)' = ```
+			
+			DIVIDE(
+			    [Manual Driver new],
+			    [Total Driver new])
+			
+			```
+		lineageTag: fb30acbf-cd39-4648-9d0a-88eb27342ed9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Activated Recruitments' = ```
+			
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'Driver Map'[Version] = "Trigger"
+			)
+			
+			```
+		lineageTag: 36b3fa9f-25b3-4c8e-a01a-9c580dff2f3b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Test Sum' =
+			
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			)
+		lineageTag: 852283dd-ed5f-4a0d-9d91-7feabdea344f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Activity scaled Selector (month)' = ```
+			
+			
+			VAR ResumeValue =
+			    [Activity scaled Resume Recived (Month)]
+			
+			VAR InterviewValue =
+			    [Activity scaled interviews schedualed (Month)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))    
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resume"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    AllResume,
+			        ResumeValue,
+			
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    (ResumeValue + InterviewValue) / 2
+			)
+			```
+		lineageTag: 56d016b7-6562-45fb-b209-630bfa10e5f3
+
+	measure 'Activity scaled Resume Recived (Month)' = ```
+			
+			DIVIDE(
+			    [Resumes received (total) (Actual vs forecast)],
+			    CALCULATE(
+			        [Resumes Recived LY Baseline Monthly],
+			        REMOVEFILTERS(DateTable[YearMonth])
+			    )
+			)
+			
+			```
+		lineageTag: 344cf590-ed1e-4263-8991-cf96bbff9906
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity scaled interviews schedualed (Month)' = ```
+			
+			DIVIDE(
+			    [Total Interviews Manual (Actual vs Forecast)],
+			    CALCULATE(
+			        [Interviews LY Baseline Monthly],
+			        REMOVEFILTERS(DateTable[YearMonth])
+			    )
+			)
+			
+			```
+		lineageTag: 99c9f624-c2fa-4ca3-9add-e676cbe28426
+
+	measure 'Interviews LY Baseline Monthly' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Interviews LY Baseline],
+			        REMOVEFILTERS(DateTable[Date]),
+			        REMOVEFILTERS(DateTable[MonthNumber]),
+			        REMOVEFILTERS(DateTable[YearMonth]),
+			        VALUES(DateTable[Year])
+			    ),
+			    12
+			)
+		lineageTag: 34b6fbd8-019f-4be1-893c-f0da3ff54144
+
+	measure 'Interviews LY Baseline' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Total Interviews Manual (Actual vs Forecast)],
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    ),
+			    CALCULATE(
+			        [FTE Yearly Average (Adjusted)], -- FIXED: Removed the stray ')' from here
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    )
+			)
+		lineageTag: f090de99-2b32-41da-8733-22c3e2ea69d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes Recived LY Baseline Monthly' =
+			
+			VAR FullYearBaseline =
+			    CALCULATE(
+			        [Resumes Recived LY Baseline],
+			        REMOVEFILTERS(DateTable),
+			        TREATAS(VALUES(DateTable[Year]), DateTable[Year])
+			    )
+			RETURN
+			    DIVIDE(FullYearBaseline, 12)
+		lineageTag: 28d6f122-99e5-4f5b-9483-f8764a02d69c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes Recived LY Baseline' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Resumes received (total) (Actual vs forecast)],
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    ),
+			    CALCULATE(
+			        [FTE Yearly Average (Adjusted)],
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    )
+			)
+			
+			```
+		lineageTag: 38f8928c-2c41-4a6d-ae74-56a8907a8323
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FTE Yearly Average (Adjusted)' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR MonthlyFTEs =
+			    ADDCOLUMNS(
+			        VALUES('DateTable'[MonthNumber]), 
+			        "@FTE", [Active FTE new]
+			    )
+			RETURN
+			CALCULATE(
+			    AVERAGEX(MonthlyFTEs, [@FTE]),
+			    YEAR('DateTable'[Date]) = SelectedYear
+			)
+			
+			```
+		lineageTag: f94fcc40-24e9-4879-9488-712208bcca45
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Stream Activity Total (Year)' =
+			
+			
+			VAR ResumeValue =
+			    [Activity scaled Resume Recived (year)]
+			
+			VAR InterviewValue =
+			    [Activity scaled interviews schedualed (year)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resume"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    -- All selected drivers are Resume
+			    AllResume,
+			        ResumeValue,
+			
+			    -- All selected drivers are Interview
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    ResumeValue * 0.53 + InterviewValue * 0.47
+			)
+		lineageTag: 3dd83765-7a6c-4b62-a7ae-4ca86b5e2880
+
+	measure 'Activity scaled Resume Recived (year)' = ```
+			
+			DIVIDE(
+			    [Resumes received (total) (Actual vs forecast)],
+			    CALCULATE(
+			        [Resumes Recived LY Baseline],
+			        REMOVEFILTERS(DateTable[YearMonth])
+			    )
+			)
+			
+			```
+		lineageTag: 621938e3-5e22-46b5-aa8b-e00f95c0fe07
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity scaled interviews schedualed (year)' = ```
+			
+			DIVIDE(
+			    [Total Interviews Manual (Actual vs Forecast)],
+			    CALCULATE(
+			        [Interviews LY Baseline],
+			        REMOVEFILTERS(DateTable[YearMonth])
+			    )
+			)
+			
+			```
+		lineageTag: 23343cc9-a1f5-4d3e-adc1-7128fe62be99
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Stream Activity Total +5 (Month)' =
+			
+			
+			VAR ResumeValue =
+			    [Activity scaled Resume Recived + 5% (month)]
+			
+			VAR InterviewValue =
+			    [Activity scaled interviews schedualed + 5% (month)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resume"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    -- All selected drivers are Resume
+			    AllResume,
+			        ResumeValue,
+			
+			    -- All selected drivers are Interview
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    ResumeValue * 0.53 + InterviewValue * 0.47
+			)
+		lineageTag: c74d8b8d-ff9c-4d9c-97cd-423ad8ac39bd
+
+	measure 'Activity scaled Resume Recived + 5% (month)' =
+			
+			[Activity scaled Resume Recived (Month)] * (1- 0.05 )
+		lineageTag: 4d1ce56e-2070-4d49-b09b-1b3d4b1e8977
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity scaled interviews schedualed + 5% (month)' =
+			
+			[Activity scaled interviews schedualed (Month)] * (1- 0.05 )
+		lineageTag: 8c2afabd-eff0-445a-be57-002f3657721d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Stream Activity Total +5 (Year)' =
+			
+			
+			VAR ResumeValue =
+			    [Activity scaled Resume Recived + 5% (year)]
+			
+			VAR InterviewValue =
+			    [Activity scaled interviews scheduled + 5% (year)]
+			
+			VAR DriverCount =
+			    COUNTROWS(VALUES('Driver Map'[Driver Name]))
+			
+			VAR AllInterview =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Interview"))
+			    ) = DriverCount
+			
+			VAR AllResume =
+			    COUNTROWS(
+			        FILTER(VALUES('Driver Map'[Driver Name]),
+			            CONTAINSSTRING('Driver Map'[Driver Name], "Resume"))
+			    ) = DriverCount
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    -- All selected drivers are Resume
+			    AllResume,
+			        ResumeValue,
+			
+			    -- All selected drivers are Interview
+			    AllInterview,
+			        InterviewValue,
+			
+			    -- Mix of both or no filter
+			    ResumeValue * 0.53 + InterviewValue * 0.47
+			)
+		lineageTag: 49d8c841-4980-4acd-8f44-0ef9de53674f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity scaled Resume Recived + 5% (year)' = ```
+			
+			CALCULATE(
+			    [Activity scaled Resume Recived (year)] * (1 - 0.05),
+			    FILTER(
+			        ALL('Driver Map'[Driver Name]),
+			        CONTAINSSTRING('Driver Map'[Driver Name], "Resumes")
+			    )
+			)
+			
+			```
+		lineageTag: f1abd9cb-e5ea-4dee-a7c2-8bad5b170347
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity scaled interviews scheduled + 5% (year)' = ```
+			
+			CALCULATE(
+			    [Activity scaled interviews schedualed (year)] * (1 - 0.05),
+			    KEEPFILTERS(
+			        CONTAINSSTRING('Driver Map'[Driver Name], "Interviews")
+			    )
+			)
+			
+			```
+		lineageTag: b11d98c7-7693-455a-a115-bdb4f960914b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Rs forcast'
+		dataType: string
+		lineageTag: fb7a7a57-ba50-4d5f-9f91-2a68d277fffc
+		summarizeBy: none
+		sourceColumn: Rs forcast
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Rs forcast' = m
+		mode: import
+		source =
+				let
+				    Source = ""
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

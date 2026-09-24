@@ -1,0 +1,72 @@
+table 'Criteria for model'
+	lineageTag: f6e7fb1c-e37f-42cf-8ed5-b5266a142378
+
+	column Sub-stream
+		dataType: string
+		lineageTag: 33655f6f-331d-4cca-bb07-740f4e21d815
+		summarizeBy: none
+		sourceColumn: Sub-stream
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ref
+		dataType: string
+		lineageTag: c1ee08d5-d359-4c63-b11f-39f8932a6b4d
+		summarizeBy: none
+		sourceColumn: Ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column Criteria
+		dataType: string
+		lineageTag: 45eb8f70-b628-4f04-8c74-ee9f81c84c5b
+		summarizeBy: none
+		sourceColumn: Criteria
+
+		annotation SummarizationSetBy = Automatic
+
+	column Definition
+		dataType: string
+		lineageTag: ffc55939-ea82-48f9-be67-3755377ee78e
+		summarizeBy: none
+		sourceColumn: Definition
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Definition Owner'
+		dataType: string
+		lineageTag: 68ed1916-ce17-46d3-ab5d-8fac757bba9d
+		summarizeBy: none
+		sourceColumn: Definition Owner
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Data Source'
+		dataType: string
+		lineageTag: 2b7d1838-9453-45d8-b5c7-858c470212fb
+		summarizeBy: none
+		sourceColumn: Data Source
+
+		annotation SummarizationSetBy = Automatic
+
+	column Comments
+		dataType: string
+		lineageTag: 64700c98-6776-4f18-ac23-41d74b4781f5
+		summarizeBy: none
+		sourceColumn: Comments
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Criteria for model' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dkMadRau\OneDrive - LEGO\Skrivebord\Criteria for scaling model'.xlsx"), null, true),
+				    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+				in
+				    Table1_Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

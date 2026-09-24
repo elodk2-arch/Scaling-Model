@@ -1,0 +1,63 @@
+table Stream_Forecast_Method
+	lineageTag: 3d98cf89-4852-4d6c-9900-e33725751dbf
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: a4a61ec0-58d5-4f8c-b53f-9b1b583851be
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Forecast Method'
+		dataType: string
+		lineageTag: 483bac20-b435-4bfa-a032-53728cef8e19
+		summarizeBy: none
+		sourceColumn: Forecast Method
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Stream_Forecast_Method = m
+		mode: import
+		source = ```
+				let
+				    Source = #table(
+				        {"Substream Abbreviation", "Forecast Method"},
+				        {
+				            {"CAB2B", "growth"},
+				            {"CC", "growth"},
+				            {"CM", "growth"},
+				            {"INV", "growth"},
+				            {"PC", "growth"},
+				            {"D2C", "growth"},
+				            {"EMD", "headcount_ratio"},
+				            {"PY", "headcount_ratio"},
+				            {"FC&P", "growth"},
+				            {"SRM", "growth"},
+				            {"AP", "growth"},
+				            {"PS","growth"},
+				            {"VMD", "growth"},
+				            {"ESO", "headcount_avg"},
+				            {"SD", "headcount_ratio"},
+				            {"ITSD","growth"},
+				            {"RS","rs"},
+				            {"TEM", "tem"},
+				            {"GL", "gl"},
+				            {"TAX", "growth"
+				            }
+				            
+				            
+				        }
+				    ),
+				    TypedTable = Table.TransformColumnTypes(Source, {
+				        {"Substream Abbreviation", type text},
+				        {"Forecast Method", type text}
+				    })
+				in
+				    TypedTable
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

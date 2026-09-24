@@ -1,0 +1,171 @@
+table Headcount_Mock
+	lineageTag: eaf7031b-5d2f-426d-aee7-ae32e7c6224b
+
+	measure 'Total Headcount Selected Year' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year])
+			RETURN
+			CALCULATE(
+			    MAX('Headcount_Mock'[Total Headcount]),
+			    'Headcount_Mock'[Year] = SelectedYear,
+			    'Headcount_Mock'[MonthNumber] = 12
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 75648525-ea57-491f-a5df-82bade07cf7d
+
+	measure 'Headcount Forecast Dynamic' = ```
+			
+			VAR CurrentYear =
+			    MAX('DateTable'[Year])
+			
+			VAR CurrentMonth =
+			    MAX('DateTable'[MonthNumber])
+			
+			VAR ActualValue =
+			    CALCULATE(
+			        MAX(Headcount_Mock[Total Headcount]),
+			        Headcount_Mock[Year] = CurrentYear,
+			        Headcount_Mock[MonthNumber] = CurrentMonth
+			    )
+			
+			VAR LastActualMonth =
+			    CALCULATE(
+			        MAX(Headcount_Mock[MonthNumber]),
+			        FILTER(
+			            ALL(Headcount_Mock),
+			            Headcount_Mock[Year] = CurrentYear &&
+			            Headcount_Mock[MonthNumber] < 12 &&
+			            NOT ISBLANK(Headcount_Mock[Total Headcount])
+			        )
+			    )
+			
+			VAR LastActualValue =
+			    CALCULATE(
+			        MAX(Headcount_Mock[Total Headcount]),
+			        Headcount_Mock[Year] = CurrentYear,
+			        Headcount_Mock[MonthNumber] = LastActualMonth
+			    )
+			
+			VAR DecemberTarget =
+			    CALCULATE(
+			        MAX(Headcount_Mock[Total Headcount]),
+			        Headcount_Mock[Year] = CurrentYear,
+			        Headcount_Mock[MonthNumber] = 12
+			    )
+			
+			VAR RemainingMonths =
+			    12 - LastActualMonth
+			
+			VAR MonthlyIncrease =
+			    DIVIDE(
+			        DecemberTarget - LastActualValue,
+			        RemainingMonths
+			    )
+			
+			VAR ForecastValue =
+			    LastActualValue +
+			    (CurrentMonth - LastActualMonth) * MonthlyIncrease
+			
+			RETURN
+			IF(
+			    NOT ISBLANK(ActualValue) && CurrentMonth <= LastActualMonth,
+			    ActualValue,
+			    IF(
+			        CurrentMonth > LastActualMonth,
+			        ForecastValue
+			    )
+			)
+			
+			```
+		lineageTag: 7499663e-93c3-48ba-9f69-cbf91325520a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Test Month' = ```
+			MAX('DateTable'[MonthNumber])
+			
+			```
+		formatString: 0
+		lineageTag: ad34131e-5858-4796-b5c7-49e4782c8138
+
+	column Year
+		formatString: 0
+		lineageTag: c948f5b3-f690-479f-b995-e5bc3ffc1af9
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		formatString: 0
+		lineageTag: 2311967e-8691-4a8a-9df8-e9103c4c7735
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthNumber]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Headcount'
+		formatString: 0
+		lineageTag: 62696896-25ae-442f-a4df-e8afeb9c3918
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Total Headcount]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Headcount_Mock = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Year", INTEGER,
+				    "MonthNumber", INTEGER,
+				    "Total Headcount", INTEGER,
+				    {
+				        {2024, 1, 100},
+				        {2024, 2, 105},
+				        {2024, 3, 110},
+				        {2024, 4, 120},
+				        {2024, 5, 115},
+				        {2024, 6, 118},
+				        {2024, 7, 122},
+				        {2024, 8, 125},
+				        {2024, 9, 128},
+				        {2024, 10, 130},
+				        {2024, 11, 132},
+				        {2024, 12, 30835},
+				        {2025, 1,  30835 },
+				        {2025, 2, 30653},
+				        {2025, 3, 30991},
+				        {2025, 4, 31134},
+				        {2025, 5, 31269},
+				        {2025, 6, 31661},
+				        {2025, 7, 31963},
+				        {2025, 8, 32441},
+				        {2025, 9, 32937},
+				        {2025, 10, 33450},
+				        {2025, 11, 33594},
+				        {2025, 12, 33526},
+				        {2026, 1, 33170},
+				        {2026, 2, 33262},
+				        {2026, 3, 33597},
+				        {2026, 4, 33765},
+				        {2026, 5, 34105},
+				        {2026, 6, 34435},
+				        {2026, 7, 34498},
+				        {2026, 8, 35029},
+				        {2026, 9, },
+				        {2026, 10, },
+				        {2026, 11, },
+				        {2026, 12, 35617}
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = 0689df3743a74e7b8ca5e691eb650ee9
+

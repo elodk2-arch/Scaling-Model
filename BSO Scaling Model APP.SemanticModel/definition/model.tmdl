@@ -1,0 +1,47 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-DK
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Driver Data","Driver Map","Manual Input (Scaling Model)","EfficiencyTarget","FTE Map","FTE Data","Criteria for model","Fact_Actuals","Fact_FTE","Sub_stream_combiner","Capacity_Per_Substream_Year","Efficiency_Rates","Stream_Forecast_Method","Fact_Headcount","Headcount_Mock1","Fact_WhiteCollarHC","Rs forcast","Headcount_Data_Finance","OneStopShop Data"]
+
+annotation PBI_ProTooling = ["TMDLView_Desktop","DevMode"]
+
+ref table 'Driver Data'
+ref table 'Driver Map'
+ref table DateTable
+ref table 'Stream split main'
+ref table BaseProcessWeights
+ref table 'Manual Input (Scaling Model)'
+ref table 'Stream split Year'
+ref table Headcount_Mock
+ref table EfficiencyTarget
+ref table 'FTE Map'
+ref table 'FTE Data'
+ref table Headcount_white_collar_Mock
+ref table 'Criteria for model'
+ref table DateTableTemplate_a3f3fbe2-658e-4b94-bb35-e962b6127f5b
+ref table Fact_Actuals
+ref table Fact_FTE
+ref table Sub_stream_combiner
+ref table LocalDateTable_f86ad14d-51c6-4dee-8428-cfb44b4882df
+ref table LocalDateTable_4da41d75-4be3-40c5-ab49-388add1b9571
+ref table Capacity_Per_Substream_Year
+ref table Efficiency_Rates
+ref table Stream_Forecast_Method
+ref table Fact_Headcount
+ref table Fact_WhiteCollarHC
+ref table LocalDateTable_758b57da-cb2d-4693-82b7-843452f79afc
+ref table 'Rs forcast'
+ref table 'SDA Row Type'
+ref table Headcount_Data_Finance
+ref table LocalDateTable_783c8ffc-a561-4a4c-94ea-22f790f26f2d
+ref table 'OneStopShop Data'
+
+ref cultureInfo en-US
+

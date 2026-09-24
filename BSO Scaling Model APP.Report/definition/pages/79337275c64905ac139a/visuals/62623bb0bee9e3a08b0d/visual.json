@@ -1,0 +1,139 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "62623bb0bee9e3a08b0d",
+  "position": {
+    "x": 44.166666666666671,
+    "y": 198.33333333333334,
+    "z": 1000,
+    "height": 480,
+    "width": 1186.6666666666667,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Sub-stream"
+                }
+              },
+              "queryRef": "Criteria for model.Sub-stream",
+              "nativeQueryRef": "Sub-stream"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Ref"
+                }
+              },
+              "queryRef": "Criteria for model.Ref",
+              "nativeQueryRef": "Ref"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Criteria"
+                }
+              },
+              "queryRef": "Criteria for model.Criteria",
+              "nativeQueryRef": "Criteria"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Definition"
+                }
+              },
+              "queryRef": "Criteria for model.Definition",
+              "nativeQueryRef": "Definition"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Definition Owner"
+                }
+              },
+              "queryRef": "Criteria for model.Definition Owner",
+              "nativeQueryRef": "Definition Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Data Source"
+                }
+              },
+              "queryRef": "Criteria for model.Data Source",
+              "nativeQueryRef": "Data Source"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Criteria for model"
+                    }
+                  },
+                  "Property": "Comments"
+                }
+              },
+              "queryRef": "Criteria for model.Comments",
+              "nativeQueryRef": "Comments"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Criteria for model"
+                  }
+                },
+                "Property": "Definition"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

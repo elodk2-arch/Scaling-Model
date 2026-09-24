@@ -1,0 +1,761 @@
+table Fact_FTE
+	lineageTag: 6e35f6f3-c66d-482d-9a06-abaae5d698a6
+
+	measure 'Active FTE new' =
+			
+			CALCULATE(
+			    SUM('Fact_FTE'[Active FTE]),
+			    TREATAS(
+			        VALUES('Fact_Actuals'[YearMonth]),
+			        'Fact_FTE'[YearMonth]
+			    )
+			)
+		formatString: 0.00
+		lineageTag: 7e1fcb31-b791-4f63-856b-b9c9f8d69e4c
+
+	measure 'Activity Scaled FTE Weighted' = ```
+			
+			VAR CurrentSubstream = SELECTEDVALUE('Sub_stream_combiner'[Substream abbreviation])
+			
+			// Check if there's a driver filter active
+			VAR DriverFilterActive = 
+			    ISFILTERED('Fact_Actuals'[Driver Name])
+			    && NOT ISBLANK(SELECTEDVALUE('Fact_Actuals'[Driver Name]))
+			
+			// Get weights for current substream
+			VAR WeightTable = 
+			    FILTER(
+			        BaseProcessWeights,
+			        BaseProcessWeights[SubStream] = CurrentSubstream
+			    )
+			VAR HasWeights = COUNTROWS(WeightTable) > 0
+			
+			// If driver is filtered OR substream has no weights → just return regular activity scaled
+			VAR RegularActivityScaled = [Activity Scaled FTE]
+			
+			// If substream has weights and no driver filter → calculate weighted avg
+			VAR WeightedResult = 
+			    SUMX(
+			        WeightTable,
+			        VAR ThisDriver = BaseProcessWeights[Driver]
+			        VAR ThisWeight = BaseProcessWeights[Weight] / 100
+			        VAR DriverActivityScaled = 
+			            CALCULATE(
+			                [Activity Scaled FTE],
+			                'Fact_Actuals'[Driver Name] = ThisDriver
+			            )
+			        RETURN
+			            DriverActivityScaled * ThisWeight
+			    )
+			
+			RETURN
+			    IF(
+			        HasWeights && NOT DriverFilterActive,
+			        WeightedResult,
+			        RegularActivityScaled
+			    )
+			```
+		lineageTag: 4875365f-6ae1-4b68-8bb0-7a84c042b4ae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE + Eff Weighted' = ```
+			
+			VAR CurrentSubstream = SELECTEDVALUE('Sub_stream_combiner'[Substream abbreviation])
+			
+			VAR DriverFilterActive = 
+			    ISFILTERED('Fact_Actuals'[Driver Name])
+			    && NOT ISBLANK(SELECTEDVALUE('Fact_Actuals'[Driver Name]))
+			
+			VAR WeightTable = 
+			    FILTER(
+			        BaseProcessWeights,
+			        BaseProcessWeights[SubStream] = CurrentSubstream
+			    )
+			VAR HasWeights = COUNTROWS(WeightTable) > 0
+			
+			VAR RegularResult = [Activity Scaled FTE + Eff]
+			
+			VAR WeightedResult = 
+			    SUMX(
+			        WeightTable,
+			        VAR ThisDriver = BaseProcessWeights[Driver]
+			        VAR ThisWeight = BaseProcessWeights[Weight] / 100
+			        VAR DriverResult = 
+			            CALCULATE(
+			                [Activity Scaled FTE + Eff],
+			                'Fact_Actuals'[Driver Name] = ThisDriver
+			            )
+			        RETURN
+			            DriverResult * ThisWeight
+			    )
+			
+			RETURN
+			    IF(
+			        HasWeights && NOT DriverFilterActive,
+			        WeightedResult,
+			        RegularResult
+			    )
+			```
+		lineageTag: 2a21b978-e47b-4bea-903d-7856c397107f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE GL' = ```
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			VAR VacancyRate = 0.087
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR LYTotalDriver =
+			            CALCULATE(
+			                [Total Driver new],
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			        VAR LYFTEAvg = 
+			            CALCULATE(
+			                [Active FTE Avg],
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			        VAR Baseline =
+			            DIVIDE(
+			                LYTotalDriver,
+			                LYFTEAvg * (1 + VacancyRate)
+			            )
+			        VAR AdjustedBaseline =
+			            IF(
+			                MonthCount = 1,
+			                Baseline / 12,
+			                Baseline
+			            )
+			        VAR DriverScaled =
+			            DIVIDE(
+			                CALCULATE([Total Driver new]),
+			                AdjustedBaseline
+			            )
+			        RETURN
+			            DriverScaled * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+			```
+		lineageTag: 2f85aee6-5b0c-4d29-a9cd-605e504afd4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE GL + Eff' = ```
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			VAR VacancyRate = 0.087
+			VAR Efficiency =
+			    CALCULATE(
+			        MAX(Efficiency_Rates[Efficiency]),
+			        Efficiency_Rates[LY Year] = YEAR(TODAY()) - 1
+			    )
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR LYTotalDriver =
+			            CALCULATE(
+			                [Total Driver new],
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			        VAR LYFTEAvg = 
+			            CALCULATE(
+			                [Active FTE Avg],
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			        VAR Baseline =
+			            DIVIDE(
+			                LYTotalDriver,
+			                LYFTEAvg * (1 + VacancyRate)
+			            )
+			        VAR AdjustedBaseline =
+			            IF(
+			                MonthCount = 1,
+			                Baseline / 12,
+			                Baseline
+			            )
+			        VAR DriverScaled =
+			            DIVIDE(
+			                CALCULATE([Total Driver new]),
+			                AdjustedBaseline * (1 + Efficiency)
+			            )
+			        RETURN
+			            DriverScaled * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+			```
+		lineageTag: 3d976f05-e821-4e03-a32f-458eafca90b5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dynamic Sub-Stream Title' =
+			
+			VAR SelectedSubStream =
+			    SELECTEDVALUE ( 'FTE Map'[Substream Abbreviation], "All Sub-streams" )
+			RETURN
+			    "Current View: " & SelectedSubStream
+		lineageTag: 159065f9-1e51-4e4d-9385-26651913c714
+
+	measure 'Actuals until: Month Year (Dynamic)' = ```
+			
+			VAR LatestActualDate =
+			    CALCULATE(
+			        MAX('Driver Data'[Reporting Date]),
+			        FILTER(
+			            ALL('Driver Data'),
+			            'Driver Data'[Value] <> 0
+			        )
+			    )
+			
+			VAR AdjustedDate =
+			    IF(
+			        MONTH(LatestActualDate) = 12,
+			        EOMONTH(TODAY(), -1),  // fallback to last completed month
+			        LatestActualDate
+			    )
+			
+			RETURN
+			IF(
+			    ISBLANK(LatestActualDate),
+			    "Actuals until: No data :(",
+			    "Latest Reported Data: " & FORMAT(AdjustedDate, "MMMM YYYY")
+			)
+			
+			```
+		lineageTag: 93e728ab-ed8a-42a5-8fda-e3be1b20c825
+
+	measure 'Actual vs Forecast + Blue Special (Dynamic)' = ```
+			
+			VAR CurrentYMText = SELECTEDVALUE('DateTable'[YearMonth])
+			VAR SelectedMeasure = SELECTEDVALUE('Stream split main'[MeasureName])
+			
+			VAR IsForecast = 
+			    CALCULATE(
+			        COUNTROWS(Fact_Actuals),
+			        Fact_Actuals[IsForecast] = TRUE()
+			    ) > 0
+			
+			RETURN
+			IF(
+			    ISBLANK(CurrentYMText),
+			    BLANK(),
+			    SWITCH(
+			        TRUE(),
+			
+			        // Activity Scaled + 5% → Blue
+			        SelectedMeasure = "Activity Scaled FTE + 5%", 5,
+			
+			        // Activity Scaled → Light Blue
+			        SelectedMeasure = "Activity Scaled FTE", 6,
+			
+			        // Total Driver → Dark Green (actual) or Yellow (forecast)
+			        SelectedMeasure = "Total Driver",
+			            IF(IsForecast, 3, 1),
+			
+			        // Manual/Auto Driver → Light Green (actual) or Light Yellow (forecast)
+			        SelectedMeasure IN {"Manual Driver", "Automated Driver"},
+			            IF(IsForecast, 4, 2),
+			
+			        // Everything else → White
+			        7
+			    )
+			)
+			```
+		formatString: 0
+		lineageTag: 0d5ab920-5be1-4f77-a71b-2ea0a568b27d
+
+	measure 'Selected FTE KPI' =
+			
+			VAR ForecastMethod =
+			    SELECTEDVALUE('Stream_Forecast_Method'[Forecast Method])
+			
+			RETURN
+			SWITCH(
+			    ForecastMethod,
+			
+			    "headcount_ratio",
+			        [Activity Scaled FTE total],
+			
+			    "headcount_avg",
+			        [Activity Scaled FTE AVG],
+			
+			    "gl",
+			        [Activity Scaled FTE GL],
+			
+			    "rs",
+			        [RS Stream Activity Total (Year)],
+			
+			    -- default
+			    [Activity Scaled FTE Weighted]
+			)
+		lineageTag: d8f0f961-9319-4102-a1d0-4759ec8e0e4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTE Switch' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Method = 
+			    LOOKUPVALUE(
+			        Stream_Forecast_Method[Forecast Method],
+			        Stream_Forecast_Method[Substream Abbreviation], Sub
+			    )
+			RETURN
+			SWITCH(
+			    Method,
+			    "headcount_ratio",  [FTE AVG],
+			    "headcount_avg",    [FTE AVG],
+			    "growth",           [Active FTE Avg],
+			    "rs",               [Active FTE Avg],
+			    "gl",               [Active FTE Avg],
+			    [FTE AVG] // growth default
+			)
+			```
+		lineageTag: 4ef2166d-173f-4b4e-9b9b-72d52b8e58c5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Driver Switch' =
+			
+			VAR Sub =
+			    MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Method =
+			    LOOKUPVALUE(
+			        Stream_Forecast_Method[Forecast Method],
+			        Stream_Forecast_Method[Substream Abbreviation], Sub
+			    )
+			RETURN
+			SWITCH(
+			    Method,
+			    "headcount_ratio", [Total Driver new],
+			    "headcount_avg",   [Manual Driver new],
+			    "gl",              [Total Driver new],
+			    "tem",             [Manual Driver new],
+			    "rs",              [RS Total Selector],
+			    [Manual Driver new]
+			)
+		lineageTag: a964450c-8dec-4f8c-9f6e-62ea3fb26d68
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA LY Volume per FTE' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR LYDriver = 
+			    CALCULATE(
+			        [SDA Driver Switch],
+			        'DateTable'[Year] = SelectedYear - 1,
+			        ALL('DateTable')
+			    )
+			VAR LYAvgFTE = 
+			    CALCULATE(
+			        [SDA FTE Switch Weighted],
+			        'DateTable'[Year] = SelectedYear - 1,
+			        ALL('DateTable')
+			    )
+			RETURN
+			DIVIDE(LYDriver, LYAvgFTE)
+			```
+		lineageTag: b1c033af-b63e-4019-a481-17ac457e6e35
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA CY Volume per FTE' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR CYDriver = 
+			    CALCULATE(
+			        [SDA Driver Switch],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			VAR CYAvgFTE = 
+			    CALCULATE(
+			        [SDA FTE Switch Weighted],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			RETURN
+			DIVIDE(CYDriver, CYAvgFTE)
+			```
+		lineageTag: f1b17ab2-3452-4588-9e8f-de6fab1665cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTEs Needed at LY Productivity' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR CYDriver = 
+			    CALCULATE(
+			        [SDA Driver Switch],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			VAR LYVolumePerFTE = [SDA LY Volume per FTE]
+			RETURN
+			DIVIDE(CYDriver, LYVolumePerFTE)
+			```
+		lineageTag: 4cd8207c-e5fc-48be-967f-b6d56152791b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTEs Absorbed' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR CYAvgFTE = 
+			    CALCULATE(
+			        [SDA FTE Switch Weighted],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			RETURN
+			[SDA FTEs Needed at LY Productivity] - CYAvgFTE
+			```
+		lineageTag: fc3a0697-ae34-4851-80e1-bc9409f7c2d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Productivity Gain %' =
+			
+			DIVIDE(
+			    [SDA CY Volume per FTE] - [SDA LY Volume per FTE],
+			    [SDA LY Volume per FTE]
+			) * 100
+		lineageTag: d2ce486a-35d2-4af0-b474-94e7728a27ea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTE Switch Weighted' =
+			
+			SUMX(
+			    VALUES(Fact_Actuals[Driver Name]),
+			    VAR DriverWeight =
+			        LOOKUPVALUE(
+			            BaseProcessWeights[Weight],
+			            BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			            BaseProcessWeights[Driver], Fact_Actuals[Driver Name]
+			        ) / 100
+			    RETURN
+			        CALCULATE([SDA FTE Switch]) * DriverWeight
+			)
+		lineageTag: 34eb4d00-4223-49ff-918b-f67955e69ad4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FTE Absorbed (SDA) - Per Stream 2' =
+			
+			SUMX(
+			    ALLSELECTED('Fact_Actuals'[Driver Family]),
+			    CALCULATE([SDA FTEs Absorbed])
+			)
+		lineageTag: 7f2d564f-8125-4541-a67c-8cbde802a8a6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTEs Absorbed (Sum)' =
+			
+			SUMX(
+			    ALLSELECTED(Sub_stream_combiner[Substream Abbreviation]),
+			    CALCULATE([SDA FTEs Absorbed])
+			)
+		lineageTag: d5d0900a-024b-4caa-b3e0-938a327c8074
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA KPI FTEs Absorbed' =
+			
+			SUMX(
+			    ALLSELECTED('Sub_stream_combiner'[Substream Abbreviation]),
+			    SUMX(
+			        ALLSELECTED(Fact_Actuals[Driver Family]),
+			        CALCULATE([SDA FTEs Absorbed])
+			    )
+			)
+		lineageTag: a7cf7c0c-9721-428c-92e7-64101d9ccaff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Stream % of Total' =
+			
+			VAR CurrentStream = [SDA KPI FTEs Absorbed]
+			VAR GrandTotal =
+			    CALCULATE(
+			        [SDA KPI FTEs Absorbed],
+			        ALL('Sub_stream_combiner')
+			    )
+			VAR StreamPercentage = DIVIDE(CurrentStream, GrandTotal) * 100
+			RETURN
+			FORMAT(StreamPercentage, "0") & "%"
+		lineageTag: c5c3fd20-4962-44ba-838b-52ce5569d8c5
+
+	measure 'SDA manual target' = 15
+		formatString: 0
+		lineageTag: 8359253a-97bc-41dd-866c-11fb7c1a4274
+
+	measure 'SDA Stream % of Total Adjusted' =
+			
+			VAR CurrentStream = [SDA KPI FTEs Absorbed]
+			VAR GrandTotal =
+			    CALCULATE(
+			        [SDA KPI FTEs Absorbed],
+			        ALL('Sub_stream_combiner')
+			    )
+			VAR StreamPercentage = DIVIDE(CurrentStream, GrandTotal)
+			RETURN
+			StreamPercentage * [SDA manual target]
+		lineageTag: a9143081-ba65-4ddd-910e-9b4a2921ef4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Row Type' =
+			
+			DATATABLE(
+			    "RowType", STRING,
+			    "RowOrder", INTEGER,
+			    {
+			        {"Volume", 1},
+			        {"FTE", 2}
+			    }
+			)
+		lineageTag: ced6dcd9-c836-478d-bbf4-0ea54a33f615
+
+	measure 'SDA Driver Switch (Text)' =
+			
+			FORMAT(
+			    [SDA Driver Switch],
+			    "#,##0"
+			)
+		lineageTag: 87d8151e-a728-4888-861a-24ccc5396995
+
+	column 'Stream Abbreviation'
+		dataType: string
+		lineageTag: 1b24065f-ef99-40b5-8275-16044715dcf6
+		summarizeBy: none
+		sourceColumn: Stream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: c987705d-c041-49f3-af6c-5d1394d44420
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Family'
+		dataType: string
+		lineageTag: 9e631323-4edb-43e8-bf9d-22e727e17a3d
+		summarizeBy: none
+		sourceColumn: FTE Family
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Category Type'
+		dataType: string
+		lineageTag: 93271e0d-e58f-4afb-aa7d-360720d7237a
+		summarizeBy: none
+		sourceColumn: FTE Category Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Functional Domain'
+		dataType: string
+		lineageTag: 901976a5-4f4a-40b9-96f2-d7fe97268fa1
+		summarizeBy: none
+		sourceColumn: Functional Domain
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsForecast
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3613bda1-2286-4023-81ab-27681220187c
+		summarizeBy: none
+		sourceColumn: IsForecast
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: 24ab9180-9b94-472b-b51f-55b50ccbb17d
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d9091147-c9cf-494e-b040-e219ef5b8908
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Active FTE'
+		dataType: double
+		lineageTag: 23c1c99a-8ca0-472e-b661-217dd5ff8d27
+		summarizeBy: sum
+		sourceColumn: Active FTE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Fact_FTE = m
+		mode: import
+		source = ```
+				let
+				    Source = #"FTE Data",
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 1: Active FTEs only
+				    // ─────────────────────────────────────────────
+				    ActiveOnly = Table.SelectRows(Source, each [Active] = 1),
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 2: Join FTE Map
+				    // ─────────────────────────────────────────────
+				    Joined = Table.NestedJoin(
+				        ActiveOnly, {"FTE Category ID"},
+				        #"FTE Map", {"FTE Category ID"},
+				        "MapData",
+				        JoinKind.Inner
+				    ),
+				    
+				    Expanded = Table.ExpandTableColumn(
+				        Joined, "MapData",
+				        {"FTE Category Name", "FTE Category Type", "FTE Family", "Stream Abbreviation", "Substream Abbreviation", "Functional Domain"},
+				        {"FTE Category Name", "FTE Category Type", "FTE Family", "Stream Abbreviation", "Substream Abbreviation", "Functional Domain"}
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 3: Aggregate to monthly grain
+				    // ─────────────────────────────────────────────
+				    AggregatedActuals = Table.Group(
+				        Expanded,
+				        {"Date", "Stream Abbreviation", "Substream Abbreviation", "FTE Family", "FTE Category Type", "Functional Domain"},
+				        {{"Active FTE", each List.Sum([Mapped FTE]), type number}}
+				    ),
+				    // Normalize actual dates to end of month to match forecast dates
+				NormalizeActualDates = Table.TransformColumns(
+				    AggregatedActuals,
+				    {{"Date", each Date.EndOfMonth(_), type date}}
+				),
+				    
+				    ActualsClean = Table.SelectRows(NormalizeActualDates, 
+				    each [Active FTE] <> null and [Active FTE] <> 0
+				),
+				    AddIsForecastActuals = Table.AddColumn(ActualsClean, "IsForecast", each false, type logical),
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 4: For each combo, find its latest row
+				    // ─────────────────────────────────────────────
+				    
+				    // Sort by date descending so first row per group = latest
+				    SortedDesc = Table.Sort(ActualsClean, {{"Date", Order.Descending}}),
+				    
+				    // Group by combo and take the first (latest) row
+				    LatestPerCombo = Table.Group(
+				        SortedDesc,
+				        {"Stream Abbreviation", "Substream Abbreviation", "FTE Family", "FTE Category Type", "Functional Domain"},
+				        {
+				            {"LatestDate", each List.Max([Date]), type date},
+				            {"LatestFTE", each 
+				                let firstRow = Table.First(_) 
+				                in firstRow[Active FTE], 
+				                type number}
+				        }
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 5: Generate forecast rows (held flat from latest)
+				    // ─────────────────────────────────────────────
+				    AddForecastMonths = Table.AddColumn(
+				        LatestPerCombo, "ForecastMonths",
+				        each
+				            let
+				                cutoff = [LatestDate],
+				                startDate = Date.AddMonths(Date.EndOfMonth(cutoff), 1),
+				                endDate = #date(Date.Year(cutoff), 12, 31),
+				                monthCount = if startDate > endDate then 0 
+				                             else (Date.Year(endDate) - Date.Year(startDate)) * 12 
+				                                  + (Date.Month(endDate) - Date.Month(startDate)) + 1
+				            in
+				                if monthCount = 0 then {}
+				                else List.Transform(
+				                    {0..monthCount-1},
+				                    each Date.EndOfMonth(Date.AddMonths(startDate, _))
+				                )
+				    ),
+				    
+				    ExpandedForecastMonths = Table.ExpandListColumn(AddForecastMonths, "ForecastMonths"),
+				    FilterValidForecast = Table.SelectRows(ExpandedForecastMonths, each [ForecastMonths] <> null),
+				    
+				    // Shape forecast rows to match actuals schema
+				    ForecastRenamed = Table.RenameColumns(FilterValidForecast, {
+				        {"ForecastMonths", "Date"},
+				        {"LatestFTE", "Active FTE"}
+				    }),
+				    AddIsForecastFlag = Table.AddColumn(ForecastRenamed, "IsForecast", each true, type logical),
+				    
+				    ForecastShaped = Table.SelectColumns(AddIsForecastFlag,
+				        {"Date", "Stream Abbreviation", "Substream Abbreviation", 
+				         "FTE Family", "FTE Category Type", "Functional Domain", 
+				         "Active FTE", "IsForecast"}
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // STEP 6: Combine
+				    // ─────────────────────────────────────────────
+				    Combined = Table.Combine({AddIsForecastActuals, ForecastShaped}),
+				    
+				    AddYearMonth = Table.AddColumn(
+				        Combined, "YearMonth",
+				        each Date.ToText([Date], "yyyy-MM"),
+				        type text
+				    ),
+				    #"Changed Type" = Table.TransformColumnTypes(AddYearMonth,{{"Date", type datetime}})
+				in
+				    #"Changed Type"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

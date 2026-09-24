@@ -1,0 +1,152 @@
+table Headcount_white_collar_Mock
+	lineageTag: 815f45d6-3cb1-43c3-9c70-76a7b6f59a69
+
+	measure 'White HC Forecast Dynamic' = ```
+			
+			VAR CurrentYear =
+			    MAX('DateTable'[Year])
+			
+			VAR CurrentMonth =
+			    MAX('DateTable'[MonthNumber])
+			
+			VAR ActualValue =
+			    CALCULATE(
+			        MAX(Headcount_white_collar_Mock[WhiteCollarHC]),
+			        Headcount_White_Collar_Mock[Year] = CurrentYear,
+			        Headcount_White_Collar_Mock[MonthNumber] = CurrentMonth
+			    )
+			
+			VAR LastActualMonth =
+			    CALCULATE(
+			        MAX(Headcount_White_Collar_Mock[MonthNumber]),
+			        FILTER(
+			            ALL(Headcount_White_Collar_Mock),
+			            Headcount_White_Collar_Mock[Year] = CurrentYear &&
+			            Headcount_White_Collar_Mock[MonthNumber] < 12 &&
+			            NOT ISBLANK(Headcount_White_Collar_Mock[WhiteCollarHC])
+			        )
+			    )
+			
+			VAR LastActualValue =
+			    CALCULATE(
+			        MAX(Headcount_White_Collar_Mock[WhiteCollarHC]),
+			        Headcount_White_Collar_Mock[Year] = CurrentYear,
+			        Headcount_White_Collar_Mock[MonthNumber] = LastActualMonth
+			    )
+			
+			VAR DecemberTarget =
+			    CALCULATE(
+			        MAX(Headcount_White_Collar_Mock[WhiteCollarHC]),
+			        Headcount_White_Collar_Mock[Year] = CurrentYear,
+			        Headcount_White_Collar_Mock[MonthNumber] = 12
+			    )
+			
+			VAR RemainingMonths =
+			    12 - LastActualMonth
+			
+			VAR MonthlyIncrease =
+			    DIVIDE(
+			        DecemberTarget - LastActualValue,
+			        RemainingMonths
+			    )
+			
+			VAR ForecastValue =
+			    LastActualValue +
+			    (CurrentMonth - LastActualMonth) * MonthlyIncrease
+			
+			RETURN
+			IF(
+			    NOT ISBLANK(ActualValue) && CurrentMonth <= LastActualMonth,
+			    ActualValue,
+			    IF(
+			        CurrentMonth > LastActualMonth,
+			        ForecastValue
+			    )
+			)
+			
+			```
+		lineageTag: e917a97d-1fe3-4be5-8b42-c9fe6fd058f0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		formatString: 0
+		lineageTag: a8c1e73d-7000-4aee-b41c-d3e175bf7fef
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		formatString: 0
+		lineageTag: 23a7e431-88b2-4d94-8cb9-232ba6c30297
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthNumber]
+
+		annotation SummarizationSetBy = Automatic
+
+	column WhiteCollarHC
+		formatString: 0
+		lineageTag: d18856a5-542a-49ed-940d-ea99ac257513
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [WhiteCollarHC]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Headcount_white_collar_Mock = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Year", INTEGER,
+				    "MonthNumber", INTEGER,
+				    "WhiteCollarHC", INTEGER,
+				    {
+				        {2024, 1, },
+				        {2024, 2, },
+				        {2024, 3, },
+				        {2024, 4, },
+				        {2024, 5, },
+				        {2024, 6, },
+				        {2024, 7, },
+				        {2024, 8, },
+				        {2024, 9, },
+				        {2024, 10, },
+				        {2024, 11, },
+				        {2024, 12, },
+				        {2025, 1, 13587 },
+				        {2025, 2, 13625},
+				        {2025, 3, 13475},
+				        {2025, 4, 13545},
+				        {2025, 5, 13636},
+				        {2025, 6, 13720},
+				        {2025, 7, 13677},
+				        {2025, 8, 13850},
+				        {2025, 9, 14019},
+				        {2025, 10, 14138},
+				        {2025, 11, 14177},
+				        {2025, 12, 14186},
+				        {2026, 1, 14186},
+				        {2026, 2, 14079},
+				        {2026, 3, 14185},
+				        {2026, 4, 14236},
+				        {2026, 5, 13230},
+				        {2026, 6, 13315},
+				        {2026, 7, 13332},
+				        {2026, 8, 13454},
+				        {2026, 9, },
+				        {2026, 10, },
+				        {2026, 11, },
+				        {2026, 12, 15780}
+				    }
+				
+				
+				)
+				
+				```
+
+	annotation PBI_Id = c6f339ad3b3849f0aaf899632d437d8a
+

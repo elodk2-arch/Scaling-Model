@@ -1,0 +1,73 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "0cb10b8589b850fc64f7",
+  "displayName": "Stream Overview Month",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'PBIX Backgrounds.svg'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "PBIX_Backgrounds6109295319991507.svg"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "3a7208f7db59081dff94",
+      "target": "0e52a662fc129470b001",
+      "type": "NoFilter"
+    },
+    {
+      "source": "3a7208f7db59081dff94",
+      "target": "2c7890af6950b9fa188c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "9778ed7184e88440f9b7",
+      "target": "2c7890af6950b9fa188c",
+      "type": "DataFilter"
+    },
+    {
+      "source": "3a7208f7db59081dff94",
+      "target": "b9f7220a3b9359686eae",
+      "type": "NoFilter"
+    }
+  ]
+}

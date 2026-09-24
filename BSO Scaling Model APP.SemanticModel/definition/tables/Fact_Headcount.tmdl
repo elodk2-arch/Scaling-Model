@@ -1,0 +1,159 @@
+table Fact_Headcount
+	lineageTag: 24707bf0-4e4e-405d-8a8f-ddb2b76b863b
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6341d8f1-9e8d-40b0-a8cd-a72f2e360efd
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: f87f7f64-e360-451f-9f08-c72bd97303f6
+		summarizeBy: sum
+		sourceColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column Headcount
+		dataType: int64
+		lineageTag: b5d04919-a78a-43b0-8d87-07016a9df40f
+		summarizeBy: sum
+		sourceColumn: Headcount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column IsForecast
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7b89d1f4-5966-4597-9330-f2a630922e7a
+		summarizeBy: none
+		sourceColumn: IsForecast
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1ad6cfda-6f35-4959-9b9e-7842beb36206
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column YearMonth
+		dataType: string
+		lineageTag: 02ed2d6b-ab65-45d5-9f94-f917e24cb14a
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Headcount = m
+		mode: import
+		source = ```
+				let
+				    Source = Headcount_Mock1,
+				    
+				    YearsPresent = List.Distinct(Source[Year]),
+				    
+				    AllYearsProcessed = List.Transform(
+				        YearsPresent,
+				        each
+				            let
+				                yr = _,
+				                yearRows = Table.SelectRows(Source, (r) => r[Year] = yr),
+				                
+				                actualRows = Table.SelectRows(
+				                    yearRows, 
+				                    (r) => r[#"Total Headcount"] <> null and r[MonthNumber] < 12
+				                ),
+				                
+				                decRows = Table.SelectRows(yearRows, (r) => r[MonthNumber] = 12),
+				                decTarget = if Table.RowCount(decRows) = 0 then null 
+				                            else decRows{0}[#"Total Headcount"],
+				                
+				                lastActualMonth = if Table.RowCount(actualRows) = 0 then 0 
+				                                  else List.Max(actualRows[MonthNumber]),
+				                lastActualValue = if lastActualMonth = 0 then null
+				                                  else 
+				                                      let
+				                                          row = Table.SelectRows(yearRows, (r) => r[MonthNumber] = lastActualMonth)
+				                                      in
+				                                          if Table.RowCount(row) = 0 then null else row{0}[#"Total Headcount"],
+				                
+				                allMonths = List.Transform(
+				                    {1..12},
+				                    (m) => 
+				                        let
+				                            existingRow = Table.SelectRows(yearRows, (r) => r[MonthNumber] = m),
+				                            existingValue = if Table.RowCount(existingRow) = 0 then null else existingRow{0}[#"Total Headcount"],
+				                            
+				                            isActual = m <= lastActualMonth and existingValue <> null,
+				                            
+				                            interpolated = 
+				                                let
+				                                    rawValue = 
+				                                        if isActual then existingValue
+				                                        else if m = 12 and decTarget <> null then decTarget
+				                                        else if lastActualValue <> null and decTarget <> null and lastActualMonth < 12 then
+				                                            let
+				                                                remainingMonths = 12 - lastActualMonth,
+				                                                monthlyIncrease = (decTarget - lastActualValue) / remainingMonths
+				                                            in
+				                                                lastActualValue + (m - lastActualMonth) * monthlyIncrease
+				                                        else null
+				                                in
+				                                    if rawValue = null then null else Number.RoundUp(rawValue), // or Number.Round(rawValue) if you want to round to nearest
+				                            
+				                            isForecast = not isActual
+				                        in
+				                            [Year = yr, MonthNumber = m, Headcount = interpolated, IsForecast = isForecast]
+				                )
+				            in
+				                allMonths
+				    ),
+				    
+				    FlatList = List.Combine(AllYearsProcessed),
+				    
+				    AsTable = Table.FromRecords(FlatList),
+				    
+				    AddDate = Table.AddColumn(
+				        AsTable, "Date",
+				        each Date.EndOfMonth(#date([Year], [MonthNumber], 1)),
+				        type date
+				    ),
+				    
+				    AddYearMonth = Table.AddColumn(
+				        AddDate, "YearMonth",
+				        each Date.ToText([Date], "MM-yyyy"), // Fixed the format string
+				        type text
+				    ),
+				
+				    Typed = Table.TransformColumnTypes(
+				        AddYearMonth,
+				        {
+				            {"Year", Int64.Type}, 
+				            {"MonthNumber", Int64.Type}, 
+				            {"Headcount", Int64.Type}, 
+				            {"IsForecast", type logical}, 
+				            {"Date", type date},
+				            {"YearMonth", type text}
+				        }
+				    )
+				in
+				    Typed
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

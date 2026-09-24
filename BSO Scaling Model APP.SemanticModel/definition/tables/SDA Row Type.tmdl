@@ -1,0 +1,216 @@
+table 'SDA Row Type'
+	lineageTag: 8491e856-4631-4358-a9d9-778932964a38
+
+	measure 'SDA Table Value' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR RowType = SELECTEDVALUE('SDA Row Type'[RowType])
+			VAR LYYear = SelectedYear - 1
+			
+			VAR CYVolume = 
+			    CALCULATE(
+			        [SDA Driver Switch],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			VAR LYVolume = 
+			    CALCULATE(
+			        [SDA Driver Switch],
+			        'DateTable'[Year] = LYYear,
+			        ALL('DateTable')
+			    )
+			VAR CYFTE = 
+			    CALCULATE(
+			        [SDA FTE Switch Weighted],
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			VAR LYFTE = 
+			    CALCULATE(
+			        [SDA FTE Switch Weighted],
+			        'DateTable'[Year] = LYYear,
+			        ALL('DateTable')
+			    )
+			
+			RETURN
+			SWITCH(
+			    RowType,
+			    "Volume", 
+			        SWITCH(
+			            SELECTEDVALUE('DateTable'[Year]),
+			            SelectedYear, CYVolume,
+			            LYYear, LYVolume
+			        ),
+			    "FTE",
+			        SWITCH(
+			            SELECTEDVALUE('DateTable'[Year]),
+			            SelectedYear, CYFTE,
+			            LYYear, LYFTE
+			        )
+			)
+			```
+		lineageTag: b965f868-3b0d-463e-903b-8c7eda936d6a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Change %' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			VAR RowType = SELECTEDVALUE('SDA Row Type'[RowType])
+			VAR LYYear = SelectedYear - 1
+			
+			VAR CYValue = 
+			    CALCULATE(
+			        IF(RowType = "Volume", [SDA Driver Switch], [SDA FTE Switch Weighted]),
+			        'DateTable'[Year] = SelectedYear,
+			        ALL('DateTable')
+			    )
+			VAR LYValue = 
+			    CALCULATE(
+			        IF(RowType = "Volume", [SDA Driver Switch], [SDA FTE Switch Weighted]),
+			        'DateTable'[Year] = LYYear,
+			        ALL('DateTable')
+			    )
+			
+			RETURN
+			DIVIDE(CYValue - LYValue, LYValue) * 100
+			```
+		lineageTag: 1914c5ab-46e6-496b-a20a-6c119489225e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA LY Volume' =
+			
+			CALCULATE(
+			    [SDA Driver Switch],
+			    'DateTable'[Year] = YEAR(TODAY()) - 1,
+			    ALL('DateTable')
+			)
+		lineageTag: f75d982f-8f48-4035-bc43-471e5712609b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA CY Volume' =
+			
+			CALCULATE(
+			    [SDA Driver Switch],
+			    'DateTable'[Year] = YEAR(TODAY()),
+			    ALL('DateTable')
+			)
+		lineageTag: a09ed465-53c2-4410-8b00-a78896b6ce35
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA LY FTE' =
+			
+			CALCULATE(
+			    [SDA FTE Switch],
+			    'DateTable'[Year] = YEAR(TODAY()) - 1,
+			    ALL('DateTable')
+			)
+		lineageTag: 0caaf2e7-d954-4608-a55c-2d05ed36dc88
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA CY FTE' =
+			
+			CALCULATE(
+			    [SDA FTE Switch],
+			    'DateTable'[Year] = YEAR(TODAY()),
+			    ALL('DateTable')
+			)
+		lineageTag: 3c9140eb-02fd-4669-b5af-57f9a02db25c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Volume Change %' =
+			
+			DIVIDE(
+			    [SDA CY Volume] - [SDA LY Volume],
+			    [SDA LY Volume]
+			) * 100
+		lineageTag: 040bc41c-9957-4742-97a6-811bf86081ce
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA FTE Change %' =
+			
+			DIVIDE(
+			    [SDA CY FTE] - [SDA LY FTE],
+			    [SDA LY FTE]
+			) * 100
+		lineageTag: 02ff3f23-173d-4802-bca9-7e7bf4931ae9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SDA Analysis Category' =
+			
+			VAR VolChange = [SDA Volume Change %]
+			VAR FTEChange = [SDA FTE Change %]
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    // Volume up, FTE down = best case
+			    VolChange > 0 && FTEChange <= 0,
+			        "✅ Productivity gain — more output with fewer resources",
+			
+			    // Volume up, FTE up but volume growing faster = good
+			    VolChange > 0 && FTEChange > 0 && VolChange > FTEChange,
+			        "✅ Scaling efficiently — volume growing faster than headcount",
+			
+			    // Volume up, FTE up at same or faster rate = neutral/concern
+			    VolChange > 0 && FTEChange > 0 && VolChange <= FTEChange,
+			        "⚠️ Volume growth not keeping pace with headcount increase",
+			
+			    // Volume down, FTE down faster = right-sizing well
+			    VolChange < 0 && FTEChange < 0 && ABS(FTEChange) > ABS(VolChange),
+			        "✅ Right-sizing — headcount reduced faster than volume decline",
+			
+			    // Volume down, FTE down slower = concern
+			    VolChange < 0 && FTEChange < 0 && ABS(FTEChange) < ABS(VolChange),
+			        "⚠️ Volume declining faster than headcount adjustment",
+			
+			    // Volume down, FTE up = worst case
+			    VolChange < 0 && FTEChange > 0,
+			        "🔴 Capacity under pressure — volume declining while headcount grows",
+			
+			    // Volume flat, FTE down = good
+			    VolChange = 0 && FTEChange < 0,
+			        "✅ Same output with fewer resources",
+			
+			    "➡️ Stable — no significant change in volume or headcount"
+			)
+		lineageTag: 631287ee-0b14-450b-a407-a3d5e9cb60d6
+
+	column RowType
+		lineageTag: 26b08859-a56d-4b3b-b98d-057ed88115ce
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RowType]
+
+		annotation SummarizationSetBy = Automatic
+
+	column RowOrder
+		formatString: 0
+		lineageTag: 44408ba8-67b7-4443-8a93-e15a75d6a48f
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [RowOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'SDA Row Type' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "RowType", STRING,
+				    "RowOrder", INTEGER,
+				    {
+				        {"Volume", 1},
+				        {"FTE", 2}
+				    }
+				)
+
+	annotation PBI_Id = c8dc9841536342008950d57527f2c8e5
+

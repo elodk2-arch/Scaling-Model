@@ -1,0 +1,122 @@
+table BaseProcessWeights
+	lineageTag: e0b922f8-7680-4f7e-a69e-69d053ad95a4
+
+	measure 'SubStream Weight (Text)' = ```
+			
+			VAR CurrentSubStream =
+			    SELECTEDVALUE('FTE Map'[Substream Abbreviation])
+			VAR W =
+			    CALCULATE(
+			        SELECTEDVALUE(BaseProcessWeights[Weight]),
+			        BaseProcessWeights[SubStream] = CurrentSubStream
+			    )
+			RETURN
+			CurrentSubStream & " Weight is: " & FORMAT(W, "0") & "%"
+			
+			```
+		lineageTag: 1a6cbe0d-f60f-4a03-9fc9-36d597545872
+
+	measure 'Weight %' = ```
+			
+			DIVIDE (
+			    SELECTEDVALUE ( BaseProcessWeights[Weight] ),
+			    100
+			)
+			
+			```
+		lineageTag: 6674f445-06ce-44e8-86d8-7e03515a360c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SubStream
+		lineageTag: 86554269-55c9-438f-8003-f246839e987e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [SubStream]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weight
+		lineageTag: 037d5f30-05bb-48ab-8f44-c56818654d38
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weight]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Driver
+		lineageTag: d682ded9-c77c-4a2e-b412-107f49c0a56e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Driver]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BaseProcessWeights = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "SubStream", STRING,
+				    "Driver", STRING,
+				    "Weight", DOUBLE,
+				    {
+				        {"AP","AP Vendor Invoices",100},
+				
+				        {"CAB2B","Payments Posted B2B",100},
+				        {"D2C","GL Reconciliations - Clearings",100},
+				        {"CC","Average Turnover on Active Customers",100},
+				        {"CM","Active Customer Base CM",100},
+				        {"EMD","Employee Masterdata Requests",100},
+				        {"FP","Risk Items Screened",100},
+				
+				        {"ESO","Scheduled Admin Tasks - Transactions",50},
+				        {"ESO","Service Requests",50},
+				
+				        {"GL","Fixed Assets and Leases",25},
+				        {"GL","General Accounting and Close",50},
+				        {"GL","Regulatory Accounting",25},
+				
+				        {"INV","Documents Created",100},
+				
+				        {"Other","activecustomerbasecmtransition",0},    // OLD NAME – no new equivalent found
+				        {"Other","servicerequestsppc",0},                 // OLD NAME – no new equivalent found
+				
+				        {"PC","Bank Transactions",40},
+				        {"PC","Manual Payments",60},
+				
+				        {"PS","PO Lines",100},
+				        {"PY","Payslips",100},
+				
+				        {"RS","Interviews Scheduled - Salaried + CSE",16.66},
+				        {"RS","Interviews Scheduled - Executive",16.66},
+				        {"RS","Interviews Scheduled - Hourly",16.66},
+				        {"RS","Resumes Received - Hourly",25},
+				        {"RS","Resumes Received - Salaried + CSE + Executive",25},
+				
+				        {"SD","SD Tickets AP",40},
+				        {"SD","SD Tickets HR",40},
+				        {"SD","SD Tickets TEM",20},
+				
+				        {"TAX","Sanctioned Party Screening",6},
+				        {"TAX","Tax Controls",58},
+				        {"TAX","Tax Filings",23},
+				        {"TAX","Tax Reconciliations",13},
+				
+				        {"TEM","TEM Reporting Lines Below 10 USD",0},
+				        {"TEM","TEM Reporting Lines SAP Robot",0},
+				        {"TEM","TEM Reporting Lines SAP",100},
+				
+				        {"VMD","Vendor and Customer Masterdata Requests",77},
+				        {"VMD","Vendor Data Privacy Audits",23}
+				    }
+				)
+				
+				
+				
+				```
+
+	annotation PBI_Id = ec0d5bce7dd241059f96ba75c72f99a7
+

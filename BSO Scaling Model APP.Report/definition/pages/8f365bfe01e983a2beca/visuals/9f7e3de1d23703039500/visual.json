@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "9f7e3de1d23703039500",
+  "position": {
+    "x": 915.49212333378216,
+    "y": 18.908615284002387,
+    "z": 6000,
+    "height": 130.78458904768317,
+    "width": 335.62792129104236,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DateTable"
+                    }
+                  },
+                  "Property": "MonthName"
+                }
+              },
+              "queryRef": "DateTable.MonthName",
+              "nativeQueryRef": "MonthName"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

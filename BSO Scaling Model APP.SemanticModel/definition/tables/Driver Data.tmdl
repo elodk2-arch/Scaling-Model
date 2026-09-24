@@ -1,0 +1,276 @@
+table 'Driver Data'
+	lineageTag: 09c6d5a6-b648-45aa-97c3-2f9361882e3f
+
+	measure 'Output Last 12 Months' =
+			
+			VAR LastActualDate =
+			    CALCULATE(
+			        MAX('Driver Data'[Reporting Date]),
+			        'Driver Map'[Version] = "Total",
+			        'Driver Data'[Value] <> 0,
+			        ALL('DateTable')
+			    )
+			RETURN
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'Driver Map'[Version] = "Total",
+			    DATESINPERIOD(
+			        'Driver Data'[Reporting Date],
+			        LastActualDate,
+			        -12,
+			        MONTH
+			    ),
+			    ALL('DateTable')
+			)
+		formatString: #,0
+		lineageTag: 833d2acd-61c9-401b-9166-e42d56fb10b5
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Output Previous 12 Months' =
+			
+			VAR LastActualDate =
+			    CALCULATE(
+			        MAX('Driver Data'[Reporting Date]),
+			        'Driver Map'[Version] = "Total",
+			        'Driver Data'[Value] <> 0,
+			        ALL('DateTable')
+			    )
+			VAR PrevEndDate = EDATE(LastActualDate, -12)
+			RETURN
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'Driver Map'[Version] = "Total",
+			    DATESINPERIOD(
+			        'Driver Data'[Reporting Date],
+			        PrevEndDate,
+			        -12,
+			        MONTH
+			    ),
+			    ALL('DateTable')
+			)
+		lineageTag: 9a2ba972-7810-4657-b3e8-ec42effb9a3b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Output Growth (Numeric)' = ```
+			
+			DIVIDE(
+			    [Output Last 12 Months],
+			    [Output Previous 12 Months]
+			) -1
+			
+			```
+		lineageTag: 2ae15a37-18fd-4cc1-9202-2aedda1a04f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Output Growth Latest (Numeric)' = ```
+			
+			CALCULATE(
+			    [Output Growth (Numeric)],
+			    REMOVEFILTERS('DateTable')
+			)
+			
+			```
+		lineageTag: b5090eea-b500-458e-ab40-9b0288d2fece
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Driver total Forecast' = ```
+			
+			VAR CurrentYear =
+			    SELECTEDVALUE('DateTable'[Year])
+			VAR CurrentMonth =
+			    SELECTEDVALUE('DateTable'[MonthNumber])
+			VAR SelectedTNames =
+			    ALLSELECTED('Driver Data'[Driver ID])
+			
+			// Get 2025 actuals
+			VAR Driver_2025 =
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'DateTable'[Year] = 2025,
+			    'DateTable'[MonthNumber] = CurrentMonth,
+			    'Driver Data'[Driver ID] IN SelectedTNames,
+			    'Driver Map'[Version] = "total",
+			    ALLEXCEPT('Driver Data', 'Driver Map'[Service Region])
+			)
+			
+			
+			// Fallback to 2024 same month 
+			VAR Driver_2024 =
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'DateTable'[Year] = 2024,
+			    'DateTable'[MonthNumber] = CurrentMonth,
+			    'Driver Data'[Driver ID] IN SelectedTNames,
+			    'Driver Map'[Version] = "total",
+			    ALLEXCEPT('Driver Data', 'Driver Map'[Service Region])
+			)
+			
+			
+			VAR GrowthPct = [Output Growth Latest (Numeric)]
+			
+			// fallback with growth
+			RETURN
+			IF (
+			    CurrentYear = 2025,
+			    IF (
+			        NOT ISBLANK ( Driver_2025 ),
+			        Driver_2025,
+			        IF (
+			            NOT ISBLANK ( Driver_2024 ) && NOT ISBLANK ( GrowthPct ),
+			            Driver_2024 * ( 1 + GrowthPct ),
+			            BLANK ()
+			        )
+			    ),
+			    BLANK ()
+			)
+			
+			```
+		lineageTag: f82d8833-5c18-423d-8361-520aaa6d5492
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Output Growth (%)' = ```
+			
+			VAR Output_Last = [Output Last 12 Months]
+			VAR Output_Prev = [Output Previous 12 Months]
+			RETURN
+			IF(
+			    Output_Prev = 0 || ISBLANK(Output_Prev),
+			    BLANK(),
+			    (Output_Last / Output_Prev - 1) * 100
+			)
+			
+			```
+		lineageTag: 636ec4ee-4e93-41bc-92ee-667bf8d70c26
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Output Last 12 Months (manual ITSD)' = ```
+			
+			VAR LastActualDate =
+			    CALCULATE(
+			        MAX('Driver Data'[Reporting Date]),
+			        'Driver Map'[Version] = "Manual",
+			        'Driver Data'[Value] <> 0,
+			        ALL('DateTable')  // Ignore any date slicers
+			    )
+			RETURN
+			CALCULATE(
+			    SUM('Driver Data'[Value]),
+			    'Driver Map'[Version] = "Manual",
+			    DATESINPERIOD(
+			        'Driver Data'[Reporting Date],
+			        LastActualDate,
+			        -12,
+			        MONTH
+			    ),
+			    ALL('DateTable')  // Ignore any date slicers
+			)
+			
+			```
+		lineageTag: 38fdc48a-d810-495b-b92a-ef068d0ff6b1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)2' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM('Driver Data'[Value]),
+			        'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			    ),
+			    CALCULATE(
+			        SUM('Driver Data'[Value]),
+			        'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE"
+			    )
+			)
+			
+			```
+		lineageTag: 8387145e-7463-477b-b790-33102d854407
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Actual Resumes Recived (Salaried + CSE + Executive)2' = ```
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Driver Map'[Version] = "Manual",
+			    'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			)
+			
+			```
+		lineageTag: 7fc27497-9498-4251-902b-306498bd9b08
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column crfc0_driverid
+		dataType: string
+		lineageTag: 560213f6-6e89-46b2-9306-78fc91e0c56c
+		summarizeBy: none
+		sourceColumn: crfc0_driverid
+
+		annotation SummarizationSetBy = Automatic
+
+	column crfc0_name
+		dataType: string
+		lineageTag: 5b1d53cd-04d3-4812-b066-3524ba1fa887
+		summarizeBy: none
+		sourceColumn: crfc0_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Reporting Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7b0e17d1-2680-4ca2-ac79-c0b3d7100b50
+		summarizeBy: none
+		sourceColumn: Reporting Date
+
+		variation Variation
+			isDefault
+			relationship: 97827a88-7efd-4420-99c7-a92bab25dfb1
+			defaultHierarchy: LocalDateTable_f86ad14d-51c6-4dee-8428-cfb44b4882df.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Driver ID'
+		dataType: string
+		lineageTag: 2a92f629-9bcc-4e8b-b408-007712356471
+		summarizeBy: none
+		sourceColumn: Driver ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: 8caa507b-ab3a-49c4-8115-4e57a820e3e9
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Driver Data' = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows(null),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"1d1ebcb0-7e1e-4303-b742-3817a202b865" = Workspaces{[workspaceId="1d1ebcb0-7e1e-4303-b742-3817a202b865"]}[Data],
+				    #"2ead87da-5db1-4b70-80d0-7afc95ed7102" = #"1d1ebcb0-7e1e-4303-b742-3817a202b865"{[dataflowId="2ead87da-5db1-4b70-80d0-7afc95ed7102"]}[Data],
+				    #"Driver Data_" = #"2ead87da-5db1-4b70-80d0-7afc95ed7102"{[entity="Driver Data",version=""]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(#"Driver Data_", each ([Driver ID] <> "crfc0_activecustomerbasecmtotal_global" and [Driver ID] <> "crfc0_apvendorinvoicestotal_global" and [Driver ID] <> "crfc0_avgturnoveronactivecustomersmanual_global" and [Driver ID] <> "crfc0_avgturnoveronactivecustomerstotal_global" and [Driver ID] <> "crfc0_banktransactionstotal_global" and [Driver ID] <> "crfc0_documentscreatedtotal_global" and [Driver ID] <> "crfc0_employeemasterdatarequeststotal_global" and [Driver ID] <> "crfc0_fixedassetsandleasestotal_global" and [Driver ID] <> "crfc0_generalaccountingandclosetotal_global" and [Driver ID] <> "crfc0_glreconciliationsclearingstotal_global" and [Driver ID] <> "crfc0_interviewsschedtotal_ame" and [Driver ID] <> "crfc0_interviewsschedtotal_apac" and [Driver ID] <> "crfc0_interviewsschedtotal_cn" and [Driver ID] <> "crfc0_interviewsschedtotal_emea" and [Driver ID] <> "crfc0_interviewsschedtotal_global" and [Driver ID] <> "crfc0_paymentspostedb2btotal_global" and [Driver ID] <> "crfc0_payslipstotal_global" and [Driver ID] <> "crfc0_polinestotal_global" and [Driver ID] <> "crfc0_regulatoryaccountingtotal_global" and [Driver ID] <> "crfc0_resumesrectotal_global" and [Driver ID] <> "crfc0_sanctionedpartyscreeningtotal_global" and [Driver ID] <> "crfc0_scadmintaskstransactionstotal_global" and [Driver ID] <> "crfc0_sdticketstotal_global" and [Driver ID] <> "crfc0_servicerequeststotal_global" and [Driver ID] <> "crfc0_servicerequeststotal_n/a" and [Driver ID] <> "crfc0_taxcontrolstotal_global" and [Driver ID] <> "crfc0_taxfilingstotal_global" and [Driver ID] <> "crfc0_taxreconciliationstotal_global" and [Driver ID] <> "crfc0_temreplinestotal_global" and [Driver ID] <> "crfc0_vendorandcustomermasterdatareqtotal_global" and [Driver ID] <> "crfc0_vendordataprivacyauditstotal_global"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,64 @@
+table DateTable
+	lineageTag: 4a061ff7-5e5d-4031-b6ac-970669b5483a
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 827284d6-88d6-4593-a672-4cceb733334b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 870f3701-d9cd-4ded-b8d9-057e1684d118
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		formatString: 0
+		lineageTag: 55eeaa51-852d-4da9-b5e1-b0b012851a4c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthNumber]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		lineageTag: 8f8a2000-38da-432b-9c44-33b78277c025
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthName]
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		lineageTag: 8961c82e-9de5-4ee0-ad85-f86989e32001
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [YearMonth]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS(
+				    CALENDAR(DATE(2020,1,1), DATE(2030,12,31)),
+				    "Year", YEAR([Date]),
+				    "MonthNumber", MONTH([Date]),
+				    "MonthName", FORMAT([Date], "MMMM"),
+				    "YearMonth", FORMAT([Date], "YYYY-MM")
+				)
+				
+				```
+
+	annotation PBI_Id = 847b5b38f1ac4925ab1f8fff30ca674d
+

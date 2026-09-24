@@ -1,0 +1,182 @@
+table 'FTE Data'
+	lineageTag: c5799c8d-e45e-4fc1-909f-98df207df9bb
+
+	measure 'Total Mapped FTE (working) 1' = SUM('FTE Data'[Mapped FTE])
+		lineageTag: 39ea5605-c270-4832-afdf-4208905ed4f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column crfc0_fte_dataid
+		dataType: string
+		lineageTag: 8f437bcf-5332-4f58-b670-2eb88359b365
+		summarizeBy: none
+		sourceColumn: crfc0_fte_dataid
+
+		annotation SummarizationSetBy = Automatic
+
+	column crfc0_idx
+		dataType: string
+		lineageTag: 45bad0bd-0978-4dc2-a4e0-b138106e63f2
+		summarizeBy: none
+		sourceColumn: crfc0_idx
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 76d9f1e9-631c-4e37-ace8-8b3c7449ce00
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 93b4f632-1b58-4f21-bfe4-c0bd67f22531
+			defaultHierarchy: LocalDateTable_4da41d75-4be3-40c5-ab49-388add1b9571.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Employee Key 12 Digit'
+		dataType: string
+		lineageTag: b910a827-ca0b-4ced-8063-3c2f3aef4528
+		summarizeBy: none
+		sourceColumn: Employee Key 12 Digit
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Type'
+		dataType: string
+		lineageTag: 4e4aa8c5-5829-4e03-8940-19bc4190ded4
+		summarizeBy: none
+		sourceColumn: Employee Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Type Main'
+		dataType: string
+		lineageTag: d63dd239-785b-455f-a242-ba3838ae0958
+		summarizeBy: none
+		sourceColumn: Employee Type Main
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Type Specification'
+		dataType: string
+		lineageTag: 66e66a66-2950-442c-bc29-5e92aefd13cd
+		summarizeBy: none
+		sourceColumn: Employee Type Specification
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Master Cost Center'
+		dataType: string
+		lineageTag: 13ffb9af-1ffd-4a65-ba5b-7207e7f8c9e1
+		summarizeBy: none
+		sourceColumn: Master Cost Center
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Master Cost Center Key'
+		dataType: string
+		lineageTag: 2aaa6a8f-8998-4868-968f-ad21a9c59044
+		summarizeBy: none
+		sourceColumn: Master Cost Center Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: 5edca97a-d5df-4451-9ede-a0d4ab45ec04
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Organizational Unit L5'
+		dataType: string
+		lineageTag: 7a7c34a4-917c-42dd-b0c4-8d2cc1fcac19
+		summarizeBy: none
+		sourceColumn: Organizational Unit L5
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Leave Status'
+		dataType: string
+		lineageTag: 415dcae7-93c0-4852-b6ee-b4fe43bf1f64
+		summarizeBy: none
+		sourceColumn: Leave Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Active
+		dataType: int64
+		formatString: 0
+		lineageTag: 591b8be6-38b4-4410-a3fe-0c1487620d75
+		summarizeBy: sum
+		sourceColumn: Active
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Value'
+		dataType: double
+		lineageTag: 84768bbd-e3e7-4ff8-82b6-0b06b8e10780
+		summarizeBy: sum
+		sourceColumn: FTE Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Employment Status'
+		dataType: string
+		lineageTag: 9076889a-6b3c-4734-a8f2-6df1d3dbd826
+		summarizeBy: none
+		sourceColumn: Employment Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Category ID'
+		dataType: string
+		lineageTag: e2143550-fe9b-4246-9f81-8f9dc9701b73
+		summarizeBy: none
+		sourceColumn: FTE Category ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mapped FTE'
+		dataType: double
+		lineageTag: 8988f7ed-f826-4a3d-bdda-6e67968aa358
+		summarizeBy: sum
+		sourceColumn: Mapped FTE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Custom
+		dataType: string
+		lineageTag: 599d4fcb-62ba-4b16-afba-354f5e4379f2
+		summarizeBy: none
+		sourceColumn: Custom
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'FTE Data' = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows(null),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"1d1ebcb0-7e1e-4303-b742-3817a202b865" = Workspaces{[workspaceId="1d1ebcb0-7e1e-4303-b742-3817a202b865"]}[Data],
+				    #"2ead87da-5db1-4b70-80d0-7afc95ed7102" = #"1d1ebcb0-7e1e-4303-b742-3817a202b865"{[dataflowId="2ead87da-5db1-4b70-80d0-7afc95ed7102"]}[Data],
+				    #"FTE Data_" = #"2ead87da-5db1-4b70-80d0-7afc95ed7102"{[entity="FTE Data",version=""]}[Data],
+				    #"Added Conditional Column" = Table.AddColumn(#"FTE Data_", "Custom", each if Text.Contains([FTE Category ID], "transition") then "Transition" else if Text.Contains([Employee Type], "Regular") then "LEGO Empl." else if Text.Contains([Employee Type], "Outsourced") then "Contract Worker" else if Text.Contains([Employee Type], "Temp") then "LEGO Temp." else "External")
+				in
+				    #"Added Conditional Column"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

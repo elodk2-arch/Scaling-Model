@@ -1,0 +1,78 @@
+table 'FTE Map'
+	lineageTag: 23bd98c0-3299-4ffc-880e-b3f859ab32d3
+
+	column 'FTE Category ID'
+		dataType: string
+		lineageTag: ca6270a7-9d15-4384-b1a0-9b2dac5cc605
+		summarizeBy: none
+		sourceColumn: FTE Category ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Category Name'
+		dataType: string
+		lineageTag: d1cbbb7f-3a8f-4df5-80bc-70bcb37a296b
+		summarizeBy: none
+		sourceColumn: FTE Category Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Category Type'
+		dataType: string
+		lineageTag: 6583b77c-676e-4154-85aa-311560d2fe22
+		summarizeBy: none
+		sourceColumn: FTE Category Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FTE Family'
+		dataType: string
+		lineageTag: d9047e55-b91c-41c4-8f1e-afd65f950256
+		summarizeBy: none
+		sourceColumn: FTE Family
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stream Abbreviation'
+		dataType: string
+		lineageTag: 054986cc-2827-4fc3-983f-31b7143c10a6
+		summarizeBy: none
+		sourceColumn: Stream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: b2219429-63b0-408c-93c8-eba555ab6a83
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+		sortByColumn: 'Stream Abbreviation'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Functional Domain'
+		dataType: string
+		lineageTag: 2a49e487-16fc-48f1-a575-fffd47928d5f
+		summarizeBy: none
+		sourceColumn: Functional Domain
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'FTE Map' = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows(null),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"1d1ebcb0-7e1e-4303-b742-3817a202b865" = Workspaces{[workspaceId="1d1ebcb0-7e1e-4303-b742-3817a202b865"]}[Data],
+				    #"2ead87da-5db1-4b70-80d0-7afc95ed7102" = #"1d1ebcb0-7e1e-4303-b742-3817a202b865"{[dataflowId="2ead87da-5db1-4b70-80d0-7afc95ed7102"]}[Data],
+				    #"FTE Map_" = #"2ead87da-5db1-4b70-80d0-7afc95ed7102"{[entity="FTE Map",version=""]}[Data]
+				in
+				    #"FTE Map_"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

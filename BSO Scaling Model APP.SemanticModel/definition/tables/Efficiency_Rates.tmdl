@@ -1,0 +1,43 @@
+table Efficiency_Rates
+	lineageTag: cc2f9146-4dad-4474-9c32-dc48a461a912
+
+	column 'LY Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: cdffd77e-f259-46da-906f-e2f4fda0f269
+		summarizeBy: sum
+		sourceColumn: LY Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Efficiency
+		dataType: double
+		lineageTag: aef750c2-2b1f-495d-a8c4-c1dc5f3ae3ab
+		summarizeBy: sum
+		sourceColumn: Efficiency
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Efficiency_Rates = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRecords({
+				        [LY Year = 2023, Efficiency = 0.07],
+				        [LY Year = 2024, Efficiency = 0.07],
+				        [LY Year = 2025, Efficiency = 0.05],
+				        [LY Year = 2026, Efficiency = 0.05]
+				    }),
+				    TypedTable = Table.TransformColumnTypes(Source, {
+				        {"LY Year", Int64.Type},
+				        {"Efficiency", type number}
+				    })
+				in
+				    TypedTable
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

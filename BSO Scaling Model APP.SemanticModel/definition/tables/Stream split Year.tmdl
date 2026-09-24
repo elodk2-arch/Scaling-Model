@@ -1,0 +1,184 @@
+table 'Stream split Year'
+	lineageTag: 6f5215d3-39f9-4fc0-824d-525ca9623398
+
+	measure 'Selected Measure Value (Year)' = ```
+			
+			VAR SelectedMeasure = SELECTEDVALUE('Stream split Year'[MeasureName])
+			
+			// Get all selected substreams
+			VAR StreamTable = 
+			    CALCULATETABLE(
+			        VALUES('Sub_stream_combiner'[Substream abbreviation]),
+			        ALLSELECTED('Sub_stream_combiner'[Substream abbreviation])
+			    )
+			VAR SelectedStreamCount = COUNTROWS(StreamTable)
+			
+			// Get HC streams dynamically from Stream_Forecast_Method
+			VAR HCStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_ratio"
+			    )
+			
+			// Get HCAvg streams dynamically from Stream_Forecast_Method
+			VAR HCAvgStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_avg"
+			    )
+			
+			VAR RSStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "rs"
+			    )
+			
+			// GL streams - hardcoded since it has unique vacancy logic
+			VAR GLStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "gl"
+			    )
+			
+			// All selected streams must be HC streams
+			VAR HCOverlapCount = 
+			    COUNTROWS(INTERSECT(StreamTable, HCStreams))
+			VAR IsHeadcountStream = 
+			    SelectedStreamCount > 0
+			    && HCOverlapCount = SelectedStreamCount
+			
+			// All selected streams must be HCAvg streams
+			VAR HCAvgOverlapCount = 
+			    COUNTROWS(INTERSECT(StreamTable, HCAvgStreams))
+			VAR IsHeadcountAvgStream = 
+			    SelectedStreamCount > 0
+			    && HCAvgOverlapCount = SelectedStreamCount
+			
+			// All selected streams must be GL streams
+			VAR GLOverlapCount = 
+			    COUNTROWS(INTERSECT(StreamTable, GLStreams))
+			VAR IsGLStream = 
+			    SelectedStreamCount > 0
+			    && GLOverlapCount = SelectedStreamCount
+			
+			VAR Result = 
+			    SWITCH(TRUE(),
+			
+			        ISBLANK(SelectedMeasure), BLANK(),
+			
+			        // HC streams view
+			        IsHeadcountStream,
+			            SWITCH(SelectedMeasure,
+			                "Total Driver",                    [Total Driver new],
+			                "Total Headcount",                 [Headcount Forecast Dynamic],
+			                "No. of driver / Total Headcount", [Driver HC Ratio],
+			                "FTE Actuals",                     IF(CONTAINSROW(StreamTable, "SD"), [Active FTE Avg], [FTE AVG]), // Adjusted part
+			                "Activity Scaled FTE",             [Activity Scaled FTE total],
+			                "Activity Scaled FTE + 5%",        [Activity Scaled FTE total + Eff],
+			                BLANK()
+			            ),
+			
+			        // HCAvg streams view
+			        IsHeadcountAvgStream,
+			            SWITCH(SelectedMeasure,
+			                "Manual Driver",                   [manual driver new],
+			                "Total Headcount",                 [Headcount Forecast Dynamic],
+			                "No. of driver / Total Headcount", [Driver HC Ratio],
+			                "FTE Actuals",                     [FTE AVG],
+			                "Activity Scaled FTE",             [Activity Scaled FTE AVG],
+			                "Activity Scaled FTE + 5%",        [Activity Scaled FTE AVG + Eff],
+			                BLANK()
+			            ),
+			
+			        // GL streams view
+			        IsGLStream,
+			            SWITCH(SelectedMeasure,
+			                "Total Driver",                    [Total Driver new],
+			                "Automated Driver",                [Auto Driver new],
+			                "Manual Driver",                   [Manual Driver new],
+			                "Manual Ratio",                    [Manual %],
+			                "Total Driver - Last Year SM",     [Total Driver - Last Year SM],
+			                "Manual / FTE (actuals)",          [Manual Driver per FTE],
+			                "FTE Actuals",                     [Active FTE Avg],
+			                "Activity Scaled FTE",             [Activity Scaled FTE GL],
+			                "Activity Scaled FTE + 5%",        [Activity Scaled FTE GL + Eff],
+			                BLANK()
+			            ),
+			
+			        // RS streams view
+			        RSStreams = "RS",
+			            SWITCH(SelectedMeasure,
+			                "Total Driver",                    [Total Driver new],
+			                "Manual Driver",                   [Manual Driver new],
+			                "Automated Driver",                [Auto Driver new],
+			                "Manual Ratio",                    [Interviews manual rate (real)],
+			                "Activated Recruitments",          [Total Activated Recruitments],
+			                "FTE Avg",                         [Active FTE Avg],
+			                "Activity Scaled FTE",             [RS Stream Activity Total (Year)],
+			                "Activity Scaled FTE + 5%",        [RS Stream Activity Total +5 (Year)],
+			                BLANK()
+			            ),
+			
+			        // Growth streams view (default)
+			        SWITCH(SelectedMeasure,
+			            "Total Driver",                [Total Driver new],
+			            "Automated Driver",            [Auto Driver new],
+			            "Manual Driver",               [Manual Driver new],
+			            "Manual Ratio",                [Manual %],
+			            "Total Driver - Last Year SM", [Total Driver - Last Year SM],
+			            "Manual / FTE (actuals)",      [Manual Driver per FTE],
+			            "FTE Actuals",                 [Active FTE Avg],
+			            "Activity Scaled FTE",         [Activity Scaled FTE Weighted],
+			            "Activity Scaled FTE + 5%",    [Activity Scaled FTE + Eff Weighted],
+			            BLANK()
+			        )
+			    )
+			
+			RETURN Result
+			```
+		lineageTag: fe17a413-8fa7-4fa8-a805-6edd0282bf7f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SortOrder
+		lineageTag: c699db95-e802-4ea3-844e-d9e682d869a2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SortOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MeasureName
+		lineageTag: 9f437937-677a-43e4-89f9-6f555d1675a8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MeasureName]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Stream split Year' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "MeasureName", STRING,
+				    "SortOrder", INTEGER,
+				    {
+				        {"Total Driver", 1},
+				        {"Automated Driver", 3},
+				        {"Manual Driver", 2},
+				        {"Manual Ratio", 4},
+				        {"Total Driver - Last Year SM", 5},
+				        {"Manual / FTE (actuals)", 7},
+				        {"FTE Actuals", 6},
+				        {"Activity Scaled FTE", 100},
+				        {"Activity Scaled FTE + 5%", 101},
+				        {"Total Headcount", 10},
+				        {"No. of driver / Total Headcount", 11}
+				    })
+
+	annotation PBI_Id = fb194a8d83264c088de7f8d46529db19
+

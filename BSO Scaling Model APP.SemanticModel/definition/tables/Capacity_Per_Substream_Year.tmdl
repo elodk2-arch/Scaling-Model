@@ -1,0 +1,261 @@
+table Capacity_Per_Substream_Year
+	lineageTag: 79414cb9-436c-4329-a2fc-61d07a5ab928
+
+	measure 'LY FTE Avg Used' =
+			
+			VAR CurrentSub = SELECTEDVALUE ( 'Fact_Actuals'[Substream Abbreviation] )
+			VAR CurrentYear = YEAR ( MAX ( 'Fact_Actuals'[Reporting Date] ) )
+			VAR LYYear = CurrentYear - 1
+			VAR MonthlyFTE =
+			    SUMMARIZE (
+			        FILTER (
+			            ALL ( 'FTE Data' ),
+			            'FTE Data'[Active] = 1
+			                && RELATED ( 'FTE Map'[Substream Abbreviation] ) = CurrentSub
+			                && YEAR ( 'FTE Data'[Date] ) = LYYear
+			        ),
+			        'FTE Data'[Date],
+			        "FTESum", SUM ( 'FTE Data'[Mapped FTE] )
+			    )
+			RETURN
+			    AVERAGEX ( MonthlyFTE, [FTESum] )
+		lineageTag: 15b54add-1d88-427f-9f0f-4f7922b95ff3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FTE AVG' = SUM ( 'Capacity_Per_Substream_Year'[FTEAvg] )
+		lineageTag: 365ffbae-7c0f-41eb-b63e-6b621f78ea4c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Efficiency% = "5%"
+		lineageTag: 14c65e26-ac73-46a0-a2e1-cd80e840449a
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: 061d91bb-aa8c-4017-ab5d-20695129895c
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: f958f1b5-e2ca-4465-992d-1319b1f48f3d
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column ManualSum
+		dataType: double
+		lineageTag: 667dd5ac-d1d1-48d8-92f1-0e1ce9844d97
+		summarizeBy: sum
+		sourceColumn: ManualSum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column FTEAvg
+		dataType: double
+		lineageTag: 0410edc0-a92e-44f4-ae19-f00a7882383d
+		summarizeBy: sum
+		sourceColumn: FTEAvg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Manual per FTE Avg'
+		dataType: double
+		lineageTag: b86c2c1d-10ed-4381-a072-32b72bc29412
+		summarizeBy: sum
+		sourceColumn: Manual per FTE Avg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Efficiency
+		dataType: double
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: ae8d2b05-7327-4c01-b23b-fc34fa5944e9
+		summarizeBy: none
+		sourceColumn: Efficiency
+
+		annotation SummarizationSetBy = User
+
+	column 'Manual per FTE Avg + Eff'
+		dataType: double
+		lineageTag: 95c226ff-68ea-44ba-b6b3-58d34b0cc2f6
+		summarizeBy: sum
+		sourceColumn: Manual per FTE Avg + Eff
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Driver Name'
+		dataType: string
+		lineageTag: 4562363f-ff76-480a-8b1a-36f089294240
+		summarizeBy: none
+		sourceColumn: Driver Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Manual per FTE LY Baseline'
+		dataType: double
+		lineageTag: 88f04376-4780-451d-84ba-6cfbd3fa3d2d
+		summarizeBy: sum
+		sourceColumn: Manual per FTE LY Baseline
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Capacity_Per_Substream_Year = m
+		mode: import
+		source = ```
+				let
+				    // ─────────────────────────────────────────────
+				    // Get Manual Driver totals per (Substream, Driver Name, Year)
+				    // ─────────────────────────────────────────────
+				    DriverJoined = Table.NestedJoin(
+				        #"Driver Data", {"Driver ID"},
+				        #"Driver Map", {"Driver ID"},
+				        "MapData",
+				        JoinKind.Inner
+				    ),
+				    DriverExpanded = Table.ExpandTableColumn(
+				        DriverJoined, "MapData",
+				        {"Version", "Substream Abbreviation", "Driver Name"},
+				        {"Version", "Substream Abbreviation", "Driver Name"}
+				    ),
+				    
+				    ManualOnly = Table.SelectRows(DriverExpanded, each [Version] = "Manual"),
+				
+				    // Deduplicate on Driver Name + Date to avoid region duplication
+				    ManualDeduped = Table.Distinct(
+				        Table.SelectColumns(ManualOnly, 
+				            {"Driver Name", "Substream Abbreviation", "Reporting Date", "Value"}
+				        )
+				    ),
+				
+				    AddDriverYear = Table.AddColumn(
+				        ManualDeduped, "Year",
+				        each Date.Year([Reporting Date]), Int64.Type
+				    ),
+				
+				    // Group to get ManualSum per (Substream, Driver Name, Year)
+				    ManualPerYear = Table.Group(
+				        AddDriverYear,
+				        {"Substream Abbreviation", "Driver Name", "Year"},
+				        {{"ManualSum", each List.Sum([Value]), type number}}
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // Get Avg Active FTE per (Substream, Year)
+				    // FTE stays at substream level - not per driver
+				    // ─────────────────────────────────────────────
+				    FTEActive = Table.SelectRows(#"FTE Data", each [Active] = 1),
+				    FTEJoined = Table.NestedJoin(
+				        FTEActive, {"FTE Category ID"},
+				        #"FTE Map", {"FTE Category ID"},
+				        "MapData",
+				        JoinKind.Inner
+				    ),
+				    FTEExpanded = Table.ExpandTableColumn(
+				        FTEJoined, "MapData",
+				        {"Substream Abbreviation"},
+				        {"Substream Abbreviation"}
+				    ),
+				    
+				    AddFTEYear = Table.AddColumn(FTEExpanded, "Year", each Date.Year([Date]), Int64.Type),
+				    
+				    FTEMonthly = Table.Group(
+				        AddFTEYear,
+				        {"Substream Abbreviation", "Year", "Date"},
+				        {{"MonthlyFTE", each List.Sum([Mapped FTE]), type number}}
+				    ),
+				    
+				    FTEAvgPerYear = Table.Group(
+				        FTEMonthly,
+				        {"Substream Abbreviation", "Year"},
+				        {{"FTEAvg", each List.Average([MonthlyFTE]), type number}}
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // Combine: Manual / FTE Avg / 12 = Capacity
+				    // Join FTE at substream level to each driver row
+				    // ─────────────────────────────────────────────
+				    Joined = Table.NestedJoin(
+				        ManualPerYear, {"Substream Abbreviation", "Year"},
+				        FTEAvgPerYear, {"Substream Abbreviation", "Year"},
+				        "FTEData", JoinKind.LeftOuter
+				    ),
+				    Expanded = Table.ExpandTableColumn(Joined, "FTEData", {"FTEAvg"}, {"FTEAvg"}),
+				    
+				    AddCapacity = Table.AddColumn(
+				        Expanded, "Manual per FTE Avg",
+				        each if [FTEAvg] = null or [FTEAvg] = 0 then null 
+				             else [ManualSum] / [FTEAvg] / 12,
+				        type number
+				    ),
+				    
+				    // ─────────────────────────────────────────────
+				    // Join efficiency rate and calculate boosted capacity
+				    // ─────────────────────────────────────────────
+				    JoinEfficiency = Table.NestedJoin(
+				        AddCapacity, {"Year"},
+				        Efficiency_Rates, {"LY Year"},
+				        "EffData", JoinKind.LeftOuter
+				    ),
+				    ExpandEfficiency = Table.ExpandTableColumn(
+				        JoinEfficiency, "EffData", {"Efficiency"}, {"Efficiency"}
+				    ),
+				    
+				    AddCapacityWithEff = Table.AddColumn(
+				        ExpandEfficiency, "Manual per FTE Avg + Eff",
+				        each if [Manual per FTE Avg] = null or [Efficiency] = null then null
+				             else [Manual per FTE Avg] * (1 + [Efficiency]),
+				        type number
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // Add LY Baseline = ManualSum / FTEAvg
+				    // Used for Activity Scaled on headcount_avg streams
+				    // ─────────────────────────────────────────────
+				    AddBaseline = Table.AddColumn(
+				        AddCapacityWithEff, "Manual per FTE LY Baseline",
+				        each if [FTEAvg] = null or [FTEAvg] = 0 then null
+				             else [ManualSum] / [FTEAvg],
+				        type number
+				    ),
+				    
+				    Final = Table.SelectColumns(AddBaseline, {
+				        "Substream Abbreviation", "Driver Name", "Year", "ManualSum", "FTEAvg", 
+				        "Manual per FTE Avg", "Efficiency", "Manual per FTE Avg + Eff",
+				        "Manual per FTE LY Baseline"
+				    }),
+				
+				    Typed = Table.TransformColumnTypes(Final, {
+				        {"Substream Abbreviation", type text},
+				        {"Driver Name", type text},
+				        {"Year", Int64.Type},
+				        {"ManualSum", type number},
+				        {"FTEAvg", type number},
+				        {"Manual per FTE Avg", type number},
+				        {"Efficiency", type number},
+				        {"Manual per FTE Avg + Eff", type number},
+				        {"Manual per FTE LY Baseline", type number}
+				    })
+				in
+				    Typed
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

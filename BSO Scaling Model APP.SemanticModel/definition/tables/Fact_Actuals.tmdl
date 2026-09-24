@@ -1,0 +1,2433 @@
+table Fact_Actuals
+	lineageTag: c7a72712-bef8-4ddf-a2af-9908ccf99de6
+
+	measure 'Total Driver new' =
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR DriverName = MAX(Fact_Actuals[Driver Name])
+			
+			RETURN
+			IF(
+			    Sub = "PC",
+			    [Manual Driver new],
+			    IF(
+			        Sub = "TEM",
+			        CALCULATE(
+			            SUM(Fact_Actuals[Value]),
+			            Fact_Actuals[Version] IN {"Manual", "Auto"}
+			        ),
+			        IF(
+			            Sub = "RS" && CONTAINSSTRING(DriverName, "Interview"),
+			            CALCULATE(
+			                SUM(Fact_Actuals[Value]),
+			                Fact_Actuals[Version] IN {"Manual", "Auto"}
+			            ),
+			            CALCULATE(
+			                SUM(Fact_Actuals[Value]),
+			                Fact_Actuals[Version] = "Total"
+			            )
+			        )
+			    )
+			)
+		lineageTag: 237d6ad5-128c-48c4-b65c-562821f22539
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Manual Driver new' =
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Fact_Actuals'[Version] = "Manual"
+			)
+		lineageTag: 72574c96-c901-4f5d-ad63-f8f3d66b4eeb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Automated Driver' =
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Fact_Actuals'[Version] = "Automated"
+			)
+		lineageTag: 1b52938b-9a25-4ef0-b78c-ec944e12fbd0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Manual %' =
+			
+			DIVIDE(
+			    [Manual Driver new],
+			    [Total Driver new],
+			    BLANK()
+			)
+		formatString: 0\ %;-0\ %;0\ %
+		lineageTag: 284da4da-f61e-407e-b3be-23de73e24dfe
+
+	measure 'Total Driver - Last Year SM' =
+			
+			CALCULATE(SUM('Fact_Actuals'[LY Same Month]), 'Fact_Actuals'[Version] = "Total")
+		lineageTag: 30019d7b-73d6-4aef-bb4a-6691e53a04d1
+
+	measure 'Growth Rate (Display)' =
+			
+			SELECTEDVALUE('Fact_Actuals'[Growth Rate])
+		lineageTag: 1fd5d0a1-0a45-4b1c-b9e3-0852a6e000cb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Measure
+		lineageTag: 47189091-361b-4fa8-b3cd-f25dee5282a8
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'Manual Driver per FTE' =
+			
+			DIVIDE(
+			    [Manual Driver new],
+			    [Active FTE Avg] //old[Latest FTE (Actual or Forecasted adjusted)]//old:[Active FTE Avg]
+			)
+		lineageTag: f9dec5fe-eeff-4c0c-a368-8c8d1bea6750
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE' = ```
+			
+			AVERAGEX(
+			    VALUES('DateTable'[YearMonth]),
+			    DIVIDE(
+			        [Manual Driver new],
+			        CALCULATE(
+			            AVERAGE('Fact_Actuals'[Manual per FTE Avg LY]),
+			            VALUES('Fact_Actuals'[Substream Abbreviation])  
+			        )
+			    )
+			)
+			```
+		lineageTag: e7ff7426-299b-49f8-b136-0699568540bc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE + Eff' =
+			
+			AVERAGEX(
+			    VALUES('DateTable'[YearMonth]),
+			    DIVIDE(
+			        [Manual Driver new],
+			        AVERAGE('Fact_Actuals'[Manual per FTE Avg LY + Eff])
+			    )
+			)
+		lineageTag: 87f36835-5ae5-4441-ab8f-38bd38d75fc2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Is Forecast Cell' = ```
+			
+			VAR ForecastRows = 
+			    CALCULATE(
+			        COUNTROWS('Fact_Actuals'),
+			        'Fact_Actuals'[IsForecast] = TRUE()
+			    )
+			VAR TotalRows = 
+			    CALCULATE(COUNTROWS('Fact_Actuals'))
+			RETURN
+			    IF(ForecastRows > 0 && ForecastRows = TotalRows, 1, 0)
+			```
+		formatString: 0
+		lineageTag: bc89512c-8951-42ba-a4ba-f46d1f082414
+
+	measure 'Cell Color' =
+			
+			IF(
+			    [Is Forecast Cell] = 1,
+			    "#FFF3CD",   // yellow (forecast)
+			    "#D4EDDA"    // green (actuals)
+			)
+		lineageTag: 78b07dfa-30d9-4379-ac1c-1248a20b6eae
+
+	measure 'Active FTE Avg' =
+			
+			AVERAGEX(
+			    VALUES('DateTable'[YearMonth]),
+			    [Active FTE new]
+			)
+		lineageTag: a339e40f-fca2-43d7-8368-a52b3be94605
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected Measure' =
+			
+			VAR SelectedStream = SELECTEDVALUE('Stream split main'[Applicable Substreams])
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Total Driver", [Total Driver new],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Manual Driver", [Manual Driver new],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Automated Driver", [Automated Driver],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Manual Ratio", [Manual %],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Total Driver - Last Year SM", [Total Driver - Last Year SM],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "FTE Actuals", [Active FTE new],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Activity Scaled FTE", [Activity Scaled FTE],
+			        SelectedStream = "CAS" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Activity Scaled FTE + Eff", [Activity Scaled FTE + Eff],
+			        SelectedStream = "EMD" && SELECTEDVALUE('Stream split main'[MeasureName]) = "No. of driver / Total Headcount", [Driver per Headcount],
+			        SelectedStream = "EMD" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Total Headcount", [Total Headcount Dynamic],
+			        SelectedStream = "EMD" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Driver per FTE", [Manual Driver / FTE],
+			        SelectedStream = "EMD" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Vacancy Positions", [Absorption %],
+			        SelectedStream = "EMD" && SELECTEDVALUE('Stream split main'[MeasureName]) = "Activated Recruitments", [Total Activated Recruitments],
+			        BLANK()  // Default case if no match
+			    )
+		lineageTag: 01169e53-54b3-4225-a970-dd4c37091373
+
+	measure 'Driver per Headcount new' =
+			
+			DIVIDE(
+			    [Total Driver new],
+			    [Total Headcount Dynamic]
+			)
+		lineageTag: 5392ffb3-b3ad-4b94-8d26-ccc3abf865ea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Driver HC Ratio' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM(Fact_Actuals[Value]),
+			        Fact_Actuals[Version] = "total"
+			    ),
+			    SELECTEDVALUE(Fact_Headcount[Headcount])
+			)
+		lineageTag: 16e09ed1-1426-4f3a-a9bb-05e2c676a57e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE total' =
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR DriverScaled =
+			            AVERAGEX(
+			                VALUES('DateTable'[YearMonth]),
+			                CALCULATE(
+			                    DIVIDE(
+			                        [Total Driver new],
+			                        AVERAGE('Fact_Actuals'[Manual per FTE Avg LY])
+			                    )
+			                )
+			            )
+			        RETURN
+			            DriverScaled * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+		lineageTag: 0c24a435-6ff0-4066-842e-883d081b793d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Auto Driver new' =
+			
+			CALCULATE(
+			    SUM('Fact_Actuals'[Value]),
+			    'Fact_Actuals'[Version] = "Auto")
+		lineageTag: b3b7de2f-6de4-46f1-9635-239253e462a3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Monthly FTE' =
+			
+			AVERAGEX(
+			    VALUES(DateTable[YearMonth]),
+			    CALCULATE(SUM(Fact_FTE[Active FTE]))
+			)
+		lineageTag: 07a20dfb-6c98-4135-ad5d-c04ea89d8cd5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE total + Eff' =
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR DriverScaled =
+			            AVERAGEX(
+			                VALUES('DateTable'[YearMonth]),
+			                CALCULATE(
+			                    DIVIDE(
+			                        [Total Driver new],
+			                        AVERAGE('Fact_Actuals'[Manual per FTE Avg LY + Eff])
+			                    )
+			                )
+			            )
+			        RETURN
+			            DriverScaled * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+		lineageTag: 9c4b597e-4eb4-435d-aa65-30b08f37110e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Forecast Driver' = ```
+			
+			VAR CurrentYear = MAX('DateTable'[Year])
+			VAR CurrentMonth = MAX('DateTable'[MonthNumber])
+			
+			VAR HeadcountThisMonth = [Headcount Forecast Dynamic]
+			
+			VAR AvgRatioTotal = 
+			    AVERAGEX(
+			        FILTER(
+			            'Fact_Actuals',
+			            'Fact_Actuals'[Version] = "Total" &&
+			            'Fact_Actuals'[Reporting Date] <= EOMONTH(TODAY(), -1)
+			        ),
+			        DIVIDE(
+			            'Fact_Actuals'[Value], 
+			            HeadcountThisMonth
+			        )
+			    )
+			
+			VAR ForecastValueTotal = HeadcountThisMonth * AvgRatioTotal
+			
+			RETURN
+			    IF(
+			        NOT ISBLANK(HeadcountThisMonth) && CurrentMonth,
+			        HeadcountThisMonth,
+			        ForecastValueTotal
+			    )
+			```
+		lineageTag: 47dd69a2-90a1-4a53-af0c-a2422702523e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Activity Scaled FTE' = ```
+			
+			AVERAGEX(
+			    VALUES('DateTable'[YearMonth]),
+			    SUMX(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        VAR DriverManual = 
+			            CALCULATE(
+			                [Manual Driver new],
+			                Fact_Actuals[Driver Name] = EARLIER(Fact_Actuals[Driver Name])
+			            )
+			        VAR DriverCapacity = 
+			            CALCULATE(
+			                AVERAGE(Fact_Actuals[Manual per FTE Avg LY]),
+			                Fact_Actuals[Driver Name] = EARLIER(Fact_Actuals[Driver Name])
+			            )
+			        VAR DriverWeight = 
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], Fact_Actuals[Driver Name]
+			            )
+			        RETURN
+			            DIVIDE(DriverManual, DriverCapacity) * DIVIDE(DriverWeight, 100)
+			    )
+			)
+			```
+		lineageTag: faba1382-8919-4ecd-9edd-61b477fbf985
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Manual per FTE Last year' = ```
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			VAR LYBaseline = 
+			    CALCULATE(
+			        SUMX(
+			            VALUES('DateTable'[Year]),
+			            DIVIDE([Manual Driver new], [Active FTE Avg])
+			        ),
+			        'DateTable'[Year] = YEAR(TODAY()) - 1,
+			        ALL('DateTable')
+			    )
+			RETURN
+			    IF(
+			        MonthCount = 1,
+			        LYBaseline / 12,
+			        LYBaseline
+			    )
+			```
+		lineageTag: 8bb242ca-4dd8-46ae-bcc6-9424d251f52b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE HC Avg' = ```
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			VAR Baseline = AVERAGE('Fact_Actuals'[Manual per FTE LY Baseline])
+			VAR AdjustedBaseline = 
+			    IF(
+			        MonthCount = 1,
+			        Baseline / 12,  -- monthly view
+			        Baseline        -- full year or multi-month view
+			    )
+			RETURN
+			DIVIDE(
+			    [Manual Driver new],
+			    AdjustedBaseline
+			)
+			```
+		lineageTag: 238d4934-f952-4afe-9c58-becadafde991
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE AVG' =
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100,
+			        "DriverManual",
+			            CALCULATE([Manual Driver new]),
+			        "DriverLYBaseline",
+			            CALCULATE(
+			                SUMX(
+			                    VALUES('DateTable'[Year]),
+			                    DIVIDE([Manual Driver new], [Active FTE Avg])
+			                ),
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR AdjustedBaseline =
+			            IF(
+			                MonthCount = 1,
+			                [DriverLYBaseline] / 12,
+			                [DriverLYBaseline]
+			            )
+			        RETURN
+			            DIVIDE([DriverManual], AdjustedBaseline) * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+		lineageTag: 0f531f1e-77a8-4e48-9481-46152409f349
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled FTE AVG + Eff' = ```
+			
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			VAR Efficiency = 
+			    CALCULATE(
+			        MAX(Efficiency_Rates[Efficiency]),
+			        Efficiency_Rates[LY Year] = YEAR(TODAY()) - 1
+			    )
+			
+			VAR DriverTable =
+			    ADDCOLUMNS(
+			        VALUES(Fact_Actuals[Driver Name]),
+			        "DriverWeight",
+			            LOOKUPVALUE(
+			                BaseProcessWeights[Weight],
+			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
+			                BaseProcessWeights[Driver], [Driver Name]
+			            ) / 100,
+			        "DriverManual",
+			            CALCULATE([Manual Driver new]),
+			        "DriverLYBaseline",
+			            CALCULATE(
+			                SUMX(
+			                    VALUES('DateTable'[Year]),
+			                    DIVIDE([Manual Driver new], [Active FTE Avg])
+			                ),
+			                'DateTable'[Year] = YEAR(TODAY()) - 1,
+			                ALL('DateTable')
+			            )
+			    )
+			
+			VAR WeightedResult =
+			    SUMX(
+			        DriverTable,
+			        VAR AdjustedBaseline =
+			            IF(
+			                MonthCount = 1,
+			                [DriverLYBaseline] / 12,
+			                [DriverLYBaseline]
+			            )
+			        RETURN
+			            DIVIDE(
+			                [DriverManual],
+			                AdjustedBaseline * (1 + Efficiency)
+			            ) * [DriverWeight]
+			    )
+			
+			RETURN
+			    WeightedResult
+			```
+		lineageTag: a7a0877e-7c71-455b-9752-7596e46d889c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GrowthDebug Last12' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Cutoff = 
+			    CALCULATE(
+			        MAX(Fact_Actuals[Reporting Date]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Version] = "Total"
+			    )
+			VAR L12Start = EOMONTH(EDATE(Cutoff, -11), 0)
+			VAR L12End = Cutoff
+			RETURN
+			    CALCULATE(
+			        SUM(Fact_Actuals[Value]),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= L12Start,
+			        Fact_Actuals[Reporting Date] <= L12End
+			    )
+			```
+		lineageTag: 9fd8f9c1-edca-4818-8011-4fec1b4ca678
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GrowthDebug Prior12' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Cutoff = 
+			    CALCULATE(
+			        MAX(Fact_Actuals[Reporting Date]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Version] = "Total"
+			    )
+			VAR P12End = EOMONTH(EDATE(Cutoff, -12), 0)
+			VAR P12Start = EOMONTH(EDATE(Cutoff, -23), 0)
+			RETURN
+			    CALCULATE(
+			        SUM(Fact_Actuals[Value]),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= P12Start,
+			        Fact_Actuals[Reporting Date] <= P12End
+			    )
+			```
+		lineageTag: 23426788-bd11-4313-b8dc-a52709ab1de7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'TAX Last12 Deduped' = ```
+			
+			VAR Cutoff = 
+			    CALCULATE(
+			        MAX(Fact_Actuals[Reporting Date]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[Substream Abbreviation] = "TAX"
+			    )
+			VAR L12Start = EOMONTH(EDATE(Cutoff, -11), 0)
+			VAR L12End = Cutoff
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            VALUES(Fact_Actuals[Driver Name]),
+			            CALCULATE(
+			                AVERAGEX(
+			                    VALUES('DateTable'[YearMonth]),
+			                    SUM(Fact_Actuals[Value])
+			                )
+			            )
+			        ),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= L12Start,
+			        Fact_Actuals[Reporting Date] <= L12End,
+			        Fact_Actuals[Substream Abbreviation] = "TAX"
+			    )
+			```
+		lineageTag: 2c2882b6-3ff0-4467-92b5-12d8a687ea6a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Growth Rate Dynamic' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Cutoff = 
+			    CALCULATE(
+			        MAX(Fact_Actuals[Reporting Date]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Version] = "Total",
+			        ALL(Fact_Actuals)
+			    )
+			VAR L12End = Cutoff
+			VAR L12Start = EOMONTH(EDATE(Cutoff, -11), 0)
+			VAR P12End = EOMONTH(EDATE(Cutoff, -12), 0)
+			VAR P12Start = EOMONTH(EDATE(Cutoff, -23), 0)
+			VAR Last12 = 
+			    CALCULATE(
+			        SUM(Fact_Actuals[Value]),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= L12Start,
+			        Fact_Actuals[Reporting Date] <= L12End
+			    )
+			VAR Prior12 = 
+			    CALCULATE(
+			        SUM(Fact_Actuals[Value]),
+			        Fact_Actuals[Version] = "Total",
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= P12Start,
+			        Fact_Actuals[Reporting Date] <= P12End
+			    )
+			RETURN
+			    DIVIDE(Last12, Prior12) - 1
+			```
+		lineageTag: 91796583-1878-4d59-bcb9-8eef919c93dd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LY FTE Avg (Growth Denominator)' =
+			
+			VAR CurrentDriver = SELECTEDVALUE ( 'Fact_Actuals'[Driver Name] )
+			VAR CurrentSub = SELECTEDVALUE ( 'Fact_Actuals'[Substream Abbreviation] )
+			VAR Cutoff =
+			    CALCULATE (
+			        MAX ( 'fact_Actuals'[Reporting Date] ),
+			        'fact_Actuals'[Version] = "Total",
+			        'fact_Actuals'[IsForecast] = FALSE(),
+			        'fact_Actuals'[Value] <> 0,
+			        'fact_Actuals'[Substream Abbreviation] = CurrentSub,
+			        ALL ( 'fact_Actuals'[Reporting Date] )
+			    )
+			VAR P12End = EOMONTH ( Cutoff, -12 )
+			VAR P12Start = EOMONTH ( Cutoff, -23 ) + 1
+			VAR P12Sum =
+			    CALCULATE (
+			        SUM ( 'fact_Actuals'[Value] ),
+			        'fact_Actuals'[Version] = "Total",
+			        'fact_Actuals'[IsForecast] = FALSE(),
+			        'fact_Actuals'[Driver Name] = CurrentDriver,
+			        'fact_Actuals'[Substream Abbreviation] = CurrentSub,
+			        'fact_Actuals'[Reporting Date] >= P12Start,
+			        'fact_Actuals'[Reporting Date] <= P12End,
+			        ALL ( 'fact_Actuals'[Reporting Date] )
+			    )
+			RETURN
+			    DIVIDE ( P12Sum, 12 )
+		lineageTag: 38ddf28d-6d59-4fb8-a5dc-266371b46308
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'KPI Activity Scaled + Eff' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			
+			VAR StreamTable = 
+			    CALCULATETABLE(
+			        VALUES('Sub_stream_combiner'[Substream abbreviation]),
+			        ALLSELECTED('Sub_stream_combiner'[Substream abbreviation])
+			    )
+			VAR SelectedStreamCount = COUNTROWS(StreamTable)
+			
+			VAR HCStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_ratio"
+			    )
+			VAR HCAvgStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_avg"
+			    )
+			VAR GLStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "gl"
+			    )
+			VAR TEMStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "tem"
+			    )
+			VAR RSStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "rs"
+			    )
+			
+			VAR IsHCStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, HCStreams)) = SelectedStreamCount
+			
+			VAR IsHCAvgStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, HCAvgStreams)) = SelectedStreamCount
+			
+			VAR IsGLStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, GLStreams)) = SelectedStreamCount
+			
+			VAR IsTEMStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, TEMStreams)) = SelectedStreamCount
+			
+			VAR IsRSStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, RSStreams)) = SelectedStreamCount
+			
+			RETURN
+			CALCULATE(
+			    SWITCH(
+			        TRUE(),
+			        IsHCStream,     [Activity Scaled FTE total + Eff],
+			        IsHCAvgStream,  [Activity Scaled FTE AVG + Eff],
+			        IsGLStream,     [Activity Scaled FTE GL + Eff],
+			        IsTEMStream,    [Activity Scaled FTE + Eff Weighted],
+			        IsRSStream,     [RS Stream Activity Total +5 (Year)],
+			                        [Activity Scaled FTE + Eff Weighted]
+			    ),
+			    'DateTable'[Year] = SelectedYear
+			)
+			```
+		lineageTag: 20550304-ca2b-458e-b205-5afc8302b9ce
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'KPI Rolling Baseline' = ```
+			
+			VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+			
+			VAR LastActualMonth =
+			    CALCULATE(
+			        MAX('DateTable'[MonthNumber]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        'DateTable'[Year] = SelectedYear
+			    )
+			
+			VAR LastActualValue =
+			    CALCULATE(
+			        [Total Driver new],
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        'DateTable'[Year] = SelectedYear,
+			        'DateTable'[MonthNumber] = LastActualMonth
+			    )
+			
+			VAR GrowthRate =
+			    CALCULATE(
+			        AVERAGE(Fact_Actuals[Growth Rate]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        'DateTable'[Year] = SelectedYear,
+			        'DateTable'[MonthNumber] = LastActualMonth
+			    )
+			
+			VAR StreamTable = 
+			    CALCULATETABLE(
+			        VALUES('Sub_stream_combiner'[Substream abbreviation]),
+			        ALLSELECTED('Sub_stream_combiner'[Substream abbreviation])
+			    )
+			VAR SelectedStreamCount = COUNTROWS(StreamTable)
+			
+			VAR HCStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_ratio"
+			    )
+			VAR HCAvgStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "headcount_avg"
+			    )
+			VAR GLStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "gl"
+			    )
+			VAR TEMStreams = 
+			    CALCULATETABLE(
+			        VALUES('Stream_Forecast_Method'[Substream Abbreviation]),
+			        'Stream_Forecast_Method'[Forecast Method] = "tem"
+			    )
+			
+			VAR IsHCStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, HCStreams)) = SelectedStreamCount
+			VAR IsHCAvgStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, HCAvgStreams)) = SelectedStreamCount
+			VAR IsGLStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, GLStreams)) = SelectedStreamCount
+			VAR IsTEMStream = 
+			    SelectedStreamCount > 0
+			    && COUNTROWS(INTERSECT(StreamTable, TEMStreams)) = SelectedStreamCount
+			
+			RETURN
+			CALCULATE(
+			    SWITCH(
+			        TRUE(),
+			        // HC ratio — show avg ratio used
+			        IsHCStream,
+			            DIVIDE(
+			                [Total Driver new],
+			                SELECTEDVALUE(Fact_Headcount[Headcount], BLANK())
+			            ),
+			        // HC Avg — show LY Total / LY Dec HC / 12
+			        IsHCAvgStream,
+			            CALCULATE(
+			                DIVIDE([Total Driver new], MAX(Fact_Headcount[Headcount])),
+			                'DateTable'[Year] = SelectedYear - 1,
+			                'DateTable'[MonthNumber] = 12,
+			                ALL('DateTable')
+			            ),
+			        // GL — show LY Driver / (LY FTE × (1 + Vacancy))
+			        IsGLStream,
+			            CALCULATE(
+			                DIVIDE(
+			                    [Total Driver new],
+			                    [Active FTE Avg] * 1.087
+			                ),
+			                'DateTable'[Year] = SelectedYear - 1,
+			                ALL('DateTable')
+			            ),
+			        // TEM — show last actual White Collar HC ratio
+			        IsTEMStream,
+			            DIVIDE(LastActualValue, 
+			                CALCULATE(
+			                    MAX(Headcount_White_Collar_Mock[WhiteCollarHC]),
+			                    Headcount_White_Collar_Mock[Year] = SelectedYear,
+			                    Headcount_White_Collar_Mock[MonthNumber] = LastActualMonth
+			                )
+			            ),
+			        // Growth — show last actual value × (1 + growth rate)
+			        LastActualValue * (1 + GrowthRate)
+			    ),
+			    'DateTable'[Year] = SelectedYear
+			)
+			```
+		lineageTag: 6542a761-70be-4894-955d-2311cb99abc5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Output Growth (%) new' = ```
+			
+			VAR Cutoff = 
+			    CALCULATE(
+			        MAX(Fact_Actuals[Reporting Date]),
+			        Fact_Actuals[IsForecast] = FALSE()
+			    )
+			
+			VAR L12Start = EOMONTH(EDATE(Cutoff, -11), 0)
+			VAR P12End   = EOMONTH(EDATE(Cutoff, -12), 0)
+			VAR P12Start = EOMONTH(EDATE(Cutoff, -23), 0)
+			
+			VAR Last12 = 
+			    CALCULATE(
+			        [Total Driver new],
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= L12Start,
+			        Fact_Actuals[Reporting Date] <= Cutoff
+			    )
+			
+			VAR Prev12 = 
+			    CALCULATE(
+			        [Total Driver new],
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Reporting Date] >= P12Start,
+			        Fact_Actuals[Reporting Date] <= P12End
+			    )
+			
+			RETURN
+			IF(
+			    Prev12 = 0 || ISBLANK(Prev12),
+			    BLANK(),
+			    (Last12 / Prev12 - 1) * 100
+			)
+			```
+		lineageTag: ca8d60c5-bcf3-495a-9416-9f27ecedf03d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Manual Actuals new' =
+			
+			CALCULATE(
+			    [Manual Driver new],
+			    Fact_Actuals[IsForecast] = FALSE()
+			)
+		lineageTag: 32a372bc-4aa9-43f3-ac4b-a9d1da1e4321
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Manual Forecast new' =
+			
+			CALCULATE(
+			    [Manual Driver new],
+			    Fact_Actuals[IsForecast] = TRUE()
+			)
+		lineageTag: dc784036-d3fe-45f9-984c-688ed84a1266
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled Universal' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Method = 
+			    LOOKUPVALUE(
+			        Stream_Forecast_Method[Forecast Method],
+			        Stream_Forecast_Method[Substream Abbreviation], Sub
+			    )
+			VAR MonthCount = DISTINCTCOUNT('DateTable'[YearMonth])
+			
+			RETURN
+			SWITCH(
+			    Method,
+			    "headcount_ratio",  [Activity Scaled FTE total],
+			    "headcount_avg",    [Activity Scaled FTE AVG],
+			    "gl",               [Activity Scaled FTE GL],
+			    "tem",              [Activity Scaled FTE Weighted],
+			    "rs",               [RS Stream Activity Total (Year)],
+			    // Default: growth
+			    [Activity Scaled FTE Weighted]
+			)
+			```
+		lineageTag: 55323dc2-1108-480d-97da-2aeba40adbe3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled Universal + Eff' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Method = 
+			    LOOKUPVALUE(
+			        Stream_Forecast_Method[Forecast Method],
+			        Stream_Forecast_Method[Substream Abbreviation], Sub
+			    )
+			
+			RETURN
+			SWITCH(
+			    Method,
+			    "headcount_ratio",  [Activity Scaled FTE total + Eff],
+			    "headcount_avg",    [Activity Scaled FTE AVG + Eff],
+			    "gl",               [Activity Scaled FTE GL + Eff],
+			    "tem",              [Activity Scaled FTE + Eff Weighted],
+			    "rs",               [RS Stream Activity Total +5 (Year)],
+			    // Default: growth
+			    [Activity Scaled FTE + Eff Weighted]
+			)
+			```
+		lineageTag: 27e9f30c-9d65-4196-a5c4-565e46d8c693
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Variance + Eff' = ```
+			
+			VAR Sub = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR Method = 
+			    LOOKUPVALUE(
+			        Stream_Forecast_Method[Forecast Method],
+			        Stream_Forecast_Method[Substream Abbreviation], Sub
+			    )
+			
+			VAR ActivityScaledEff =
+			    SWITCH(
+			        Method,
+			        "headcount_ratio",  [Activity Scaled FTE total + Eff],
+			        "headcount_avg",    [Activity Scaled FTE AVG + Eff],
+			        "gl",               [Activity Scaled FTE GL + Eff],
+			        "tem",              [Activity Scaled FTE + Eff] ,
+			        "rs",               [RS Stream Activity Total +5 (Year)],
+			        [Activity Scaled FTE + Eff Weighted]
+			    )
+			
+			VAR GSOAdj = [Sum of GSO adjustment]
+			
+			VAR MappedFTE = 
+			    CALCULATE(
+			        SUM('FTE Data'[Mapped FTE]),
+			        'FTE Data'[Active] = 1
+			    )
+			
+			RETURN
+			(GSOAdj + MappedFTE) - ActivityScaledEff
+			```
+		lineageTag: 5b380314-8025-488c-a71f-e4c143e5c8d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Variance + Eff (Sum of Rows)' =
+			
+			SUMX(
+			    VALUES(Sub_stream_combiner[Substream Abbreviation]),
+			    [Weighted Variance + Eff]
+			)
+		lineageTag: 71bb2241-1723-4639-b0f2-54a8a909f07a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Adj. Variance + Eff Weighted' = ```
+			
+			VAR BaseVariance = [Weighted Variance + Eff]
+			VAR OpenPositions = 
+			    CALCULATE(
+			        SUM('Manual Input (Scaling Model)'[OpenPositions])
+			    )
+			VAR RecruitmentNotStarted = 
+			    CALCULATE(
+			        SUM('Manual Input (Scaling Model)'[Recruitmentnotstarted])
+			    )
+			
+			RETURN
+			BaseVariance +
+			    IF(
+			        BaseVariance >= 0,
+			        - OpenPositions,
+			        + OpenPositions
+			    )
+			```
+		lineageTag: d57ba386-74b4-4b4f-89ee-62f2ff105057
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled Universal (Sum of Rows)' =
+			
+			SUMX(
+			    VALUES(Sub_stream_combiner[Substream Abbreviation]),
+			    [Activity Scaled Universal]
+			)
+		lineageTag: 6f0e79a6-8377-4761-bbaf-c010ac7680cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Activity Scaled Universal + Eff (Sum of Rows)' =
+			
+			SUMX(
+			    VALUES(Sub_stream_combiner[Substream Abbreviation]),
+			    [Activity Scaled Universal + Eff]
+			)
+		lineageTag: d795a664-f6fc-4127-a843-ed5a73ec2e8e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Adj. Variance + Eff Weighted (Sum of Rows)' =
+			
+			SUMX(
+			    VALUES(Sub_stream_combiner[Substream Abbreviation]),
+			    [Adj. Variance + Eff Weighted]
+			)
+		lineageTag: ec43179e-fd3a-42fd-8ecc-c16cc7d6f714
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Interviews Total' =
+			
+			CALCULATE(
+			    SUM(Fact_Actuals[Value]),
+			    Fact_Actuals[Substream Abbreviation] = "RS",
+			    Fact_Actuals[Version] = "Auto"
+			) +
+			CALCULATE(
+			    SUM(Fact_Actuals[Value]),
+			    Fact_Actuals[Substream Abbreviation] = "RS",
+			    Fact_Actuals[Version] = "Manual",
+			    CONTAINSSTRING(Fact_Actuals[Driver Name], "Interview")
+			)
+		lineageTag: 57bab624-0049-4adb-8921-c6224e9ab910
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Resumes Total' =
+			
+			[RS Resumes Hourly] + [RS Resumes Salaried]
+		lineageTag: ea1b9e6e-96db-45cc-8e7f-7f25bfd81730
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Resumes Hourly' =
+			
+			CALCULATE(
+			    SUM(Fact_Actuals[Value]),
+			    Fact_Actuals[Substream Abbreviation] = "RS",
+			    Fact_Actuals[Driver Name] = "Resumes Received - Hourly"
+			)
+		lineageTag: 0b7cc153-17a1-4ff1-a4b2-012d5f49f92f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RS Resumes Salaried' =
+			
+			CALCULATE(
+			    SUM(Fact_Actuals[Value]),
+			    Fact_Actuals[Substream Abbreviation] = "RS",
+			    Fact_Actuals[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			)
+		lineageTag: 20e40c35-5480-47b8-a57f-9f447e2b9b6a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Resumes received (Salaried + CSE + Executive) / Activated Recruitments (Salaried + CSE + Executive)5' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Resumes Received - Salaried + CSE + Executive"
+			    ),
+			    CALCULATE(
+			        SUM('Fact_Actuals'[Value]),
+			        'Driver Map'[Driver Name] = "Activated Recruitments - Salaried + CSE"
+			    )
+			)
+			
+			```
+		lineageTag: e2c23590-34aa-4062-aafa-81a95e93d285
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Growth Rate %' =
+			
+			CALCULATE(
+			    MAX(Fact_Actuals[Growth Rate]),
+			    REMOVEFILTERS('DateTable'[Year])
+			) * 100
+		lineageTag: 967baa76-5685-4a13-bd8d-5a873998c099
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Driver ID'
+		dataType: string
+		lineageTag: 1bf7c040-bcc1-4afe-aabb-f7a2360b2ea6
+		summarizeBy: none
+		sourceColumn: Driver ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: f9e7a0ec-aad8-487c-80fd-2e24f8d6331d
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Version
+		dataType: string
+		lineageTag: 96ae4760-d313-416b-9844-a4edd615427e
+		summarizeBy: none
+		sourceColumn: Version
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Driver Name'
+		dataType: string
+		lineageTag: 24374306-acb5-4db2-a3c4-89ba997f9692
+		summarizeBy: none
+		sourceColumn: Driver Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Driver Family'
+		dataType: string
+		lineageTag: 3e765fdc-a14a-4f6b-829f-233cbb7b83df
+		summarizeBy: none
+		sourceColumn: Driver Family
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Service Region'
+		dataType: string
+		lineageTag: e1a9de7c-5f30-4f4f-89d1-80e14d955dbb
+		summarizeBy: none
+		sourceColumn: Service Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stream Abbreviation'
+		dataType: string
+		lineageTag: 48ae643a-6094-44ef-94b0-958c0050c4a3
+		summarizeBy: none
+		sourceColumn: Stream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: 30924325-3cb9-40ed-b05a-e5851e8cbcb5
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weight
+		dataType: double
+		lineageTag: abd0e553-7832-4175-8746-3a7176f1a6fd
+		summarizeBy: sum
+		sourceColumn: Weight
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Reporting Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bec68016-5f2b-43e6-a872-baed382dbf43
+		summarizeBy: none
+		sourceColumn: Reporting Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'LY Same Month'
+		dataType: double
+		lineageTag: ce95ffff-da93-46da-81a8-73bb625c48e1
+		summarizeBy: sum
+		sourceColumn: LY Same Month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Growth Rate'
+		dataType: double
+		formatString: 0.000
+		lineageTag: 9fbb41d7-200c-4b65-aab7-df27dff5e725
+		summarizeBy: sum
+		sourceColumn: Growth Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column crfc0_driverid
+		dataType: string
+		lineageTag: 964a18e5-917e-4bae-bc79-6674b165b5b3
+		summarizeBy: none
+		sourceColumn: crfc0_driverid
+
+		annotation SummarizationSetBy = Automatic
+
+	column crfc0_name
+		dataType: string
+		lineageTag: fd971018-d166-477b-82ab-b33f8eb16392
+		summarizeBy: none
+		sourceColumn: crfc0_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsForecast
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1ba8be51-e309-4703-ab29-89455d93b3bf
+		summarizeBy: none
+		sourceColumn: IsForecast
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: 88e19169-701c-4115-ba74-afac25ecd184
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Manual per FTE Avg LY'
+		dataType: double
+		lineageTag: 4d92b429-ecee-4d41-8ea2-0eb1a07b0af1
+		summarizeBy: sum
+		sourceColumn: Manual per FTE Avg LY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Manual per FTE Avg LY + Eff'
+		dataType: double
+		lineageTag: 88c0e9b3-7558-4055-86ce-540d134b1f40
+		summarizeBy: sum
+		sourceColumn: Manual per FTE Avg LY + Eff
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Manual per FTE LY Baseline'
+		dataType: double
+		lineageTag: 8ae36b04-27be-4d67-9127-12d01c6e486c
+		summarizeBy: sum
+		sourceColumn: Manual per FTE LY Baseline
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'TEM Forecast Total' =
+			
+			VAR LastActualMonth =
+			    CALCULATE(
+			        MAX('DateTable'[MonthNumber]),
+			        Fact_Actuals[IsForecast] = FALSE(),
+			        Fact_Actuals[Substream Abbreviation] = "TEM",
+			        ALL('DateTable')
+			    )
+			
+			VAR CurrentMonth = MAX('DateTable'[MonthNumber])
+			VAR CurrentYear = MAX('DateTable'[Year])
+			
+			// Expanding avg of Total Driver / White Collar HC for actual months
+			VAR ExpandingAvg =
+			    AVERAGEX(
+			        FILTER(
+			            ALL('DateTable'),
+			            'DateTable'[Year] = CurrentYear &&
+			            'DateTable'[MonthNumber] <= LastActualMonth
+			        ),
+			        DIVIDE(
+			            CALCULATE(
+			                [Total Driver new],
+			                Fact_Actuals[Version] = "Total",
+			                Fact_Actuals[Substream Abbreviation] = "TEM"
+			            ),
+			            CALCULATE(
+			                MAX(Headcount_White_Collar_Mock[WhiteCollarHC]),
+			                Headcount_White_Collar_Mock[Year] = CurrentYear
+			            )
+			        )
+			    )
+			
+			// Manual ratio from last actual month
+			VAR LastManual =
+			    CALCULATE(
+			        [Manual Driver new],
+			        'DateTable'[MonthNumber] = LastActualMonth,
+			        'DateTable'[Year] = CurrentYear,
+			        Fact_Actuals[Substream Abbreviation] = "TEM"
+			    )
+			
+			VAR LastTotal =
+			    CALCULATE(
+			        [Total Driver new],
+			        Fact_Actuals[Version] = "Total",
+			        'DateTable'[MonthNumber] = LastActualMonth,
+			        'DateTable'[Year] = CurrentYear,
+			        Fact_Actuals[Substream Abbreviation] = "TEM"
+			    )
+			
+			VAR ManualRatio = DIVIDE(LastManual, LastTotal)
+			
+			// White collar HC for forecast month
+			VAR WhiteHC = [White HC Forecast Dynamic]
+			
+			VAR ForecastTotal = WhiteHC * ExpandingAvg * ManualRatio
+			
+			RETURN
+			IF(
+			    CurrentMonth > LastActualMonth,
+			    ForecastTotal,
+			    [Total Driver new]
+			)
+		lineageTag: 7fb014bb-a5bc-45ee-b06d-4a31cd14f744
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Fact_Actuals = m
+		mode: import
+		source = ```
+				let
+				    Source = #"Driver Data",
+				    
+				    Joined = Table.NestedJoin(
+				        Source, {"Driver ID"},
+				        #"Driver Map", {"Driver ID"},
+				        "MapData",
+				        JoinKind.Inner
+				    ),
+				    
+				    Expanded = Table.ExpandTableColumn(
+				        Joined, "MapData",
+				        {"Version", "Driver Name", "Driver Family", "Service Region", "Stream Abbreviation", "Substream Abbreviation", "Weight"},
+				        {"Version", "Driver Name", "Driver Family", "Service Region", "Stream Abbreviation", "Substream Abbreviation", "Weight"}
+				    ),
+				    
+				    TodayCutoff = Date.EndOfMonth(Date.AddMonths(DateTime.Date(DateTime.LocalNow()), -1)),
+				    
+				    ExpandedFiltered = Table.SelectRows(Expanded, each [Reporting Date] <= TodayCutoff),
+				    
+				    SubstreamCutoffs = 
+				        Table.Group(
+				            Table.SelectRows(ExpandedFiltered, each [Version] = "Total" and [Value] <> null and [Value] <> 0),
+				            {"Substream Abbreviation"},
+				            {{"SubLastDate", each Date.EndOfMonth(List.Max([Reporting Date])), type date}}
+				        ),
+				    SubstreamCutoffRecord = Record.FromList(
+				        SubstreamCutoffs[SubLastDate],
+				        SubstreamCutoffs[#"Substream Abbreviation"]
+				    ),
+				    
+				    ActualsClean = Table.Buffer(
+				        Table.SelectRows(
+				            ExpandedFiltered,
+				            each
+				                let
+				                    sub = [Substream Abbreviation],
+				                    cutoff = Record.FieldOrDefault(SubstreamCutoffRecord, sub, TodayCutoff)
+				                in
+				                    [Reporting Date] <= cutoff
+				        )
+				    ),
+				    AddIsForecastActuals = Table.AddColumn(ActualsClean, "IsForecast", each false, type logical),
+				    
+				    // NOTE: this is the RAW Version="Total"-only table, kept around as TotalOnly1
+				    // so the name doesn't collide with the substream-aware TotalOnly built below.
+				    TotalOnly1 = Table.Buffer(
+				        Table.Group(
+				            Table.SelectRows(ActualsClean, each [Version] = "Total"),
+				            {"Substream Abbreviation", "Driver Name", "Reporting Date"},
+				            {{"Value", each List.Sum([Value]), type number}}
+				        )
+				    ),
+				    // FIX: SubstreamList is defined ONCE here. (It was previously also redefined
+				    // inside the Step C block below, which is a duplicate-identifier error that
+				    // stops the whole query from compiling.)
+				    SubstreamList = List.Distinct(SubstreamCutoffs[#"Substream Abbreviation"]),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP C: Growth calculation
+				    // Uses the same version logic as [Total Driver new]
+				    // PC                    → Manual
+				    // TEM                   → Manual + Auto
+				    // RS + Interview        → Manual + Auto
+				    // Everything else       → Total
+				    // ─────────────────────────────────────────────
+				
+				   GrowthBase = Table.SelectRows(
+				    ActualsClean,
+				    each
+				        [Value] <> null
+				        and [Value] <> 0
+				        and
+				        (
+				            // PC → Manual only
+				            ([Substream Abbreviation] = "PC"
+				                and [Version] = "Manual")
+				
+				            // TEM → Manual + Auto
+				            or (
+				                [Substream Abbreviation] = "TEM"
+				                and ([Version] = "Manual" or [Version] = "Auto")
+				            )
+				
+				            // RS Interviews → Manual + Auto
+				            or (
+				                [Substream Abbreviation] = "RS"
+				                and Text.Contains(Text.Lower([Driver Name]), "interview")
+				                and ([Version] = "Manual" or [Version] = "Auto")
+				            )
+				
+				            // All other drivers → Total only
+				            or (
+				                [Substream Abbreviation] <> "PC"
+				                and [Substream Abbreviation] <> "TEM"
+				                and [Version] = "Total"
+				            )
+				        )
+				),
+				    // Combine versions where Manual + Auto are required.
+				    // For PC only Manual is included.
+				    // For normal drivers only Total is included.
+				    TotalOnly = Table.Buffer(
+				        Table.Group(
+				            GrowthBase,
+				            {"Substream Abbreviation", "Driver Name", "Reporting Date"},
+				            {{"Value", each List.Sum([Value]), type number}}
+				        )
+				    ),
+				    DriverSubList = List.Distinct(
+				        Table.ToRecords(
+				            Table.SelectColumns(
+				                TotalOnly,
+				                {"Substream Abbreviation", "Driver Name"}
+				            )
+				        )
+				    ),
+				
+				    GrowthPerDriver = List.Transform(
+				        DriverSubList,
+				        each
+				            let
+				                sub = _[#"Substream Abbreviation"],
+				                driver = _[#"Driver Name"],
+				
+				                cutoff = Record.FieldOrDefault(
+				                    SubstreamCutoffRecord,
+				                    sub,
+				                    null
+				                ),
+				
+				                l12End = cutoff,
+				                l12Start =
+				                    if cutoff = null
+				                    then null
+				                    else Date.StartOfMonth(
+				                        Date.AddMonths(cutoff, -11)
+				                    ),
+				
+				                p12End =
+				                    if cutoff = null
+				                    then null
+				                    else Date.EndOfMonth(
+				                        Date.AddMonths(cutoff, -12)
+				                    ),
+				
+				                p12Start =
+				                    if cutoff = null
+				                    then null
+				                    else Date.StartOfMonth(
+				                        Date.AddMonths(cutoff, -23)
+				                    ),
+				
+				                // FIX: this was reading from TotalOnly1 (the old Version="Total"-only
+				                // table), which meant the substream-aware GrowthBase/TotalOnly logic
+				                // above was never actually used - growth was silently still computed
+				                // the old way for every substream, including PC (which has no "Total"
+				                // rows at all, so its growth rate always came back as 0).
+				                streamRows = Table.SelectRows(
+				                    TotalOnly,
+				                    (r) =>
+				                        r[#"Substream Abbreviation"] = sub
+				                        and r[#"Driver Name"] = driver
+				                ),
+				
+				                last12Sum =
+				                    if cutoff = null
+				                    then 0
+				                    else
+				                        List.Sum(
+				                            Table.SelectRows(
+				                                streamRows,
+				                                (r) =>
+				                                    r[Reporting Date] >= l12Start
+				                                    and r[Reporting Date] <= l12End
+				                            )[Value]
+				                        ),
+				
+				                prev12Sum =
+				                    if cutoff = null
+				                    then 0
+				                    else
+				                        List.Sum(
+				                            Table.SelectRows(
+				                                streamRows,
+				                                (r) =>
+				                                    r[Reporting Date] >= p12Start
+				                                    and r[Reporting Date] <= p12End
+				                            )[Value]
+				                        ),
+				
+				                rate =
+				                    if prev12Sum = null or prev12Sum = 0
+				                    then 0
+				                    else (last12Sum / prev12Sum) - 1
+				            in
+				                rate
+				    ),
+				
+				    GrowthRecord = Record.FromList(
+				        GrowthPerDriver,
+				        List.Transform(
+				            DriverSubList,
+				            each
+				                _[#"Driver Name"]
+				                & "||"
+				                & _[#"Substream Abbreviation"]
+				        )
+				    ),
+				    HeadcountLookup = Table.Buffer(
+				        Table.SelectColumns(Fact_Headcount, {"Year", "MonthNumber", "Headcount"})
+				    ),
+				
+				    WhiteCollarLookup = Table.Buffer(
+				        Table.SelectColumns(Fact_WhiteCollarHC, {"Year", "MonthNumber", "WhiteCollarHC"})
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // TEM: Expanding avg ratio
+				    // ─────────────────────────────────────────────
+				    TEMTotalActuals = Table.Buffer(
+				        Table.SelectRows(
+				            ActualsClean,
+				            each [Value] <> null and [Value] <> 0
+				                and [Substream Abbreviation] = "TEM"
+				                and ([Version] = "Manual" or [Version] = "Auto")
+				        )
+				    ),
+				
+				    TEMTotalByMonth = Table.Group(
+				        TEMTotalActuals,
+				        {"Substream Abbreviation", "Reporting Date"},
+				        {{"TotalValue", each List.Sum([Value]), type number}}
+				    ),
+				
+				    AddTEMYear = Table.AddColumn(
+				        Table.AddColumn(TEMTotalByMonth, "Year", each Date.Year([Reporting Date]), Int64.Type),
+				        "MonthNumber", each Date.Month([Reporting Date]), Int64.Type
+				    ),
+				
+				    JoinWhiteCollar = Table.NestedJoin(
+				        AddTEMYear, {"Year", "MonthNumber"},
+				        WhiteCollarLookup, {"Year", "MonthNumber"},
+				        "WCData", JoinKind.LeftOuter
+				    ),
+				    ExpandWhiteCollar = Table.ExpandTableColumn(
+				        JoinWhiteCollar, "WCData", {"WhiteCollarHC"}, {"WhiteCollarHC"}
+				    ),
+				
+				    AddTEMRatio = Table.Buffer(
+				        Table.AddColumn(
+				            ExpandWhiteCollar, "TEMRatio",
+				            each if [WhiteCollarHC] = null or [WhiteCollarHC] = 0 then null
+				                 else [TotalValue] / [WhiteCollarHC],
+				            type number
+				        )
+				    ),
+				
+				    TEMRatioNested =
+				        let
+				            byYear = Table.Group(
+				                Table.SelectRows(AddTEMRatio, each [TEMRatio] <> null),
+				                {"Substream Abbreviation", "Year"},
+				                {{"MonthRatios", each
+				                    List.Sort(
+				                        Table.ToRecords(Table.SelectColumns(_, {"MonthNumber", "TEMRatio"})),
+				                        each _[MonthNumber]
+				                    )
+				                }}
+				            ),
+				            bySubstream = Table.Group(
+				                byYear,
+				                {"Substream Abbreviation"},
+				                {{"YearData", each
+				                    Record.FromList(
+				                        [MonthRatios],
+				                        List.Transform([Year], each Number.ToText(_))
+				                    )
+				                }}
+				            )
+				        in
+				            Record.FromList(bySubstream[YearData], bySubstream[#"Substream Abbreviation"]),
+				
+				    TEMCutoff = Record.FieldOrDefault(SubstreamCutoffRecord, "TEM", null),
+				    TEMLastActualYear = if TEMCutoff = null then null else Date.Year(TEMCutoff),
+				    TEMLastActualMonth = if TEMCutoff = null then null else Date.Month(TEMCutoff),
+				
+				    TEMLastTotal =
+				        let
+				            manualRows = Table.SelectRows(
+				                ActualsClean,
+				                each [Substream Abbreviation] = "TEM"
+				                    and [Version] = "Manual"
+				                    and Date.Year([Reporting Date]) = TEMLastActualYear
+				                    and Date.Month([Reporting Date]) = TEMLastActualMonth
+				            ),
+				            autoRows = Table.SelectRows(
+				                ActualsClean,
+				                each [Substream Abbreviation] = "TEM"
+				                    and [Version] = "Auto"
+				                    and Date.Year([Reporting Date]) = TEMLastActualYear
+				                    and Date.Month([Reporting Date]) = TEMLastActualMonth
+				            )
+				        in
+				            List.Sum(manualRows[Value]) + List.Sum(autoRows[Value]),
+				
+				    TEMAutoActuals = Table.Buffer(
+				        Table.SelectRows(ActualsClean, each [Version] = "Auto" and [Value] <> null and [Value] <> 0 and [Substream Abbreviation] = "TEM")
+				    ),
+				
+				    TEMAutoByMonth = Table.Group(
+				        TEMAutoActuals,
+				        {"Substream Abbreviation", "Reporting Date"},
+				        {{"AutoValue", each List.Sum([Value]), type number}}
+				    ),
+				
+				    TEMLastAuto =
+				        let
+				            rows = Table.SelectRows(TEMAutoByMonth, (r) => Date.Year(r[Reporting Date]) = TEMLastActualYear and Date.Month(r[Reporting Date]) = TEMLastActualMonth)
+				        in
+				            if Table.RowCount(rows) = 0 then null else rows{0}[AutoValue],
+				
+				    TEMAutoRatio = if TEMLastTotal = null or TEMLastTotal = 0 then null else TEMLastAuto / TEMLastTotal,
+				
+				    TEMAutoSplit = Table.Buffer(
+				        let
+				            autoRows = Table.SelectRows(
+				                ActualsClean,
+				                each [Substream Abbreviation] = "TEM"
+				                    and [Version] = "Auto"
+				                    and Date.Year([Reporting Date]) = TEMLastActualYear
+				                    and Date.Month([Reporting Date]) = TEMLastActualMonth
+				            ),
+				            byDriver = Table.Group(autoRows, {"Driver ID"}, {{"Value", each List.Sum([Value]), type number}}),
+				            totalAuto = List.Sum(byDriver[Value]),
+				            withRatio = Table.AddColumn(
+				                byDriver, "AutoSplitRatio",
+				                each if totalAuto = null or totalAuto = 0 then 0 else [Value] / totalAuto,
+				                type number
+				            )
+				        in
+				            withRatio
+				    ),
+				
+				    TEMAutoSplitRecord = Record.FromList(
+				        TEMAutoSplit[AutoSplitRatio],
+				        List.Transform(TEMAutoSplit[Driver ID], each Text.From(_))
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // RS: Lookup tables and helper functions
+				    // ─────────────────────────────────────────────
+				    RSActuals = Table.Buffer(
+				        Table.SelectRows(ActualsClean, each [Substream Abbreviation] = "RS")
+				    ),
+				
+				    RSCutoff = Record.FieldOrDefault(SubstreamCutoffRecord, "RS", null),
+				    RSLastActualYear = if RSCutoff = null then null else Date.Year(RSCutoff),
+				    RSLastActualMonth = if RSCutoff = null then null else Date.Month(RSCutoff),
+				
+				    RSTriggerData = Table.Buffer(
+				        Table.SelectRows(Expanded, each [Substream Abbreviation] = "RS" and [Version] = "Trigger")
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // RS: Pre-compute expanding avg ratios per region
+				    // Stored as nested records for fast lookup in forecast rows
+				    // ─────────────────────────────────────────────
+				
+				    // Get all actual months for RS up to cutoff
+				    RSActualMonths = Table.Buffer(
+				        Table.Distinct(
+				            Table.SelectColumns(
+				                Table.AddColumn(
+				                    Table.AddColumn(RSActuals, "Year", each Date.Year([Reporting Date]), Int64.Type),
+				                    "MonthNumber", each Date.Month([Reporting Date]), Int64.Type
+				                ),
+				                {"Service Region", "Year", "MonthNumber", "Reporting Date"}
+				            )
+				        )
+				    ),
+				
+				    RSRegions = List.Distinct(RSActuals[Service Region]),
+				
+				    // Pre-compute per region: expanding avg resume ratio salaried
+				    RSResumeSalariedRatiosByRegion = Record.FromList(
+				        List.Transform(
+				            RSRegions,
+				            each
+				                let
+				                    region = _,
+				                    // Get all actual months for this region sorted ascending
+				                    regionMonths = List.Sort(
+				                        List.Distinct(
+				                            List.Transform(
+				                                Table.ToRecords(
+				                                    Table.SelectRows(RSActualMonths, (r) => Text.Lower(r[Service Region]) = Text.Lower(region))
+				                                ),
+				                                each [Reporting Date]
+				                            )
+				                        ),
+				                        Order.Ascending
+				                    ),
+				                    // For each actual month compute the ratio
+				                    ratiosByMonth = List.Transform(
+				                        regionMonths,
+				                        each
+				                            let
+				                                dt = _,
+				                                numRows = Table.SelectRows(
+				                                    RSActuals,
+				                                    (r) => Text.Lower(r[#"Driver Name"]) = "resumes received - salaried + cse + executive"
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                denRows = Table.SelectRows(
+				                                    RSTriggerData,
+				                                    (r) => (Text.Contains(Text.Lower(r[#"Driver Name"]), "salaried + cse") or Text.Contains(Text.Lower(r[#"Driver Name"]), "executive"))
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                num = List.Sum(numRows[Value]),
+				                                den = List.Sum(denRows[Value]),
+				                                ratio = if den = null or den = 0 then null else num / den
+				                            in
+				                                [Date = dt, Ratio = ratio]
+				                    ),
+				                    // Filter nulls
+				                    validRatios = List.Select(ratiosByMonth, each _[Ratio] <> null)
+				                in
+				                    validRatios
+				        ),
+				        RSRegions
+				    ),
+				
+				    // Pre-compute per region: expanding avg resume ratio hourly
+				    RSResumeHourlyRatiosByRegion = Record.FromList(
+				        List.Transform(
+				            RSRegions,
+				            each
+				                let
+				                    region = _,
+				                    regionMonths = List.Sort(
+				                        List.Distinct(
+				                            List.Transform(
+				                                Table.ToRecords(
+				                                    Table.SelectRows(RSActualMonths, (r) => Text.Lower(r[Service Region]) = Text.Lower(region))
+				                                ),
+				                                each [Reporting Date]
+				                            )
+				                        ),
+				                        Order.Ascending
+				                    ),
+				                    ratiosByMonth = List.Transform(
+				                        regionMonths,
+				                        each
+				                            let
+				                                dt = _,
+				                                numRows = Table.SelectRows(
+				                                    RSActuals,
+				                                    (r) => Text.Lower(r[#"Driver Name"]) = "resumes received - hourly"
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                denRows = Table.SelectRows(
+				                                    RSTriggerData,
+				                                    (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), "hourly")
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                num = List.Sum(numRows[Value]),
+				                                den = List.Sum(denRows[Value]),
+				                                ratio = if den = null or den = 0 then null else num / den
+				                            in
+				                                [Date = dt, Ratio = ratio]
+				                    ),
+				                    validRatios = List.Select(ratiosByMonth, each _[Ratio] <> null)
+				                in
+				                    validRatios
+				        ),
+				        RSRegions
+				    ),
+				
+				    // Pre-compute per region: expanding avg interview ratio (Interviews Salaried / Activated Salaried)
+				    RSInterviewRatiosByRegion = Record.FromList(
+				        List.Transform(
+				            RSRegions,
+				            each
+				                let
+				                    region = _,
+				                    regionMonths = List.Sort(
+				                        List.Distinct(
+				                            List.Transform(
+				                                Table.ToRecords(
+				                                    Table.SelectRows(RSActualMonths, (r) => Text.Lower(r[Service Region]) = Text.Lower(region))
+				                                ),
+				                                each [Reporting Date]
+				                            )
+				                        ),
+				                        Order.Ascending
+				                    ),
+				                    ratiosByMonth = List.Transform(
+				                        regionMonths,
+				                        each
+				                            let
+				                                dt = _,
+				                                // Total interviews (Manual + Auto) Salaried+CSE
+				                                numRows = Table.SelectRows(
+				                                    RSActuals,
+				                                    (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), "interviews scheduled - salaried + cse")
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                denRows = Table.SelectRows(
+				                                    RSTriggerData,
+				                                    (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), "salaried + cse")
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                num = List.Sum(numRows[Value]),
+				                                den = List.Sum(denRows[Value]),
+				                                ratio = if den = null or den = 0 then null else num / den
+				                            in
+				                                [Date = dt, Ratio = ratio]
+				                    ),
+				                    validRatios = List.Select(ratiosByMonth, each _[Ratio] <> null)
+				                in
+				                    validRatios
+				        ),
+				        RSRegions
+				    ),
+				
+				    // Pre-compute per region: expanding avg manual rate (Manual Interviews / Total Interviews)
+				    RSManualRateByRegion = Record.FromList(
+				        List.Transform(
+				            RSRegions,
+				            each
+				                let
+				                    region = _,
+				                    regionMonths = List.Sort(
+				                        List.Distinct(
+				                            List.Transform(
+				                                Table.ToRecords(
+				                                    Table.SelectRows(RSActualMonths, (r) => Text.Lower(r[Service Region]) = Text.Lower(region))
+				                                ),
+				                                each [Reporting Date]
+				                            )
+				                        ),
+				                        Order.Ascending
+				                    ),
+				                    ratiosByMonth = List.Transform(
+				                        regionMonths,
+				                        each
+				                            let
+				                                dt = _,
+				                                manualRows = Table.SelectRows(
+				                                    RSActuals,
+				                                    (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), "interviews")
+				                                        and Text.Lower(r[Version]) = "manual"
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                totalRows = Table.SelectRows(
+				                                    RSActuals,
+				                                    (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), "interviews")
+				                                        and (Text.Lower(r[Version]) = "manual" or Text.Lower(r[Version]) = "auto")
+				                                        and Text.Lower(r[Service Region]) = Text.Lower(region)
+				                                        and r[Reporting Date] = dt
+				                                ),
+				                                manualSum = List.Sum(manualRows[Value]),
+				                                totalSum = List.Sum(totalRows[Value]),
+				                                rate = if totalSum = null or totalSum = 0 then null else manualSum / totalSum
+				                            in
+				                                [Date = dt, Ratio = rate]
+				                    ),
+				                    validRatios = List.Select(ratiosByMonth, each _[Ratio] <> null)
+				                in
+				                    validRatios
+				        ),
+				        RSRegions
+				    ),
+				
+				    // Helper: get expanding avg ratio up to (but not including) forecast date
+				    GetExpandingAvg = (ratioList as list, forecastDate as date) as number =>
+				        let
+				            // Only use actual months before forecast date
+				            priorRatios = List.Select(ratioList, each _[Date] < forecastDate),
+				            ratioValues = List.Transform(priorRatios, each _[Ratio]),
+				            // Jan fallback - use first available ratio if none prior
+				            janRatio = if List.Count(ratioList) = 0 then 0
+				                       else List.First(List.Transform(ratioList, each _[Ratio]))
+				        in
+				            if List.IsEmpty(ratioValues) then janRatio
+				            else List.Average(ratioValues),
+				
+				    // Helper: get trigger value for a region and forecast date
+				    GetTriggerValue = (driverNamePattern as text, region as text, forecastDate as date) as number =>
+				        let
+				            yr = Date.Year(forecastDate),
+				            mth = Date.Month(forecastDate),
+				            rows = Table.SelectRows(
+				                RSTriggerData,
+				                (r) => Text.Contains(Text.Lower(r[#"Driver Name"]), Text.Lower(driverNamePattern))
+				                    and Text.Lower(r[#"Service Region"]) = Text.Lower(region)
+				                    and Date.Year(r[Reporting Date]) = yr
+				                    and Date.Month(r[Reporting Date]) = mth
+				            )
+				        in
+				            if Table.RowCount(rows) = 0 then 0 else List.Sum(rows[Value]),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP D: Headcount lookup + ratios
+				    // ─────────────────────────────────────────────
+				    TotalActualsOnly = Table.SelectRows(
+				        ActualsClean,
+				        each [Version] = "Total" and [Value] <> null and [Value] <> 0
+				    ),
+				
+				    AddYearMonth_Actuals = Table.AddColumn(
+				        Table.AddColumn(TotalActualsOnly, "Year", each Date.Year([Reporting Date]), Int64.Type),
+				        "MonthNumber", each Date.Month([Reporting Date]), Int64.Type
+				    ),
+				
+				    JoinHC = Table.NestedJoin(
+				        AddYearMonth_Actuals, {"Year", "MonthNumber"},
+				        HeadcountLookup, {"Year", "MonthNumber"},
+				        "HCData", JoinKind.LeftOuter
+				    ),
+				    ExpandHC = Table.ExpandTableColumn(JoinHC, "HCData", {"Headcount"}, {"Headcount"}),
+				
+				    AddRatio = Table.Buffer(
+				        Table.AddColumn(
+				            ExpandHC, "DriverHCRatio",
+				            each if [Headcount] = null or [Headcount] = 0 then null
+				                 else [Value] / [Headcount],
+				            type number
+				        )
+				    ),
+				
+				    RatioPerDriverYearMonth = Table.Group(
+				        Table.SelectRows(AddRatio, each [DriverHCRatio] <> null),
+				        {"Driver ID", "Version", "Year", "MonthNumber"},
+				        {{"DriverHCRatio", each List.Sum([DriverHCRatio]), type number}}
+				    ),
+				
+				    ActualRatiosNested =
+				        let
+				            withKey = Table.AddColumn(
+				                RatioPerDriverYearMonth, "DriverKey",
+				                each Text.From([Driver ID]) & "||" & Text.From([Version])
+				            ),
+				            byDriver = Table.Group(
+				                withKey,
+				                {"DriverKey"},
+				                {{"ByYear", each
+				                    let
+				                        innerTable = _,
+				                        byYear = Table.Group(
+				                            innerTable,
+				                            {"Year"},
+				                            {{"MonthRatios", each
+				                                List.Sort(
+				                                    Table.ToRecords(Table.SelectColumns(_, {"MonthNumber", "DriverHCRatio"})),
+				                                    each _[MonthNumber]
+				                                )
+				                            }}
+				                        )
+				                    in
+				                        Record.FromList(
+				                            byYear[MonthRatios],
+				                            List.Transform(byYear[Year], Number.ToText)
+				                        )
+				                }}
+				            )
+				        in
+				            Record.FromList(byDriver[ByYear], byDriver[DriverKey]),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP D2: headcount_avg method
+				    // ─────────────────────────────────────────────
+				    DriverSubCombos = List.Distinct(
+				        Table.ToRecords(
+				            Table.SelectColumns(ActualsClean, {"Driver ID", "Substream Abbreviation"})
+				        )
+				    ),
+				
+				    LYDecHCPerSubstream = List.Transform(
+				        SubstreamList,
+				        each
+				            let
+				                sub = _,
+				                cutoff = Record.Field(SubstreamCutoffRecord, sub),
+				                lyYear = Date.Year(cutoff) - 1,
+				                decRows = Table.SelectRows(HeadcountLookup, (r) => r[Year] = lyYear and r[MonthNumber] = 12),
+				                decHC = if Table.RowCount(decRows) = 0 then null else decRows{0}[Headcount]
+				            in
+				                decHC
+				    ),
+				    LYDecHCRecord = Record.FromList(LYDecHCPerSubstream, SubstreamList),
+				
+				    LYDriverPerDriver = List.Transform(
+				        DriverSubCombos,
+				        each
+				            let
+				                driverID = _[Driver ID],
+				                sub = _[#"Substream Abbreviation"],
+				                cutoff = Record.FieldOrDefault(SubstreamCutoffRecord, sub, null),
+				                lyYear = if cutoff = null then null else Date.Year(cutoff) - 1,
+				                lyStart = if lyYear = null then null else #date(lyYear, 1, 1),
+				                lyEnd = if lyYear = null then null else #date(lyYear, 12, 31),
+				                streamRows = Table.SelectRows(
+				                    ActualsClean,
+				                    (r) => r[#"Driver ID"] = driverID
+				                        and r[#"Substream Abbreviation"] = sub
+				                        and r[#"Version"] = "Manual"
+				                        and r[Reporting Date] >= lyStart
+				                        and r[Reporting Date] <= lyEnd
+				                ),
+				                lyTotal = List.Sum(streamRows[Value])
+				            in
+				                [DriverKey = Text.From(driverID) & "||" & sub, LYTotal = lyTotal]
+				    ),
+				
+				    HCAvgRatioPerDriver = List.Transform(
+				        LYDriverPerDriver,
+				        each
+				            let
+				                key = _[DriverKey],
+				                sub = Text.Split(key, "||"){1},
+				                lyDriver = _[LYTotal],
+				                lyDecHC = Record.FieldOrDefault(LYDecHCRecord, sub, null)
+				            in
+				                [DriverKey = key, Ratio = if lyDriver = null or lyDecHC = null or lyDecHC = 0 then null else lyDriver / lyDecHC / 12]
+				    ),
+				    HCAvgRatioDriverRecord = Record.FromList(
+				        List.Transform(HCAvgRatioPerDriver, each _[Ratio]),
+				        List.Transform(HCAvgRatioPerDriver, each _[DriverKey])
+				    ),
+				
+				    RegionCountPerDriver = Table.Buffer(
+				        Table.Group(
+				            Table.SelectRows(ActualsClean, each [Version] = "Manual"),
+				            {"Driver ID", "Substream Abbreviation"},
+				            {{"RegionCount", each List.Count(List.Distinct([Service Region])), type number}}
+				        )
+				    ),
+				    RegionCountRecord = Record.FromList(
+				        RegionCountPerDriver[RegionCount],
+				        List.Transform(
+				            Table.ToRecords(Table.SelectColumns(RegionCountPerDriver, {"Driver ID", "Substream Abbreviation"})),
+				            each Text.From(_[Driver ID]) & "||" & _[#"Substream Abbreviation"]
+				        )
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP E: Build LY lookup
+				    // ─────────────────────────────────────────────
+				    ActualsLookupBase = Table.AddColumn(
+				        Table.AddColumn(ActualsClean, "LY_Year", each Date.Year([Reporting Date]), Int64.Type),
+				        "LY_Month", each Date.Month([Reporting Date]), Int64.Type
+				    ),
+				    ActualsLookup = Table.Group(
+				        ActualsLookupBase,
+				        {"Driver ID", "Version", "LY_Year", "LY_Month"},
+				        {{"LYValue", each List.Sum([Value]), type number}}
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP F: Enrich actuals
+				    // ─────────────────────────────────────────────
+				    AddActualsLYKeys = Table.AddColumn(
+				        Table.AddColumn(AddIsForecastActuals, "LY_Year", each Date.Year([Reporting Date]) - 1, Int64.Type),
+				        "LY_Month", each Date.Month([Reporting Date]), Int64.Type
+				    ),
+				
+				    JoinLYActuals = Table.NestedJoin(
+				        AddActualsLYKeys, {"Driver ID", "Version", "LY_Year", "LY_Month"},
+				        ActualsLookup, {"Driver ID", "Version", "LY_Year", "LY_Month"},
+				        "LYData", JoinKind.LeftOuter
+				    ),
+				    ExpandLYActuals = Table.ExpandTableColumn(JoinLYActuals, "LYData", {"LYValue"}, {"LY Same Month"}),
+				
+				    AddGrowthRateActuals = Table.AddColumn(
+				        ExpandLYActuals, "Growth Rate",
+				        each Record.FieldOrDefault(GrowthRecord, [Driver Name] & "||" & [Substream Abbreviation], 0),
+				        type number
+				    ),
+				
+				    ActualsEnriched = Table.RemoveColumns(AddGrowthRateActuals, {"LY_Year", "LY_Month"}),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP G: Load method lookup
+				    // ─────────────────────────────────────────────
+				    MethodRecord = Record.FromList(
+				        Stream_Forecast_Method[#"Forecast Method"],
+				        Stream_Forecast_Method[#"Substream Abbreviation"]
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP H: Generate forecast rows
+				    // ─────────────────────────────────────────────
+				    // FIX: reverted to keeping every Driver ID + Version combo as its own row
+				    // (no Table.Group collapse, no per-substream hardcoding). This is what
+				    // actually makes each driver family forecast independently - it's driven
+				    // entirely by whatever versions exist in the real data, so it doesn't need
+				    // special-casing for PC/TEM/RS and won't break the next time a new
+				    // multi-version substream shows up.
+				    DriverVersionCombos = 
+				        Table.Distinct(
+				            Table.SelectColumns(
+				                Table.SelectRows(ActualsClean, each [Version] <> "Trigger"),
+				                {
+				                    "Driver ID", "Version", "Driver Name", "Driver Family",
+				                    "Service Region", "Stream Abbreviation", "Substream Abbreviation", "Weight"
+				                }
+				            )
+				        ),
+				
+				    AddForecastMonthsCol = Table.AddColumn(
+				        DriverVersionCombos, "ForecastMonths",
+				        each
+				            let
+				                sub = [Substream Abbreviation],
+				                cutoff = Record.FieldOrDefault(SubstreamCutoffRecord, sub, null)
+				            in
+				                if cutoff = null then {}
+				                else
+				                    let
+				                        startDate = Date.AddMonths(Date.EndOfMonth(cutoff), 1),
+				                        endDate = #date(Date.Year(cutoff), 12, 31),
+				                        monthCount = if startDate > endDate then 0
+				                                     else (Date.Year(endDate) - Date.Year(startDate)) * 12
+				                                          + (Date.Month(endDate) - Date.Month(startDate)) + 1
+				                    in
+				                        List.Transform(
+				                            {0..monthCount-1},
+				                            each Date.EndOfMonth(Date.AddMonths(startDate, _))
+				                        )
+				    ),
+				    ExpandedMonths = Table.ExpandListColumn(AddForecastMonthsCol, "ForecastMonths"),
+				    RenamedForecastMonth = Table.RenameColumns(ExpandedMonths, {{"ForecastMonths", "ForecastMonth"}}),
+				    FilterValidForecast = Table.SelectRows(RenamedForecastMonth, each [ForecastMonth] <> null),
+				
+				    AddLYKeys = Table.AddColumn(
+				        Table.AddColumn(FilterValidForecast, "LY_Year", each Date.Year([ForecastMonth]) - 1, Int64.Type),
+				        "LY_Month", each Date.Month([ForecastMonth]), Int64.Type
+				    ),
+				
+				    JoinLY = Table.NestedJoin(
+				        AddLYKeys, {"Driver ID", "Version", "LY_Year", "LY_Month"},
+				        ActualsLookup, {"Driver ID", "Version", "LY_Year", "LY_Month"},
+				        "LYData", JoinKind.LeftOuter
+				    ),
+				    ExpandLY = Table.ExpandTableColumn(JoinLY, "LYData", {"LYValue"}, {"LY Same Month"}),
+				
+				    AddForecastYearMonth = Table.AddColumn(
+				        Table.AddColumn(ExpandLY, "ForecastYear", each Date.Year([ForecastMonth]), Int64.Type),
+				        "ForecastMonthNum", each Date.Month([ForecastMonth]), Int64.Type
+				    ),
+				
+				    JoinHCForecast = Table.NestedJoin(
+				        AddForecastYearMonth, {"ForecastYear", "ForecastMonthNum"},
+				        HeadcountLookup, {"Year", "MonthNumber"},
+				        "HCForecast", JoinKind.LeftOuter
+				    ),
+				    ExpandHCForecast = Table.ExpandTableColumn(JoinHCForecast, "HCForecast", {"Headcount"}, {"ForecastHeadcount"}),
+				
+				    JoinWCForecast = Table.NestedJoin(
+				        ExpandHCForecast, {"ForecastYear", "ForecastMonthNum"},
+				        WhiteCollarLookup, {"Year", "MonthNumber"},
+				        "WCForecast", JoinKind.LeftOuter
+				    ),
+				    ExpandWCForecast = Table.ExpandTableColumn(JoinWCForecast, "WCForecast", {"WhiteCollarHC"}, {"ForecastWhiteCollarHC"}),
+				
+				    AddGrowthRate = Table.AddColumn(
+				        ExpandWCForecast, "Growth Rate",
+				        each Record.FieldOrDefault(GrowthRecord, [Driver Name] & "||" & [Substream Abbreviation], 0),
+				        type number
+				    ),
+				
+				    // ─────────────────────────────────────────────
+				    // STEP H2: Forecast value - all methods
+				    // ─────────────────────────────────────────────
+				    AddForecastValue = Table.AddColumn(
+				        AddGrowthRate, "Value",
+				        each
+				            let
+				                sub = [Substream Abbreviation],
+				                method = Record.FieldOrDefault(MethodRecord, sub, "growth"),
+				                forecastYear = [ForecastYear],
+				                forecastMonthNum = [ForecastMonthNum],
+				                forecastDate = [ForecastMonth],
+				                driverNameLower = Text.Lower([Driver Name]),
+				                region = [Service Region],
+				                version = [Version],
+				                driverKey = Text.From([Driver ID]) & "||" & version,
+				
+				                // Growth method
+				                growthValue =
+				                    if [LY Same Month] = null then null
+				                    else [LY Same Month] * (1 + [Growth Rate]),
+				
+				                // Headcount ratio method
+				                hcValue =
+				                    let
+				                        driverYears = Record.FieldOrDefault(ActualRatiosNested, driverKey, null),
+				                        yearKey = Number.ToText(forecastYear),
+				                        actualMonthRatios = if driverYears = null then {} else Record.FieldOrDefault(driverYears, yearKey, {}),
+				                        actualRatios = List.Transform(actualMonthRatios, each _[DriverHCRatio]),
+				                        hc = [ForecastHeadcount],
+				                        lastActualMonth = if List.Count(actualMonthRatios) = 0 then 0 else List.Max(List.Transform(actualMonthRatios, each _[MonthNumber])),
+				                        priorForecastMonths = if forecastMonthNum <= lastActualMonth + 1 then {} else {(lastActualMonth + 1)..(forecastMonthNum - 1)},
+				                        expandedRatios = List.Accumulate(
+				                            priorForecastMonths, actualRatios,
+				                            (state, m) => let avgSoFar = if List.Count(state) = 0 then 0 else List.Average(state) in state & {avgSoFar}
+				                        ),
+				                        finalAvg = if List.Count(expandedRatios) = 0 then null else List.Average(expandedRatios)
+				                    in
+				                        if finalAvg = null or hc = null then null else hc * finalAvg,
+				
+				                // Headcount avg method
+				                hcAvgKey = Text.From([Driver ID]) & "||" & sub,
+				                hcAvgValue =
+				                    let
+				                        ratio = Record.FieldOrDefault(HCAvgRatioDriverRecord, hcAvgKey, null),
+				                        hc = [ForecastHeadcount],
+				                        regionCount = Record.FieldOrDefault(RegionCountRecord, hcAvgKey, 1)
+				                    in
+				                        if ratio = null or hc = null or regionCount = 0 then null
+				                        else (hc * ratio) / regionCount,
+				
+				                // TEM method
+				                temValue =
+				                    let
+				                        wc = [ForecastWhiteCollarHC],
+				                        temSubRatios = Record.FieldOrDefault(TEMRatioNested, sub, null),
+				                        yearKey = Number.ToText(forecastYear),
+				                        actualMonthRatios = if temSubRatios = null then {} else Record.FieldOrDefault(temSubRatios, yearKey, {}),
+				                        filteredRatios = List.Select(actualMonthRatios, each _[MonthNumber] < forecastMonthNum),
+				                        ratioValues = List.Transform(filteredRatios, each _[TEMRatio]),
+				                        expandingAvg = if List.IsEmpty(ratioValues) then null else List.Average(ratioValues),
+				                        forecastTotal = if expandingAvg = null or wc = null then null else wc * expandingAvg,
+				                        totalAutoForecast = if TEMAutoRatio = null or forecastTotal = null then null
+				                                            else forecastTotal * TEMAutoRatio,
+				                        driverAutoSplit = Record.FieldOrDefault(TEMAutoSplitRecord, Text.From([Driver ID]), null),
+				                        forecastAuto = if totalAutoForecast = null or driverAutoSplit = null then null
+				                                       else totalAutoForecast * driverAutoSplit,
+				                        versionValue =
+				                            if version = "Total" then forecastTotal
+				                            else if version = "Auto" then forecastAuto
+				                            else if version = "Manual" then
+				                                if forecastTotal = null or totalAutoForecast = null then null
+				                                else forecastTotal - totalAutoForecast
+				                            else null
+				                    in
+				                        versionValue,
+				
+				                // RS method - Resumes + Interviews with expanding avg ratios
+				                rsValue =
+				                    let
+				                        regionLower = Text.Lower(region),
+				
+				                        // Get pre-computed ratio lists for this region
+				                        resumeSalariedRatios = Record.FieldOrDefault(RSResumeSalariedRatiosByRegion, region, {}),
+				                        resumeHourlyRatios = Record.FieldOrDefault(RSResumeHourlyRatiosByRegion, region, {}),
+				                        interviewRatios = Record.FieldOrDefault(RSInterviewRatiosByRegion, region, {}),
+				                        manualRates = Record.FieldOrDefault(RSManualRateByRegion, region, {}),
+				
+				                        // Get expanding averages up to forecast date
+				                        avgResumeSalaried = GetExpandingAvg(resumeSalariedRatios, forecastDate),
+				                        avgResumeHourly = GetExpandingAvg(resumeHourlyRatios, forecastDate),
+				                        avgInterviewRatio = GetExpandingAvg(interviewRatios, forecastDate),
+				                        avgManualRate = GetExpandingAvg(manualRates, forecastDate),
+				
+				                        // Get trigger values for forecast month
+				                        activatedSalaried = GetTriggerValue("salaried + cse", region, forecastDate),
+				                        activatedExecutive = GetTriggerValue("executive", region, forecastDate),
+				                        activatedHourly = GetTriggerValue("hourly", region, forecastDate),
+				
+				                        // Forecast values
+				                        // Resumes
+				                        forecastResumeSalaried = (activatedSalaried + activatedExecutive) * avgResumeSalaried,
+				                        forecastResumeHourly = activatedHourly * avgResumeHourly,
+				
+				                        // Interviews
+				                        forecastInterviewAutoSalaried = activatedSalaried * (1 - avgManualRate) * avgInterviewRatio,
+				                        forecastInterviewManualSalaried = activatedSalaried * avgManualRate * avgInterviewRatio,
+				                        forecastInterviewManualExecutive = activatedExecutive * avgInterviewRatio,
+				                        forecastInterviewManualHourly = activatedHourly * avgInterviewRatio,
+				
+				                        // Route to correct driver based on Driver Name
+				                        result =
+				    if Text.Contains(driverNameLower, "resumes") and Text.Contains(driverNameLower, "hourly") then
+				        forecastResumeHourly
+				    else if Text.Contains(driverNameLower, "resumes") and Text.Contains(driverNameLower, "salaried") then
+				        forecastResumeSalaried
+				    // Add this - Total = Hourly + Salaried
+				    else if driverNameLower = "resumes received" then
+				        forecastResumeHourly + forecastResumeSalaried
+				    else if Text.Contains(driverNameLower, "interviews") and Text.Contains(driverNameLower, "salaried") and version = "Auto" then
+				        forecastInterviewAutoSalaried
+				    else if Text.Contains(driverNameLower, "interviews") and Text.Contains(driverNameLower, "salaried") and version = "Manual" then
+				        forecastInterviewManualSalaried
+				    else if Text.Contains(driverNameLower, "interviews") and Text.Contains(driverNameLower, "executive") then
+				        forecastInterviewManualExecutive
+				    else if Text.Contains(driverNameLower, "interviews") and Text.Contains(driverNameLower, "hourly") then
+				        forecastInterviewManualHourly
+				    else null
+				                    in
+				                        result
+				            in
+				                if method = "headcount_ratio" then hcValue
+				                else if method = "headcount_avg" then hcAvgValue
+				                else if method = "tem" then temValue
+				                else if method = "rs" then rsValue
+				                else growthValue,
+				        type number
+				    ),
+				
+				    DropHelpers = Table.RemoveColumns(
+				        AddForecastValue,
+				        {"LY_Year", "LY_Month", "ForecastYear", "ForecastMonthNum",
+				         "ForecastHeadcount", "ForecastWhiteCollarHC", "Growth Rate"}
+				    ),
+				
+				    RenameForecastDate = Table.RenameColumns(DropHelpers, {{"ForecastMonth", "Reporting Date"}}),
+				    AddCrfcId = Table.AddColumn(RenameForecastDate, "crfc0_driverid", each null),
+				    AddCrfcName = Table.AddColumn(AddCrfcId, "crfc0_name", each null),
+				    ForecastEnriched = Table.AddColumn(AddCrfcName, "IsForecast", each true, type logical),
+				
+				    Combined = Table.Combine({ActualsEnriched, ForecastEnriched}),
+				
+				    AddYearMonth = Table.AddColumn(
+				        Combined, "YearMonth",
+				        each Date.ToText([Reporting Date], "yyyy-MM"),
+				        type text
+				    ),
+				
+				    AddLYYearForCapacity = Table.AddColumn(
+				        AddYearMonth, "_LYYear",
+				        each Date.Year([Reporting Date]) - 1,
+				        Int64.Type
+				    ),
+				
+				    JoinCapacity = Table.NestedJoin(
+				        AddLYYearForCapacity, {"Substream Abbreviation", "Driver Name", "_LYYear"},
+				        Capacity_Per_Substream_Year, {"Substream Abbreviation", "Driver Name", "Year"},
+				        "CapData", JoinKind.LeftOuter
+				    ),
+				    ExpandCapacity = Table.ExpandTableColumn(
+				        JoinCapacity, "CapData",
+				        {"Manual per FTE Avg", "Manual per FTE Avg + Eff", "Manual per FTE LY Baseline"},
+				        {"Manual per FTE Avg LY", "Manual per FTE Avg LY + Eff", "Manual per FTE LY Baseline"}
+				    ),
+				
+				    DropHelper = Table.RemoveColumns(ExpandCapacity, {"_LYYear"}),
+				
+				    #"Changed Type" = Table.TransformColumnTypes(DropHelper, {{"Reporting Date", type date}})
+				
+				in
+				    #"Changed Type"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

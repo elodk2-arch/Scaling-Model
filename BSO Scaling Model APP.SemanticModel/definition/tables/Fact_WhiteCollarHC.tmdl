@@ -1,0 +1,184 @@
+table Fact_WhiteCollarHC
+	lineageTag: ce5be854-d8b7-41a4-90f9-2401c534f795
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: badff50e-be28-45dc-a5ef-529fe53e58c5
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 65a41a34-e8ae-442b-9fd0-df4ead601798
+		summarizeBy: sum
+		sourceColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column WhiteCollarHC
+		dataType: int64
+		formatString: 0
+		lineageTag: 38ff0e07-600e-4d64-ac77-5261c9aa5286
+		summarizeBy: sum
+		sourceColumn: WhiteCollarHC
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsForecast
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9bff05a8-235f-41e2-bf85-9ea15900a1b5
+		summarizeBy: none
+		sourceColumn: IsForecast
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 587d4401-ce8b-4ab3-9371-19c1b6012f0e
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: ae0275e3-22cc-4400-868c-1adc38b293a4
+			defaultHierarchy: LocalDateTable_758b57da-cb2d-4693-82b7-843452f79afc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Fact_WhiteCollarHC = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [Year = Int64.Type, MonthNumber = Int64.Type, WhiteCollarHC = Int64.Type],
+				        {
+				            {2024, 1,  null},
+				            {2024, 2,  null},
+				            {2024, 3,  null},
+				            {2024, 4,  null},
+				            {2024, 5,  null},
+				            {2024, 6,  null},
+				            {2024, 7,  null},
+				            {2024, 8,  null},
+				            {2024, 9,  null},
+				            {2024, 10, null},
+				            {2024, 11, null},
+				            {2024, 12, null},
+				            {2025, 1,  13587},
+				            {2025, 2,  13625},
+				            {2025, 3,  13475},
+				            {2025, 4,  13545},
+				            {2025, 5,  13636},
+				            {2025, 6,  13720},
+				            {2025, 7,  13677},
+				            {2025, 8,  13850},
+				            {2025, 9,  14019},
+				            {2025, 10, 14138},
+				            {2025, 11, 14177},
+				            {2025, 12, 14186},
+				            {2026, 1,  14186},
+				            {2026, 2,  14079},
+				            {2026, 3,  14185},
+				            {2026, 4,  14236},
+				            {2026, 5,  null},
+				            {2026, 6,  null},
+				            {2026, 7,  null},
+				            {2026, 8,  null},
+				            {2026, 9,  null},
+				            {2026, 10, null},
+				            {2026, 11, null},
+				            {2026, 12, 15780}
+				        }
+				    ),
+				
+				    YearsPresent = List.Distinct(Source[Year]),
+				
+				    AllYearsProcessed = List.Transform(
+				        YearsPresent,
+				        each
+				            let
+				                yr = _,
+				                yearRows = Table.SelectRows(Source, (r) => r[Year] = yr),
+				
+				                actualRows = Table.SelectRows(
+				                    yearRows,
+				                    (r) => r[WhiteCollarHC] <> null and r[MonthNumber] < 12
+				                ),
+				
+				                decRows = Table.SelectRows(yearRows, (r) => r[MonthNumber] = 12),
+				                decTarget = if Table.RowCount(decRows) = 0 then null
+				                            else decRows{0}[WhiteCollarHC],
+				
+				                lastActualMonth = if Table.RowCount(actualRows) = 0 then 0
+				                                  else List.Max(actualRows[MonthNumber]),
+				                lastActualValue = if lastActualMonth = 0 then null
+				                                  else
+				                                      let
+				                                          row = Table.SelectRows(yearRows, (r) => r[MonthNumber] = lastActualMonth)
+				                                      in
+				                                          if Table.RowCount(row) = 0 then null else row{0}[WhiteCollarHC],
+				
+				                allMonths = List.Transform(
+				                    {1..12},
+				                    (m) =>
+				                        let
+				                            existingRow = Table.SelectRows(yearRows, (r) => r[MonthNumber] = m),
+				                            existingValue = if Table.RowCount(existingRow) = 0 then null
+				                                           else existingRow{0}[WhiteCollarHC],
+				
+				                            isActual = m <= lastActualMonth and existingValue <> null,
+				
+				                            rawValue =
+				                                if isActual then existingValue
+				                                else if m = 12 and decTarget <> null then decTarget
+				                                else if lastActualValue <> null and decTarget <> null and lastActualMonth < 12 then
+				                                    let
+				                                        remainingMonths = 12 - lastActualMonth,
+				                                        monthlyIncrease = (decTarget - lastActualValue) / remainingMonths
+				                                    in
+				                                        lastActualValue + (m - lastActualMonth) * monthlyIncrease
+				                                else null,
+				
+				                            interpolated = if rawValue = null then null else Number.RoundUp(rawValue),
+				                            isForecast = not isActual
+				                        in
+				                            [Year = yr, MonthNumber = m, WhiteCollarHC = interpolated, IsForecast = isForecast]
+				                )
+				            in
+				                allMonths
+				    ),
+				
+				    FlatList = List.Combine(AllYearsProcessed),
+				    AsTable = Table.FromRecords(FlatList),
+				
+				    AddDate = Table.AddColumn(
+				        AsTable, "Date",
+				        each Date.EndOfMonth(#date([Year], [MonthNumber], 1)),
+				        type date
+				    ),
+				
+				    Typed = Table.TransformColumnTypes(
+				        AddDate,
+				        {
+				            {"Year", Int64.Type},
+				            {"MonthNumber", Int64.Type},
+				            {"WhiteCollarHC", Int64.Type},
+				            {"IsForecast", type logical},
+				            {"Date", type date}
+				        }
+				    )
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

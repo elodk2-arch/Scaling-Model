@@ -1,0 +1,45 @@
+table Sub_stream_combiner
+	lineageTag: d9d1a0ce-4052-45d0-aa95-7042532687b3
+
+	column 'Stream Abbreviation'
+		dataType: string
+		lineageTag: 70ac4f0a-461e-4552-8415-257baf5474e8
+		summarizeBy: none
+		sourceColumn: Stream Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Substream Abbreviation'
+		dataType: string
+		lineageTag: 0786e02d-b403-4382-afca-5a71753dfd1a
+		summarizeBy: none
+		sourceColumn: Substream Abbreviation
+		sortByColumn: 'Stream Abbreviation'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sub_stream_combiner = m
+		mode: import
+		source = ```
+				let
+				    // Get unique substreams from both facts (in case one has streams the other doesn't)
+				    FromActuals = Table.Distinct(
+				        Table.SelectColumns(#"Fact_Actuals", {"Stream Abbreviation", "Substream Abbreviation"})
+				    ),
+				    FromFTE = Table.Distinct(
+				        Table.SelectColumns(#"Fact_FTE", {"Stream Abbreviation", "Substream Abbreviation"})
+				    ),
+				    Combined = Table.Distinct(Table.Combine({FromActuals, FromFTE})),
+				    
+				    // Drop nulls/blanks
+				    Cleaned = Table.SelectRows(Combined, each [Substream Abbreviation] <> null and [Substream Abbreviation] <> "")
+				in
+				    Cleaned
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

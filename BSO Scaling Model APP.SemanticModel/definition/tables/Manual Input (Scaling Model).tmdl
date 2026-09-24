@@ -1,0 +1,96 @@
+table 'Manual Input (Scaling Model)'
+	lineageTag: 5a3e7850-0fc2-4f8c-bea8-9b434a83cf18
+
+	measure 'Open posititons sum' = SUM('Manual Input (Scaling Model)'[OpenPositions])
+		lineageTag: 58dfbf6c-23f5-49a1-bdf6-2f73cf79b248
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sum of GSO adjustment' = ```
+			
+			CALCULATE(
+			    SUM('Manual Input (Scaling Model)'[GSL/GSOAdjustment]),
+			    YEAR('DateTable'[Date]) = YEAR(TODAY())
+			)
+			
+			```
+		lineageTag: bee07785-9d37-4963-ac73-e77319f34d97
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Recruitmentnotstartedsum = SUM('Manual Input (Scaling Model)'[Recruitmentnotstarted])
+		formatString: 0
+		lineageTag: ba037424-e19b-417f-a3da-2a2a306b9bd4
+
+	column Sub-Stream
+		dataType: string
+		lineageTag: 8143be13-c073-46de-b2f2-6e864f190799
+		summarizeBy: none
+		sourceColumn: Sub-Stream
+
+		annotation SummarizationSetBy = Automatic
+
+	column OpenPositions
+		dataType: double
+		lineageTag: 906a61e1-fad8-4e94-beb5-adcef23160b2
+		summarizeBy: none
+		sourceColumn: OpenPositions
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Accuracy
+		dataType: string
+		lineageTag: c68c09d6-545d-4b99-ae3b-0f3ceb4535eb
+		summarizeBy: none
+		sourceColumn: Accuracy
+
+		annotation SummarizationSetBy = Automatic
+
+	column GSL/GSOAdjustment
+		dataType: double
+		lineageTag: 99ce9b6b-fe2b-464d-9030-46116d0d8dd7
+		summarizeBy: none
+		sourceColumn: GSL/GSOAdjustment
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: string
+		lineageTag: 0b31ee5d-a8b2-422b-bf70-df64eb6d2a34
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recruitmentnotstarted
+		dataType: double
+		lineageTag: a4caf52c-b82c-422d-a5e1-5684427aebc2
+		summarizeBy: none
+		sourceColumn: Recruitmentnotstarted
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Manual Input (Scaling Model)' = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Tables("https://legogroup.sharepoint.com/sites/AutomationTeamDashboard", [ApiVersion = 15]),
+				    #"10ac2efa-0d01-4de1-ab54-a11ffa844867" = Source{[Id="10ac2efa-0d01-4de1-ab54-a11ffa844867"]}[Items],
+				    #"Renamed Columns" = Table.RenameColumns(#"10ac2efa-0d01-4de1-ab54-a11ffa844867",{{"ID", "ID.1"}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Renamed Columns", {"Title", "OpenPositions", "Accuracy", "Recruitmentnotstarted","GSL/GSOAdjustment", "Year"
+				}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Removed Other Columns",{{"Title", "Sub-Stream"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"GSL/GSOAdjustment", type number}, {"OpenPositions", type number}, {"Recruitmentnotstarted", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

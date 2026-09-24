@@ -1,0 +1,261 @@
+table Headcount_Data_Finance
+	lineageTag: 90ecf386-c3d0-4b9c-a92e-e77af87e068c
+
+	column report_effective_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f9ec5ac6-8d72-484e-a1ce-bb18e2340f68
+		summarizeBy: none
+		sourceColumn: report_effective_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 77f2b96f-5d13-4a0c-941b-8862ead0e5c9
+		summarizeBy: sum
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_name
+		dataType: string
+		lineageTag: b7188997-a726-4eba-9036-382777904b3f
+		summarizeBy: none
+		sourceColumn: employee_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_type
+		dataType: string
+		lineageTag: 2976f3e4-4c95-4096-847e-bc345e51417c
+		summarizeBy: none
+		sourceColumn: employee_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b1e4a6b-881e-4d8b-8105-aaf93081a0e5
+		summarizeBy: sum
+		sourceColumn: position_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_profile_id
+		dataType: string
+		lineageTag: 52947d63-f101-48c2-9fb6-24f38dc914f6
+		summarizeBy: none
+		sourceColumn: job_profile_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_profile_name
+		dataType: string
+		lineageTag: 1e807223-03f4-4c08-9e09-cc65203b3a88
+		summarizeBy: none
+		sourceColumn: job_profile_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_level_group
+		dataType: string
+		lineageTag: f6a86117-7357-4e73-9f9b-53d298c92e5c
+		summarizeBy: none
+		sourceColumn: job_level_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_level
+		dataType: string
+		lineageTag: cebdf758-1825-424d-a8d2-edd7c6972cbb
+		summarizeBy: none
+		sourceColumn: job_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column management_level
+		dataType: string
+		lineageTag: b0f1df80-57e0-430c-8d6c-b90b7b7520e9
+		summarizeBy: none
+		sourceColumn: management_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_family
+		dataType: string
+		lineageTag: 7849e1e9-6598-4825-9363-f86c155389a0
+		summarizeBy: none
+		sourceColumn: job_family
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 683c709a-48b9-4f20-bac3-91bfb7536d7b
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column cost_center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a109312d-1e15-49a2-a773-75c7eb6a4e19
+		summarizeBy: sum
+		sourceColumn: cost_center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 85b07e32-bd7f-4a52-b81c-3e65cd56e933
+		summarizeBy: sum
+		sourceColumn: company_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supervisory_organization_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e70942e9-1197-44d7-b522-9f79fba8ba06
+		summarizeBy: sum
+		sourceColumn: supervisory_organization_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column people_leader_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fb366719-98f8-48fa-baa0-16b00bc2f838
+		summarizeBy: sum
+		sourceColumn: people_leader_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column hire_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 022792fe-c65e-4c6e-820b-f5c91992cee1
+		summarizeBy: none
+		sourceColumn: hire_date
+
+		variation Variation
+			isDefault
+			relationship: b0ad5c0a-61d7-46ef-957d-de1fa459467c
+			defaultHierarchy: LocalDateTable_783c8ffc-a561-4a4c-94ea-22f790f26f2d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column employment_status
+		dataType: string
+		lineageTag: 44be2268-82dd-43ce-9373-56f371ac7e22
+		summarizeBy: none
+		sourceColumn: employment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_request_reason
+		dataType: string
+		lineageTag: 094d85f9-4210-44ea-9847-3e6c998690fe
+		summarizeBy: none
+		sourceColumn: position_request_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1dbba3e3-cd8d-4c21-8541-065b58405d42
+		summarizeBy: sum
+		sourceColumn: employee_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column fte
+		dataType: double
+		lineageTag: fde03bb5-2f2c-44b2-91fb-4f820f07b769
+		summarizeBy: sum
+		sourceColumn: fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_fte
+		dataType: double
+		lineageTag: d7e5af32-38fc-4181-8c3e-70c55540681d
+		summarizeBy: sum
+		sourceColumn: active_fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column permanent_salaried_actuals
+		dataType: int64
+		formatString: 0
+		lineageTag: ff1b1fef-3fc1-4072-9fab-7edda47b2cfa
+		summarizeBy: sum
+		sourceColumn: permanent_salaried_actuals
+
+		annotation SummarizationSetBy = Automatic
+
+	column temporary_salaried_actuals
+		dataType: int64
+		formatString: 0
+		lineageTag: 8c6d8280-5f6d-4a03-82f4-349d307cb054
+		summarizeBy: sum
+		sourceColumn: temporary_salaried_actuals
+
+		annotation SummarizationSetBy = Automatic
+
+	column students_and_interns_actuals
+		dataType: int64
+		formatString: 0
+		lineageTag: 8603ad58-ea26-4ea6-9970-c2a02d81351d
+		summarizeBy: sum
+		sourceColumn: students_and_interns_actuals
+
+		annotation SummarizationSetBy = Automatic
+
+	column brand_retail_actuals
+		dataType: int64
+		formatString: 0
+		lineageTag: 980a6090-ca82-489c-a549-079846540813
+		summarizeBy: sum
+		sourceColumn: brand_retail_actuals
+
+		annotation SummarizationSetBy = Automatic
+
+	column consumer_service_actuals
+		dataType: int64
+		formatString: 0
+		lineageTag: a51eea0d-0ee9-487d-aedd-d45ac60aed7f
+		summarizeBy: sum
+		sourceColumn: consumer_service_actuals
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Headcount_Data_Finance = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("lego-ssc-prod.cloud.databricks.com", "/sql/1.0/warehouses/1bfc9bd0905d0edf", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0"]),
+				    people_data_finance_Database = Source{[Name="people_data_finance",Kind="Database"]}[Data],
+				    people_cost_management_gold_Schema = people_data_finance_Database{[Name="people_cost_management_gold",Kind="Schema"]}[Data],
+				    headcount_and_fte_by_month_Table = people_cost_management_gold_Schema{[Name="headcount_and_fte_by_month",Kind="Table"]}[Data]
+				in
+				    headcount_and_fte_by_month_Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

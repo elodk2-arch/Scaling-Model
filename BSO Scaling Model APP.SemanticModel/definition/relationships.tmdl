@@ -1,0 +1,120 @@
+relationship AutoDetected_1b3b9430-7504-4595-8364-b6c9a881ccc8
+	fromColumn: 'Driver Data'.'Driver ID'
+	toColumn: 'Driver Map'.'Driver ID'
+
+relationship 8872cc6d-408f-ab56-e455-bee80effcf4d
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'FTE Map'.'Substream Abbreviation'
+	toColumn: 'Manual Input (Scaling Model)'.Sub-Stream
+
+relationship 7ccdd443-0b44-eb9f-ae02-8a2932db96d8
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'FTE Map'.'Substream Abbreviation'
+	toColumn: 'Driver Map'.'Substream Abbreviation'
+
+relationship bae98b93-1fb0-03e3-8f6e-7af5991b6b10
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'Driver Map'.'Substream Abbreviation'
+	toColumn: 'Criteria for model'.Sub-stream
+
+relationship dfc6974a-523a-86aa-d2e9-fdfc38132695
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Driver Map'.'Driver Name'
+	toColumn: BaseProcessWeights.Driver
+
+relationship AutoDetected_2d4bdcd4-9364-4b16-9ec2-0d41ba001b81
+	fromColumn: Fact_Actuals.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship 97827a88-7efd-4420-99c7-a92bab25dfb1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Driver Data'.'Reporting Date'
+	toColumn: LocalDateTable_f86ad14d-51c6-4dee-8428-cfb44b4882df.Date
+
+relationship f31d27b9-9313-f781-2763-fc3e858c90c2
+	fromColumn: Fact_Actuals.'Reporting Date'
+	toColumn: DateTable.Date
+
+relationship d7a197a6-1855-e7c5-0f0f-4b8dc7849407
+	fromColumn: Fact_FTE.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship 93b4f632-1b58-4f21-bfe4-c0bd67f22531
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'FTE Data'.Date
+	toColumn: LocalDateTable_4da41d75-4be3-40c5-ab49-388add1b9571.Date
+
+relationship 758ac025-28a2-41da-6aa0-8f75429a1828
+	fromColumn: Fact_FTE.Date
+	toColumn: DateTable.Date
+
+relationship AutoDetected_6b8f0817-2058-4a33-ba59-3cb4290060de
+	fromColumn: Capacity_Per_Substream_Year.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship AutoDetected_b50d484f-aa8f-4126-98b2-e7c35b18f26c
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Stream_Forecast_Method.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship AutoDetected_b1514cc8-fb2f-4cf3-be66-22562be09784
+	fromColumn: Fact_Headcount.Year
+	toColumn: EfficiencyTarget.Year
+
+relationship bfdfe53d-2dd0-0691-9a3d-a0d2e9c0ba41
+	fromColumn: Fact_Actuals.'Driver ID'
+	toColumn: 'Driver Map'.'Driver ID'
+
+relationship 8ead1e04-6f7d-d46d-712b-c4c8847461b2
+	isActive: false
+	fromColumn: 'Driver Map'.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship 9cd88acc-ed94-13d0-bdb9-49f0c17f8f3d
+	fromColumn: 'FTE Map'.'Substream Abbreviation'
+	toColumn: Sub_stream_combiner.'Substream Abbreviation'
+
+relationship f0c2bea8-c4ed-b890-6c12-2d29909ae23e
+	isActive: false
+	fromColumn: 'Criteria for model'.Sub-stream
+	toColumn: 'Manual Input (Scaling Model)'.Sub-Stream
+
+relationship 4156de43-c298-fe57-eed8-072ceb763eb8
+	fromColumn: 'FTE Data'.'FTE Category ID'
+	toColumn: 'FTE Map'.'FTE Category ID'
+
+relationship 465b770d-f6d9-689f-8eb7-149145103310
+	fromColumn: Fact_Headcount.Date
+	toColumn: DateTable.Date
+
+relationship 415a71f5-7801-47ec-4a88-36a6d171ce3d
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: DateTable.Year
+	toColumn: Capacity_Per_Substream_Year.Year
+
+relationship ae0275e3-22cc-4400-868c-1adc38b293a4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Fact_WhiteCollarHC.Date
+	toColumn: LocalDateTable_758b57da-cb2d-4693-82b7-843452f79afc.Date
+
+relationship AutoDetected_3034eb6a-1cc2-4ef3-acc1-0dc40fea2d0a
+	fromColumn: Fact_WhiteCollarHC.Year
+	toColumn: EfficiencyTarget.Year
+
+relationship b0ad5c0a-61d7-46ef-957d-de1fa459467c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Headcount_Data_Finance.hire_date
+	toColumn: LocalDateTable_783c8ffc-a561-4a4c-94ea-22f790f26f2d.Date
+
+relationship 6c7b9c4c-2760-a572-3859-a3a72d0f81fc
+	fromColumn: Headcount_Data_Finance.report_effective_date
+	toColumn: DateTable.Date
+
+relationship da6b43eb-dabc-bed2-23b6-ac3cec80104c
+	fromColumn: 'OneStopShop Data'.report_effective_date
+	toColumn: DateTable.Date
+
