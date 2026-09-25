@@ -202,20 +202,24 @@ table Fact_Actuals
 
 	measure 'Activity Scaled FTE total' =
 			
+			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
+
 			VAR DriverTable =
-			    ADDCOLUMNS(
-			        VALUES(Fact_Actuals[Driver Name]),
-			        "DriverWeight",
-			            LOOKUPVALUE(
-			                BaseProcessWeights[Weight],
-			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
-			                BaseProcessWeights[Driver], [Driver Name]
-			            ) / 100
+			    FILTER(
+			        BaseProcessWeights,
+			        BaseProcessWeights[SubStream] = CurrentSubstream
+			            && CONTAINS(
+			                VisibleDrivers,
+			                Fact_Actuals[Driver Name],
+			                BaseProcessWeights[Driver]
+			            )
 			    )
 			
 			VAR WeightedResult =
 			    SUMX(
 			        DriverTable,
+			        VAR ThisDriver = BaseProcessWeights[Driver]
 			        VAR DriverScaled =
 			            AVERAGEX(
 			                VALUES('DateTable'[YearMonth]),
@@ -223,11 +227,12 @@ table Fact_Actuals
 			                    DIVIDE(
 			                        [Total Driver new],
 			                        AVERAGE('Fact_Actuals'[Manual per FTE Avg LY])
-			                    )
+			                    ),
+			                    Fact_Actuals[Driver Name] = ThisDriver
 			                )
 			            )
 			        RETURN
-			            DriverScaled * [DriverWeight]
+			            DriverScaled * DIVIDE(BaseProcessWeights[Weight], 100)
 			    )
 			
 			RETURN
@@ -257,20 +262,24 @@ table Fact_Actuals
 
 	measure 'Activity Scaled FTE total + Eff' =
 			
+			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
+			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
+
 			VAR DriverTable =
-			    ADDCOLUMNS(
-			        VALUES(Fact_Actuals[Driver Name]),
-			        "DriverWeight",
-			            LOOKUPVALUE(
-			                BaseProcessWeights[Weight],
-			                BaseProcessWeights[SubStream], MAX(Fact_Actuals[Substream Abbreviation]),
-			                BaseProcessWeights[Driver], [Driver Name]
-			            ) / 100
+			    FILTER(
+			        BaseProcessWeights,
+			        BaseProcessWeights[SubStream] = CurrentSubstream
+			            && CONTAINS(
+			                VisibleDrivers,
+			                Fact_Actuals[Driver Name],
+			                BaseProcessWeights[Driver]
+			            )
 			    )
 			
 			VAR WeightedResult =
 			    SUMX(
 			        DriverTable,
+			        VAR ThisDriver = BaseProcessWeights[Driver]
 			        VAR DriverScaled =
 			            AVERAGEX(
 			                VALUES('DateTable'[YearMonth]),
@@ -278,11 +287,12 @@ table Fact_Actuals
 			                    DIVIDE(
 			                        [Total Driver new],
 			                        AVERAGE('Fact_Actuals'[Manual per FTE Avg LY + Eff])
-			                    )
+			                    ),
+			                    Fact_Actuals[Driver Name] = ThisDriver
 			                )
 			            )
 			        RETURN
-			            DriverScaled * [DriverWeight]
+			            DriverScaled * DIVIDE(BaseProcessWeights[Weight], 100)
 			    )
 			
 			RETURN
