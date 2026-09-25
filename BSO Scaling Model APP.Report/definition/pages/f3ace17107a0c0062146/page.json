@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "f3ace17107a0c0062146",
-  "displayName": "Stream Overview Year",
+  "displayName": "Yearly Overview",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,
