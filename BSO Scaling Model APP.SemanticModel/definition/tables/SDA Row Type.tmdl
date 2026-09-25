@@ -82,6 +82,7 @@ table 'SDA Row Type'
 	measure 'SDA LY Volume' =
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+		RETURN
 			CALCULATE(
 			    [SDA Driver Switch],
 		    'DateTable'[Year] = SelectedYear - 1,
@@ -94,6 +95,7 @@ table 'SDA Row Type'
 	measure 'SDA CY Volume' =
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+		RETURN
 			CALCULATE(
 			    [SDA Driver Switch],
 		    'DateTable'[Year] = SelectedYear,
@@ -106,6 +108,7 @@ table 'SDA Row Type'
 	measure 'SDA LY FTE' =
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+		RETURN
 			CALCULATE(
 			    [SDA FTE Switch],
 		    'DateTable'[Year] = SelectedYear - 1,
@@ -118,6 +121,7 @@ table 'SDA Row Type'
 	measure 'SDA CY FTE' =
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+		RETURN
 			CALCULATE(
 			    [SDA FTE Switch],
 		    'DateTable'[Year] = SelectedYear,
