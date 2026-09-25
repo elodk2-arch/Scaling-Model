@@ -80,6 +80,7 @@ table 'SDA Row Type'
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'SDA LY Volume' =
+			```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -88,11 +89,13 @@ table 'SDA Row Type'
 		    'DateTable'[Year] = SelectedYear - 1,
 			    ALL('DateTable')
 			)
+			```
 		lineageTag: f75d982f-8f48-4035-bc43-471e5712609b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'SDA CY Volume' =
+			```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -101,11 +104,13 @@ table 'SDA Row Type'
 		    'DateTable'[Year] = SelectedYear,
 			    ALL('DateTable')
 			)
+			```
 		lineageTag: a09ed465-53c2-4410-8b00-a78896b6ce35
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'SDA LY FTE' =
+			```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -114,11 +119,13 @@ table 'SDA Row Type'
 		    'DateTable'[Year] = SelectedYear - 1,
 			    ALL('DateTable')
 			)
+			```
 		lineageTag: 0caaf2e7-d954-4608-a55c-2d05ed36dc88
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'SDA CY FTE' =
+			```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -127,6 +134,7 @@ table 'SDA Row Type'
 		    'DateTable'[Year] = SelectedYear,
 			    ALL('DateTable')
 			)
+			```
 		lineageTag: 3c9140eb-02fd-4669-b5af-57f9a02db25c
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
