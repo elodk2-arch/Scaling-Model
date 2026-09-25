@@ -3574,7 +3574,8 @@ createOrReplace
 
 			measure 'Last Year Volume per FTE (Service Delivery, Weighted)' = ```
 					
-					VAR YearLY = 2024  // hardcode last year
+					VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
+					VAR YearLY = SelectedYear - 1
 					RETURN
 					DIVIDE(
 					    SUMX(
@@ -3610,10 +3611,11 @@ createOrReplace
 
 			measure 'Current Year Volume per FTE (Serviced Delivery)' = ```
 					
+					VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 					VAR VolumeCY =
 					    CALCULATE(
 					        [Manual Driver (Year)],
-					        'DateTable'[Year] = 2026
+					        'DateTable'[Year] = SelectedYear
 					    )
 					VAR FTE_CY =
 					        [FTE Avg Current Year]
@@ -3627,11 +3629,12 @@ createOrReplace
 
 			measure 'FTE vs Last Year Productivity (Service Delivery)' = ```
 					
+					VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 					VAR LastYearFTE = [Last Year Volume per FTE (Service Delivery, Weighted)]
 					VAR CurrentYearVolume =
 					    CALCULATE(
 					        [Manual Driver Forecast (Summable)],
-					        'DateTable'[Year] = YEAR(TODAY())   
+					        'DateTable'[Year] = SelectedYear
 					    )
 					RETURN
 					IF(

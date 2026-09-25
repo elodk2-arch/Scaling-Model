@@ -16,12 +16,6 @@ table 'Driver Map'
 			```
 		lineageTag: ca9db643-5568-4af6-b65e-87ee8efa521e
 
-	measure 'DELETE ME' = "2"
-		lineageTag: a9690fea-889b-4875-90d6-0d7880cac8b8
-
-	measure 'DELETE ME 2' = "2"
-		lineageTag: 3c1e6e7b-8f4a-4d2b-9c10-6a5f8e3b7d21
-
 	column 'Driver ID'
 		dataType: string
 		lineageTag: 404d8690-2fd8-4cf6-8a16-948f66d3d37e
