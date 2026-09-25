@@ -81,9 +81,10 @@ table 'SDA Row Type'
 
 	measure 'SDA LY Volume' =
 			
+		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 			CALCULATE(
 			    [SDA Driver Switch],
-			    'DateTable'[Year] = YEAR(TODAY()) - 1,
+		    'DateTable'[Year] = SelectedYear - 1,
 			    ALL('DateTable')
 			)
 		lineageTag: f75d982f-8f48-4035-bc43-471e5712609b
@@ -92,9 +93,10 @@ table 'SDA Row Type'
 
 	measure 'SDA CY Volume' =
 			
+		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 			CALCULATE(
 			    [SDA Driver Switch],
-			    'DateTable'[Year] = YEAR(TODAY()),
+		    'DateTable'[Year] = SelectedYear,
 			    ALL('DateTable')
 			)
 		lineageTag: a09ed465-53c2-4410-8b00-a78896b6ce35
@@ -103,9 +105,10 @@ table 'SDA Row Type'
 
 	measure 'SDA LY FTE' =
 			
+		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 			CALCULATE(
 			    [SDA FTE Switch],
-			    'DateTable'[Year] = YEAR(TODAY()) - 1,
+		    'DateTable'[Year] = SelectedYear - 1,
 			    ALL('DateTable')
 			)
 		lineageTag: 0caaf2e7-d954-4608-a55c-2d05ed36dc88
@@ -114,9 +117,10 @@ table 'SDA Row Type'
 
 	measure 'SDA CY FTE' =
 			
+		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 			CALCULATE(
 			    [SDA FTE Switch],
-			    'DateTable'[Year] = YEAR(TODAY()),
+		    'DateTable'[Year] = SelectedYear,
 			    ALL('DateTable')
 			)
 		lineageTag: 3c9140eb-02fd-4669-b5af-57f9a02db25c
@@ -181,6 +185,27 @@ table 'SDA Row Type'
 			    "➡️ Stable — no significant change in volume or headcount"
 			)
 		lineageTag: 631287ee-0b14-450b-a407-a3d5e9cb60d6
+
+	measure 'SDA Insight' =
+			
+			VAR VolChange = [SDA Volume Change %]
+			VAR FTEChange = [SDA FTE Change %]
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    ISBLANK(VolChange) || ISBLANK(FTEChange),
+			        "Awaiting comparable volume and FTE data",
+			    VolChange > 0 && FTEChange <= 0,
+			        "More output with fewer or equal resources",
+			    VolChange > 0 && FTEChange > 0 && VolChange > FTEChange,
+			        "Output is growing faster than resources",
+			    VolChange < 0 && FTEChange < 0 && ABS(FTEChange) > ABS(VolChange),
+			        "Resources are reducing faster than output",
+			    VolChange < 0 && FTEChange > 0,
+			        "Capacity is rising while output is falling",
+			    "Resource movement needs investigation"
+			)
+		lineageTag: 0e8b8f1c-0ec4-4f59-9c2e-13f55734062a
 
 	column RowType
 		lineageTag: 26b08859-a56d-4b3b-b98d-057ed88115ce

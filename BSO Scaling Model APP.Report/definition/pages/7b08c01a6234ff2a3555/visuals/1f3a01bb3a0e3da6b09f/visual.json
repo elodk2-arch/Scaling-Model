@@ -27,8 +27,8 @@
                 }
               },
               "queryRef": "Fact_FTE.SDA CY Volume per FTE",
-              "nativeQueryRef": "Voloume/FTE",
-              "displayName": "Voloume/FTE"
+              "nativeQueryRef": "Volume/FTE",
+              "displayName": "Volume/FTE"
             }
           ]
         }
