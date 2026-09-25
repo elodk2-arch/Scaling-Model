@@ -79,8 +79,7 @@ table 'SDA Row Type'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'SDA LY Volume' =
-			```
+	measure 'SDA LY Volume' = ```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -94,8 +93,7 @@ table 'SDA Row Type'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'SDA CY Volume' =
-			```
+	measure 'SDA CY Volume' = ```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -109,8 +107,7 @@ table 'SDA Row Type'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'SDA LY FTE' =
-			```
+	measure 'SDA LY FTE' = ```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
@@ -124,8 +121,7 @@ table 'SDA Row Type'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'SDA CY FTE' =
-			```
+	measure 'SDA CY FTE' = ```
 			
 		VAR SelectedYear = SELECTEDVALUE('DateTable'[Year], YEAR(TODAY()))
 		RETURN
