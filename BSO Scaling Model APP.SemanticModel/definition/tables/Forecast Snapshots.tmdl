@@ -1,0 +1,113 @@
+table 'Forecast Snapshots'
+	lineageTag: 7f98268a-0c2a-4d9a-8b1e-2c5b73ee6f41
+
+	column SnapshotId
+		dataType: string
+		lineageTag: 0421ba1d-f33a-4c06-a045-05a2b13e35a7
+		summarizeBy: none
+		sourceColumn: SnapshotId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SnapshotDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8bd52ea7-2463-463b-a86b-e1d110cd9a19
+		summarizeBy: none
+		sourceColumn: SnapshotDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetMonth
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 7a654f71-6edf-4fd0-8b74-4b756fe90bee
+		summarizeBy: none
+		sourceColumn: TargetMonth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DriverId
+		dataType: string
+		lineageTag: d9d48d2c-9406-4a24-af68-25fbe01acd9e
+		summarizeBy: none
+		sourceColumn: DriverId
+
+		annotation SummarizationSetBy = Automatic
+
+	column DriverName
+		dataType: string
+		lineageTag: 69e54ffc-9d15-4ab3-8373-7c7be3c927e6
+		summarizeBy: none
+		sourceColumn: DriverName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Substream
+		dataType: string
+		lineageTag: b4289a96-ab85-4a70-a2f7-3e4ea55aca70
+		summarizeBy: none
+		sourceColumn: Substream
+
+		annotation SummarizationSetBy = Automatic
+
+	column ForecastValue
+		dataType: double
+		lineageTag: 11ac13b3-5a63-477b-b44f-0c46f305e25a
+		summarizeBy: sum
+		sourceColumn: ForecastValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ForecastVersion
+		dataType: string
+		lineageTag: ab413edf-fdb6-4c0f-8650-56fbd7fb47ad
+		summarizeBy: none
+		sourceColumn: ForecastVersion
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceRunId
+		dataType: string
+		lineageTag: f52ee9ef-ae0c-47c3-8b97-36c7bb755498
+		summarizeBy: none
+		sourceColumn: SourceRunId
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Forecast Snapshots' = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Tables(
+					        "https://legogroup.sharepoint.com/sites/AutomationTeamDashboard",
+					        [ApiVersion = 15]
+				    ),
+				    SnapshotList = Source{[Id = "dae37943-58c7-46f0-bc34-3a72192bb563"]}[Items],
+				    SelectedColumns = Table.SelectColumns(
+					        SnapshotList,
+					        {
+					            "Title",
+					            "SnapshotDate",
+					            "TargetMonth",
+					            "DriverId",
+					            "DriverName",
+					            "Substream",
+					            "ForecastValue",
+					            "ForecastVersion",
+					            "SourceRunId"
+					        }
+				    ),
+				    RenamedTitle = Table.RenameColumns(SelectedColumns, {{"Title", "SnapshotId"}}),
+				    ChangedTypes = Table.TransformColumnTypes(RenamedTitle,{{"SnapshotId", type text}, {"SnapshotDate", type datetime}, {"TargetMonth", type date}, {"DriverId", type text}, {"DriverName", type text}, {"Substream", type text}, {"ForecastValue", type number}, {"ForecastVersion", type text}, {"SourceRunId", type text}})
+				in
+				    ChangedTypes
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

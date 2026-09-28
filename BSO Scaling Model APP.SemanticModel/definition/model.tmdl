@@ -8,7 +8,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["Driver Data","Driver Map","Manual Input (Scaling Model)","EfficiencyTarget","FTE Map","FTE Data","Criteria for model","Fact_Actuals","Fact_FTE","Sub_stream_combiner","Capacity_Per_Substream_Year","Efficiency_Rates","Stream_Forecast_Method","Fact_Headcount","Headcount_Mock1","Fact_WhiteCollarHC","Rs forcast","Headcount_Data_Finance","OneStopShop Data"]
+annotation PBI_QueryOrder = ["Driver Data","Driver Map","Manual Input (Scaling Model)","EfficiencyTarget","FTE Map","FTE Data","Criteria for model","Fact_Actuals","Fact_FTE","Sub_stream_combiner","Capacity_Per_Substream_Year","Efficiency_Rates","Stream_Forecast_Method","Fact_Headcount","Headcount_Mock1","Fact_WhiteCollarHC","Rs forcast","Headcount_Data_Finance","OneStopShop Data","Forecast Snapshots"]
 
 annotation PBI_ProTooling = ["TMDLView_Desktop","DevMode"]
 
@@ -42,6 +42,7 @@ ref table 'SDA Row Type'
 ref table Headcount_Data_Finance
 ref table LocalDateTable_783c8ffc-a561-4a4c-94ea-22f790f26f2d
 ref table 'OneStopShop Data'
+ref table 'Forecast Snapshots'
 
 ref cultureInfo en-US
 

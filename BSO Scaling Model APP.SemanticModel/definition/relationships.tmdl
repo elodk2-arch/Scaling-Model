@@ -118,3 +118,12 @@ relationship da6b43eb-dabc-bed2-23b6-ac3cec80104c
 	fromColumn: 'OneStopShop Data'.report_effective_date
 	toColumn: DateTable.Date
 
+relationship 642a7487-39a2-4bf3-aecc-dfce34af7a17
+	fromColumn: 'Forecast Snapshots'.DriverId
+	toColumn: 'Driver Map'.'Driver ID'
+
+relationship 7fac0b87-f9d7-4081-bcbf-9a7a2170e239
+	isActive: false
+	fromColumn: 'Forecast Snapshots'.TargetMonth
+	toColumn: DateTable.Date
+
