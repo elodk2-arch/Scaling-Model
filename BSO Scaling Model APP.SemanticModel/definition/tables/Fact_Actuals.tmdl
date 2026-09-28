@@ -204,7 +204,7 @@ table Fact_Actuals
 			
 			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
 			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
-
+			
 			VAR DriverTable =
 			    FILTER(
 			        BaseProcessWeights,
@@ -264,7 +264,7 @@ table Fact_Actuals
 			
 			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
 			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
-
+			
 			VAR DriverTable =
 			    FILTER(
 			        BaseProcessWeights,
