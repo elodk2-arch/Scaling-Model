@@ -11,7 +11,7 @@
         {
           "location": {
             "x": 1049.3686256181447,
-            "y": 9675.976380796259
+            "y": 12946.01196484996
           },
           "nodeIndex": "Driver Data",
           "nodeLineageTag": "09c6d5a6-b648-45aa-97c3-2f9361882e3f",
@@ -24,7 +24,7 @@
         {
           "location": {
             "x": 1545.2387264348931,
-            "y": 9607.503424227647
+            "y": 12877.539008281348
           },
           "nodeIndex": "Driver Map",
           "nodeLineageTag": "56e22c2f-d628-4490-b3ba-817c574444cc",
@@ -37,7 +37,7 @@
         {
           "location": {
             "x": 738.9023835617719,
-            "y": 7664.3741459375888
+            "y": 10934.40972999129
           },
           "nodeIndex": "DateTable",
           "nodeLineageTag": "4a061ff7-5e5d-4031-b6ac-970669b5483a",
@@ -50,7 +50,7 @@
         {
           "location": {
             "x": 550.94944837230855,
-            "y": 8621.1369162049123
+            "y": 11891.172500258614
           },
           "nodeIndex": "Stream split main",
           "nodeLineageTag": "36a5387d-c8f6-4477-b129-95fe599b7b99",
@@ -63,7 +63,7 @@
         {
           "location": {
             "x": 1544.6058256932918,
-            "y": 9276.1824945929
+            "y": 12546.218078646601
           },
           "nodeIndex": "BaseProcessWeights",
           "nodeLineageTag": "e0b922f8-7680-4f7e-a69e-69d053ad95a4",
@@ -76,7 +76,7 @@
         {
           "location": {
             "x": 1558.7731897005528,
-            "y": 10715.968420212475
+            "y": 13986.004004266177
           },
           "nodeIndex": "Manual Input (Scaling Model)",
           "nodeLineageTag": "5a3e7850-0fc2-4f8c-bea8-9b434a83cf18",
@@ -89,7 +89,7 @@
         {
           "location": {
             "x": 593.050248865172,
-            "y": 10173.196469435357
+            "y": 13443.232053489059
           },
           "nodeIndex": "Headcount_Mock",
           "nodeLineageTag": "eaf7031b-5d2f-426d-aee7-ae32e7c6224b",
@@ -102,7 +102,7 @@
         {
           "location": {
             "x": 594.72370106382891,
-            "y": 9952.68659314039
+            "y": 13222.722177194091
           },
           "nodeIndex": "EfficiencyTarget",
           "nodeLineageTag": "8606310b-4742-4637-b17b-b7ac752667e0",
@@ -115,7 +115,7 @@
         {
           "location": {
             "x": 1476.09900103796,
-            "y": 10302.229719698653
+            "y": 13572.265303752354
           },
           "nodeIndex": "FTE Map",
           "nodeLineageTag": "23bd98c0-3299-4ffc-880e-b3f859ab32d3",
@@ -128,7 +128,7 @@
         {
           "location": {
             "x": 1030.5711103506651,
-            "y": 10300.797060893206
+            "y": 13570.832644946908
           },
           "nodeIndex": "FTE Data",
           "nodeLineageTag": "c5799c8d-e45e-4fc1-909f-98df207df9bb",
@@ -141,7 +141,7 @@
         {
           "location": {
             "x": 1117.2841138509923,
-            "y": 7463.60623587691
+            "y": 10733.641819930612
           },
           "nodeIndex": "Headcount_white_collar_Mock",
           "nodeLineageTag": "815f45d6-3cb1-43c3-9c70-76a7b6f59a69",
@@ -154,7 +154,7 @@
         {
           "location": {
             "x": 2094.62741781659,
-            "y": 10210.047854968194
+            "y": 13480.083439021895
           },
           "nodeIndex": "Criteria for model",
           "nodeLineageTag": "f6e7fb1c-e37f-42cf-8ed5-b5266a142378",
@@ -167,7 +167,7 @@
         {
           "location": {
             "x": 814.81079154914335,
-            "y": 8066.9311574145613
+            "y": 11336.966741468263
           },
           "nodeIndex": "Fact_Actuals",
           "nodeLineageTag": "c7a72712-bef8-4ddf-a2af-9908ccf99de6",
@@ -180,7 +180,7 @@
         {
           "location": {
             "x": 1535.4989096518077,
-            "y": 7744.8295645253711
+            "y": 11014.865148579072
           },
           "nodeIndex": "Fact_FTE",
           "nodeLineageTag": "6e35f6f3-c66d-482d-9a06-abaae5d698a6",
@@ -193,7 +193,7 @@
         {
           "location": {
             "x": 2207.9718179198917,
-            "y": 8954.02373138701
+            "y": 12224.059315440711
           },
           "nodeIndex": "Capacity_Per_Substream_Year",
           "size": {
@@ -205,7 +205,7 @@
         {
           "location": {
             "x": 2272.5888976511678,
-            "y": 8702.8094546997763
+            "y": 11972.845038753478
           },
           "nodeIndex": "Efficiency_Rates",
           "nodeLineageTag": "cc2f9146-4dad-4474-9c32-dc48a461a912",
@@ -218,7 +218,7 @@
         {
           "location": {
             "x": 282.39824870814459,
-            "y": 7939.302743926668
+            "y": 11209.338327980369
           },
           "nodeIndex": "Fact_Headcount",
           "nodeLineageTag": "24707bf0-4e4e-405d-8a8f-ddb2b76b863b",
@@ -231,7 +231,7 @@
         {
           "location": {
             "x": 2905.205977382444,
-            "y": 8271.9880396689241
+            "y": 11542.023623722625
           },
           "nodeIndex": "Stream_Forecast_Method",
           "nodeLineageTag": "3d98cf89-4852-4d6c-9900-e33725751dbf",
@@ -244,7 +244,7 @@
         {
           "location": {
             "x": 2969.82305711372,
-            "y": 7940.0369188090935
+            "y": 11210.072502862795
           },
           "nodeIndex": "Fact_WhiteCollarHC",
           "size": {
@@ -256,7 +256,7 @@
         {
           "location": {
             "x": 1090.173055700051,
-            "y": 8622.2676839594042
+            "y": 11892.303268013105
           },
           "nodeIndex": "Stream split Year",
           "size": {
@@ -268,7 +268,7 @@
         {
           "location": {
             "x": 3034.4401368449962,
-            "y": 7368.9697366761247
+            "y": 10639.005320729826
           },
           "nodeIndex": "Rs forcast",
           "nodeLineageTag": "c69b8dad-76dc-4a7a-9870-e9109f2b4c61",
@@ -281,7 +281,7 @@
         {
           "location": {
             "x": 3099.0572165762724,
-            "y": 6540.0711681074026
+            "y": 9810.1067521611039
           },
           "nodeIndex": "SDA Row Type",
           "size": {
@@ -293,7 +293,7 @@
         {
           "location": {
             "x": 1938.05044138854,
-            "y": 8444.56985562478
+            "y": 11714.605439678482
           },
           "nodeIndex": "Sub_stream_combiner",
           "size": {
@@ -305,7 +305,7 @@
         {
           "location": {
             "x": 1802.7310792616272,
-            "y": 7081.9280654545137
+            "y": 10351.963649508216
           },
           "nodeIndex": "OneStopShop Data",
           "size": {
@@ -317,11 +317,24 @@
         {
           "location": {
             "x": 431.85884834704166,
-            "y": 7350.8879666065059
+            "y": 10620.923550660207
           },
           "nodeIndex": "Headcount_Data_Finance",
           "size": {
             "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3100.6589678681275,
+            "y": 5297.9842101062377
+          },
+          "nodeIndex": "Forecast Snapshots",
+          "nodeLineageTag": "7f98268a-0c2a-4d9a-8b1e-2c5b73ee6f41",
+          "size": {
+            "height": 296,
             "width": 234
           },
           "zIndex": 0

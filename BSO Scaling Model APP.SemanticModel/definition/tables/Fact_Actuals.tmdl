@@ -188,13 +188,15 @@ table Fact_Actuals
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Driver HC Ratio' =
-			
+			VAR SelectedSubstream = SELECTEDVALUE('Sub_stream_combiner'[Substream Abbreviation])
+			VAR SelectedVersion = IF(SelectedSubstream = "ESO", "Manual", "total")
+			RETURN
 			DIVIDE(
 			    CALCULATE(
 			        SUM(Fact_Actuals[Value]),
-			        Fact_Actuals[Version] = "total"
+			        Fact_Actuals[Version] = SelectedVersion
 			    ),
-			    SELECTEDVALUE(Fact_Headcount[Headcount])
+			    [Headcount Forecast Dynamic]
 			)
 		lineageTag: 16e09ed1-1426-4f3a-a9bb-05e2c676a57e
 
@@ -204,7 +206,7 @@ table Fact_Actuals
 			
 			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
 			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
-
+			
 			VAR DriverTable =
 			    FILTER(
 			        BaseProcessWeights,
@@ -264,7 +266,7 @@ table Fact_Actuals
 			
 			VAR CurrentSubstream = MAX(Fact_Actuals[Substream Abbreviation])
 			VAR VisibleDrivers = VALUES(Fact_Actuals[Driver Name])
-
+			
 			VAR DriverTable =
 			    FILTER(
 			        BaseProcessWeights,
@@ -1129,6 +1131,66 @@ table Fact_Actuals
 		lineageTag: 967baa76-5685-4a13-bd8d-5a873998c099
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Locked Forecast Value' =
+			VAR SnapshotIds =
+			    CALCULATETABLE(
+			        VALUES('Forecast Snapshots'[SnapshotId]),
+			        'Forecast Snapshots'[ForecastVersion] = "Locked",
+			        USERELATIONSHIP('Forecast Snapshots'[TargetMonth], 'DateTable'[Date])
+			    )
+			RETURN
+			    SUMX(
+			        SnapshotIds,
+			        CALCULATE(
+			            MAX('Forecast Snapshots'[ForecastValue]),
+			            'Forecast Snapshots'[ForecastVersion] = "Locked",
+			            USERELATIONSHIP('Forecast Snapshots'[TargetMonth], 'DateTable'[Date])
+			        )
+			    )
+		lineageTag: 0af4372a-88cf-42a7-b313-281452afd60d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Actualized Driver Value' =
+			SUMX(
+			    VALUES('Driver Map'[Driver ID]),
+			    CALCULATE(
+			        [Total Driver new],
+			        Fact_Actuals[IsForecast] = FALSE()
+			    )
+			)
+		lineageTag: 71050ccd-0919-4530-9ab2-2a2816e09136
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Forecast Variance' = [Actualized Driver Value] - [Locked Forecast Value]
+		lineageTag: 46e91363-dd6c-48f2-b3f7-7d2337c71bb3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Forecast Accuracy %' =
+			VAR ActualValue = [Actualized Driver Value]
+			VAR ErrorValue = ABS([Forecast Variance])
+			RETURN
+			    IF(
+			        ISBLANK(ActualValue) || ActualValue = 0 || ISBLANK([Locked Forecast Value]),
+			        BLANK(),
+			        1 - DIVIDE(ErrorValue, ABS(ActualValue))
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: d377fb8a-1aef-4209-8acd-fcbf0d186c46
+
+	measure 'Forecast Accuracy Coverage' =
+			DIVIDE(
+			    SUMX(
+			        VALUES('Driver Map'[Driver ID]),
+			        IF(NOT ISBLANK([Actualized Driver Value]), 1, 0)
+			    ),
+			    COUNTROWS(VALUES('Driver Map'[Driver ID]))
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 912a9d62-e57d-473f-a032-b1386295708b
 
 	column 'Driver ID'
 		dataType: string

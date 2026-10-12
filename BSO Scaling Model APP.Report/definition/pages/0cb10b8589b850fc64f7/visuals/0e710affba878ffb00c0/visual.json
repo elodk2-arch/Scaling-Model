@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "0e710affba878ffb00c0",
   "position": {
     "x": 20,
@@ -170,6 +170,20 @@
             }
           ]
         }
+      },
+      {
+        "name": "63cb739c59f5cfe1f773",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_Actuals"
+              }
+            },
+            "Property": "Driver Family"
+          }
+        },
+        "type": "Categorical"
       }
     ]
   }

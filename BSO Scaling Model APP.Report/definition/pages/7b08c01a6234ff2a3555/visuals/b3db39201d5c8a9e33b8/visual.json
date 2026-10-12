@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "b3db39201d5c8a9e33b8",
   "position": {
     "x": 524.16712775767894,
@@ -21,6 +21,7 @@
                   {
                     "value": "FTE Absorbed",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontSize": "18pt"
                     }
                   }

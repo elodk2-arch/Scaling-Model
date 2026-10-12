@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "73f17697e023020e17e1",
   "position": {
-    "x": 660,
-    "y": 166.66666666666666,
+    "x": 662.14285714285722,
+    "y": 166.42857142857144,
     "z": 10000,
-    "height": 95.555555555555557,
-    "width": 131.11111111111111,
+    "height": 95.714285714285722,
+    "width": 131.42857142857144,
     "tabOrder": 9000
   },
   "visual": {
@@ -192,5 +192,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "001a3724be6e9dac2b26",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_FTE"
+              }
+            },
+            "Property": "SDA Productivity Gain %"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

@@ -227,7 +227,7 @@ table Headcount_Data_Finance
 		annotation SummarizationSetBy = Automatic
 
 	column brand_retail_actuals
-		dataType: int64
+		dataType: double
 		formatString: 0
 		lineageTag: 980a6090-ca82-489c-a549-079846540813
 		summarizeBy: sum
@@ -236,7 +236,7 @@ table Headcount_Data_Finance
 		annotation SummarizationSetBy = Automatic
 
 	column consumer_service_actuals
-		dataType: int64
+		dataType: double
 		formatString: 0
 		lineageTag: a51eea0d-0ee9-487d-aedd-d45ac60aed7f
 		summarizeBy: sum

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "7593aceb2f132f5c8085",
   "position": {
-    "x": 995,
-    "y": 69,
+    "x": 905.00000000000011,
+    "y": 69.285714285714292,
     "z": 6000,
-    "height": 42,
-    "width": 112,
+    "height": 48.571428571428577,
+    "width": 260,
     "tabOrder": 1000
   },
   "visual": {
@@ -21,10 +21,12 @@
                   {
                     "value": "Current year",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontSize": "18pt"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

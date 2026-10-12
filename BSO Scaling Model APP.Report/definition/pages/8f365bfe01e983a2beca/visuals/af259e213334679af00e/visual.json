@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "af259e213334679af00e",
   "position": {
     "x": 992.7023024101253,
@@ -163,7 +163,7 @@
                             },
                             {
                               "Literal": {
-                                "Value": "8L"
+                                "Value": "9L"
                               }
                             }
                           ]
@@ -210,7 +210,7 @@
                                 "1": [
                                   {
                                     "Literal": {
-                                      "Value": "8L"
+                                      "Value": "9L"
                                     }
                                   }
                                 ]
@@ -247,7 +247,7 @@
                         "valueMap": [
                           {
                             "0": "2026",
-                            "1": "8"
+                            "1": "9"
                           }
                         ]
                       }
@@ -261,5 +261,37 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "798e050be5c00ee6ec3c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DateTable"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "9c78b2b53b6198bea724",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DateTable"
+              }
+            },
+            "Property": "MonthNumber"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

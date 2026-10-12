@@ -72,8 +72,8 @@ table BaseProcessWeights
 				        {"EMD","Employee Masterdata Requests",100},
 				        {"FP","Risk Items Screened",100},
 				
-				        {"ESO","Scheduled Admin Tasks - Transactions",50},
-				        {"ESO","Service Requests",50},
+				        {"ESO","Scheduled Admin Tasks - Transactions",70},
+				        {"ESO","Service Requests",30},
 				
 				        {"GL","Fixed Assets and Leases",25},
 				        {"GL","General Accounting and Close",50},
