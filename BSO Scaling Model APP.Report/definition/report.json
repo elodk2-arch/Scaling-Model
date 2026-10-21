@@ -39,6 +39,9 @@
       }
     ]
   },
+  "publicCustomVisuals": [
+    "fullclusteredstackedcolumnchartC9F3B2389C01A11245F82B467CAADAB8"
+  ],
   "resourcePackages": [
     {
       "name": "SharedResources",
@@ -116,11 +119,6 @@
           "type": "Image"
         },
         {
-          "name": "PBIX_Backgrounds3121924020048835.svg",
-          "path": "PBIX_Backgrounds3121924020048835.svg",
-          "type": "Image"
-        },
-        {
           "name": "PBIX_Backgrounds31914478773872434.svg",
           "path": "PBIX_Backgrounds31914478773872434.svg",
           "type": "Image"
@@ -158,6 +156,11 @@
         {
           "name": "PBIX_Backgrounds8384344749670503.svg",
           "path": "PBIX_Backgrounds8384344749670503.svg",
+          "type": "Image"
+        },
+        {
+          "name": "PBIX_Backgrounds900333367657658.svg",
+          "path": "PBIX_Backgrounds900333367657658.svg",
           "type": "Image"
         },
         {

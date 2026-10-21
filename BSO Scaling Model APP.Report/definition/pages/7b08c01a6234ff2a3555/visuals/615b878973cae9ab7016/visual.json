@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "615b878973cae9ab7016",
   "position": {
     "x": 540,
-    "y": 460,
+    "y": 460.00000000000006,
     "z": 9000,
-    "height": 113.33333333333333,
-    "width": 202.22222222222223,
+    "height": 113.57142857142858,
+    "width": 208.57142857142858,
     "tabOrder": 8000
   },
   "visual": {
@@ -193,5 +193,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "27b42c70bb7f344a1b9a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_FTE"
+              }
+            },
+            "Property": "SDA FTEs Needed at LY Productivity"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

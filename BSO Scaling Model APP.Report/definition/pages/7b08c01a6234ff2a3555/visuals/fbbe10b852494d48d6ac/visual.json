@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "fbbe10b852494d48d6ac",
   "position": {
-    "x": 713.33333333333337,
-    "y": 457.77777777777777,
+    "x": 713.57142857142867,
+    "y": 457.85714285714289,
     "z": 14000,
-    "height": 116.66666666666666,
-    "width": 235.55555555555554,
+    "height": 116.42857142857143,
+    "width": 191.42857142857144,
     "tabOrder": 13000
   },
   "visual": {
@@ -236,6 +236,20 @@
           ]
         },
         "howCreated": "User"
+      },
+      {
+        "name": "e54209f1750f0d5c7b50",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_FTE"
+              }
+            },
+            "Property": "SDA FTE Switch Weighted"
+          }
+        },
+        "type": "Advanced"
       }
     ],
     "filterSortOrder": "Custom"

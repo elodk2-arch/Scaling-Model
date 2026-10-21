@@ -27150,23 +27150,1648 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "fact_actual.locked_forecast_value": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Actuals",
+			          "ConceptualProperty": "Locked Forecast Value"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "locked forecast value": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "locked prediction value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "locked projection value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "locked report value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "locked estimate value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "locked forecast assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "locked forecast worth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "locked forecast price": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "locked forecast cost": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "locked forecast charge": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "locked forecast rate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "Forecast Value": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Locked Forecast": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_actual.actualized_driver_value": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Actuals",
+			          "ConceptualProperty": "Actualized Driver Value"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "actualized driver value": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "driver value": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "actualized driver assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "driver assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "actualized driver worth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "actualized driver price": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "actualized driver cost": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "actualized driver charge": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "actualized driver rate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "driver worth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "driver price": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "driver cost": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "Actuals": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_actual.forecast_variance": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Actuals",
+			          "ConceptualProperty": "Forecast Variance"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast variance": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "variance": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "prediction variance": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "projection variance": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "report variance": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "estimate variance": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "forecast alteration": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "forecast modification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "forecast adjustment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "alteration": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "modification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "adjustment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        }
+			      ]
+			    },
+			    "fact_actual.forecast_accuracy_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Actuals",
+			          "ConceptualProperty": "Forecast Accuracy %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast accuracy %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "forecast accuracy percentage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.762
+			          }
+			        },
+			        {
+			          "forecast accuracy pct": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.739
+			          }
+			        },
+			        {
+			          "prediction accuracy %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "projection accuracy %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "report accuracy %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "estimate accuracy %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        }
+			      ]
+			    },
+			    "fact_actual.forecast_accuracy_coverage": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Actuals",
+			          "ConceptualProperty": "Forecast Accuracy Coverage"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast accuracy coverage": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "coverage": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "accuracy coverage": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "prediction accuracy coverage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "projection accuracy coverage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "report accuracy coverage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "estimate accuracy coverage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "forecast accuracy attention": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "forecast accuracy treatment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "forecast accuracy exposure": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "forecast accuracy analysis": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "forecast accuracy reportage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "accuracy attention": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        }
+			      ]
+			    },
+			    "SDA_row_type.SDA_insight": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "SDA Row Type",
+			          "ConceptualProperty": "SDA Insight"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "SDA insight": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "insight": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "sda awareness": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda intuition": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda perception": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda acumen": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda comprehension": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda discernment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "sda perceptiveness": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "awareness": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "intuition": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "perception": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast snapshot": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "snapshot": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "prediction snapshot": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "projection snapshot": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "report snapshot": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "estimate snapshot": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "forecast Polaroid": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "forecast portrait": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "Polaroid": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "portrait": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "forecast photo": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast photograph": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.snapshot_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "SnapshotId"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "snapshot id": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "id": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "SnapshotId": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "snapshot": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "snapshot identification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "snapshot identity": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "snapshot identifier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "snapshot credential": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "Polaroid": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "portrait": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "photo": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "photograph": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "picture": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "snap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        }
+			      ],
+			      "NameType": "Identifier"
+			    },
+			    "forecast_snapshot.snapshot_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "SnapshotDate"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "snapshot date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "SnapshotDate": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Generated",
+			            "Weight": 0.7
+			          }
+			        },
+			        {
+			          "snapshot moment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "snapshot period": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "forecast_snapshot.target_month": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "TargetMonth"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "target month": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "TargetMonth": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Generated",
+			            "Weight": 0.7
+			          }
+			        },
+			        {
+			          "target mth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "focus month": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "goal month": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "objective month": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "forecast_snapshot.driver_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "DriverId"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "driver id": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "DriverId": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "driver identification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "driver identity": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "driver identifier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "driver credential": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.driver_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "DriverName"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "driver name": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "DriverName": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "driver nickname": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "driver title": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "driver label": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "driver tag": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.substream": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "Substream"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "substream": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.forecast_value": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "ForecastValue"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast value": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "ForecastValue": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "prediction value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "projection value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "report value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "estimate value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "forecast assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "forecast worth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast price": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast cost": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast charge": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast rate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.forecast_version": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "ForecastVersion"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "forecast version": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "ForecastVersion": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "prediction version": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "projection version": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "report version": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "estimate version": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "forecast variety": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "forecast form": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast type": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast kind": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast sort": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "forecast style": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        }
+			      ]
+			    },
+			    "forecast_snapshot.source_run_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Forecast Snapshots",
+			          "ConceptualProperty": "SourceRunId"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "source run id": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "SourceRunId": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "run": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "source run": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "run id": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "source run identification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.762
+			          }
+			        },
+			        {
+			          "source run identity": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.762
+			          }
+			        },
+			        {
+			          "source run identifier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.762
+			          }
+			        },
+			        {
+			          "run identification": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "run identity": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "run identifier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "source run credential": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.739
+			          }
+			        },
+			        {
+			          "run credential": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "source lane": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "source path": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
-			    "FTE_data_date_date_hierarchy_has_FTE_data_date_quarter": {
+			    "forecast_snapshot_has_substream": {
 			      "Binding": {
-			        "ConceptualEntity": "FTE Data"
+			        "ConceptualEntity": "Forecast Snapshots"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "FTE_data.date.date_hierarchy": {
+			        "forecast_snapshot": {
 			          "Target": {
-			            "Entity": "FTE_data.date.date_hierarchy"
+			            "Entity": "forecast_snapshot"
 			          }
 			        },
-			        "FTE_data.date.quarter": {
+			        "forecast_snapshot.substream": {
 			          "Target": {
-			            "Entity": "FTE_data.date.quarter"
+			            "Entity": "forecast_snapshot.substream"
 			          }
 			        }
 			      },
@@ -27174,32 +28799,32 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "FTE_data.date.date_hierarchy"
+			              "Role": "forecast_snapshot"
 			            },
 			            "Object": {
-			              "Role": "FTE_data.date.quarter"
+			              "Role": "forecast_snapshot.substream"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "date_hierarchies_have_quarters"
+			          "ID": "forecast_snapshots_have_substreams"
 			        }
 			      ]
 			    },
-			    "FTE_data_date_date_hierarchy_has_FTE_data_date_year": {
+			    "forecast_snapshot_has_driver_name": {
 			      "Binding": {
-			        "ConceptualEntity": "FTE Data"
+			        "ConceptualEntity": "Forecast Snapshots"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "FTE_data.date.date_hierarchy": {
+			        "forecast_snapshot": {
 			          "Target": {
-			            "Entity": "FTE_data.date.date_hierarchy"
+			            "Entity": "forecast_snapshot"
 			          }
 			        },
-			        "FTE_data.date.year": {
+			        "forecast_snapshot.driver_name": {
 			          "Target": {
-			            "Entity": "FTE_data.date.year"
+			            "Entity": "forecast_snapshot.driver_name"
 			          }
 			        }
 			      },
@@ -27207,32 +28832,32 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "FTE_data.date.date_hierarchy"
+			              "Role": "forecast_snapshot"
 			            },
 			            "Object": {
-			              "Role": "FTE_data.date.year"
+			              "Role": "forecast_snapshot.driver_name"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "date_hierarchies_have_years"
+			          "ID": "forecast_snapshots_have_driver_names"
 			        }
 			      ]
 			    },
-			    "FTE_data_date_has_date_hierarchy": {
+			    "forecast_snapshot_has_target_month": {
 			      "Binding": {
-			        "ConceptualEntity": "FTE Data"
+			        "ConceptualEntity": "Forecast Snapshots"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "FTE_data.date": {
+			        "forecast_snapshot": {
 			          "Target": {
-			            "Entity": "FTE_data.date"
+			            "Entity": "forecast_snapshot"
 			          }
 			        },
-			        "FTE_data.date.date_hierarchy": {
+			        "forecast_snapshot.target_month": {
 			          "Target": {
-			            "Entity": "FTE_data.date.date_hierarchy"
+			            "Entity": "forecast_snapshot.target_month"
 			          }
 			        }
 			      },
@@ -27240,32 +28865,32 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "FTE_data.date"
+			              "Role": "forecast_snapshot"
 			            },
 			            "Object": {
-			              "Role": "FTE_data.date.date_hierarchy"
+			              "Role": "forecast_snapshot.target_month"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "dates_have_date_hierarchies"
+			          "ID": "forecast_snapshots_have_target_months"
 			        }
 			      ]
 			    },
-			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_day": {
+			    "forecast_snapshot_has_snapshot_date": {
 			      "Binding": {
-			        "ConceptualEntity": "Driver Data"
+			        "ConceptualEntity": "Forecast Snapshots"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "driver_data.reporting_date.date_hierarchy": {
+			        "forecast_snapshot": {
 			          "Target": {
-			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			            "Entity": "forecast_snapshot"
 			          }
 			        },
-			        "driver_data.reporting_date.day": {
+			        "forecast_snapshot.snapshot_date": {
 			          "Target": {
-			            "Entity": "driver_data.reporting_date.day"
+			            "Entity": "forecast_snapshot.snapshot_date"
 			          }
 			        }
 			      },
@@ -27273,32 +28898,32 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "driver_data.reporting_date.date_hierarchy"
+			              "Role": "forecast_snapshot"
 			            },
 			            "Object": {
-			              "Role": "driver_data.reporting_date.day"
+			              "Role": "forecast_snapshot.snapshot_date"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "reporting_date_hierarchies_have_reporting_days"
+			          "ID": "forecast_snapshots_have_snapshot_dates"
 			        }
 			      ]
 			    },
-			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_month": {
+			    "forecast_snapshot_has_snapshot_id": {
 			      "Binding": {
-			        "ConceptualEntity": "Driver Data"
+			        "ConceptualEntity": "Forecast Snapshots"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "driver_data.reporting_date.date_hierarchy": {
+			        "forecast_snapshot": {
 			          "Target": {
-			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			            "Entity": "forecast_snapshot"
 			          }
 			        },
-			        "driver_data.reporting_date.month": {
+			        "forecast_snapshot.snapshot_id": {
 			          "Target": {
-			            "Entity": "driver_data.reporting_date.month"
+			            "Entity": "forecast_snapshot.snapshot_id"
 			          }
 			        }
 			      },
@@ -27306,362 +28931,32 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "driver_data.reporting_date.date_hierarchy"
+			              "Role": "forecast_snapshot"
 			            },
 			            "Object": {
-			              "Role": "driver_data.reporting_date.month"
+			              "Role": "forecast_snapshot.snapshot_id"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "reporting_date_hierarchies_have_reporting_months"
+			          "ID": "forecast_snapshots_have_snapshot_ids"
+			        },
+			        {
+			          "Name": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Name": {
+			              "Role": "forecast_snapshot.snapshot_id"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "snapshot_ids_are_names_IDs_of_forecast_snapshots"
 			        }
 			      ]
 			    },
-			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_quarter": {
-			      "Binding": {
-			        "ConceptualEntity": "Driver Data"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "driver_data.reporting_date.date_hierarchy": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date.date_hierarchy"
-			          }
-			        },
-			        "driver_data.reporting_date.quarter": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date.quarter"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "driver_data.reporting_date.date_hierarchy"
-			            },
-			            "Object": {
-			              "Role": "driver_data.reporting_date.quarter"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "reporting_date_hierarchies_have_reporting_quarters"
-			        }
-			      ]
-			    },
-			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_year": {
-			      "Binding": {
-			        "ConceptualEntity": "Driver Data"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "driver_data.reporting_date.date_hierarchy": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date.date_hierarchy"
-			          }
-			        },
-			        "driver_data.reporting_date.year": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date.year"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "driver_data.reporting_date.date_hierarchy"
-			            },
-			            "Object": {
-			              "Role": "driver_data.reporting_date.year"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "reporting_date_hierarchies_have_reporting_years"
-			        }
-			      ]
-			    },
-			    "driver_data_reporting_date_has_date_hierarchy": {
-			      "Binding": {
-			        "ConceptualEntity": "Driver Data"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "driver_data.reporting_date": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date"
-			          }
-			        },
-			        "driver_data.reporting_date.date_hierarchy": {
-			          "Target": {
-			            "Entity": "driver_data.reporting_date.date_hierarchy"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "driver_data.reporting_date"
-			            },
-			            "Object": {
-			              "Role": "driver_data.reporting_date.date_hierarchy"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "reporting_dates_have_reporting_date_hierarchies"
-			        }
-			      ]
-			    },
-			    "OneStopShop_data_has_date_table": {
-			      "Binding": {
-			        "ConceptualEntity": "OneStopShop Data"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "OneStopShop_data": {
-			          "Target": {
-			            "Entity": "OneStopShop_data"
-			          }
-			        },
-			        "date_table": {
-			          "Target": {
-			            "Entity": "date_table"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "OneStopShop_data"
-			            },
-			            "Object": {
-			              "Role": "date_table"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "OneStopShop_data_have_date_tables"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "OneStopShop_data"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_OneStopShop_data"
-			        }
-			      ]
-			    },
-			    "headcount_data_finance_has_date_table": {
-			      "Binding": {
-			        "ConceptualEntity": "Headcount_Data_Finance"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "headcount_data_finance": {
-			          "Target": {
-			            "Entity": "headcount_data_finance"
-			          }
-			        },
-			        "date_table": {
-			          "Target": {
-			            "Entity": "date_table"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "headcount_data_finance"
-			            },
-			            "Object": {
-			              "Role": "date_table"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "headcount_data_finances_have_date_tables"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "headcount_data_finance"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_headcount_data_finances"
-			        }
-			      ]
-			    },
-			    "fact_white_collar_HC_has_efficiency_target": {
-			      "Binding": {
-			        "ConceptualEntity": "Fact_WhiteCollarHC"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "fact_white_collar_HC": {
-			          "Target": {
-			            "Entity": "fact_white_collar_HC"
-			          }
-			        },
-			        "efficiency_target": {
-			          "Target": {
-			            "Entity": "efficiency_target"
-			          },
-			          "Nouns": [
-			            {
-			              "year": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "fact_white_collar_HC"
-			            },
-			            "Object": {
-			              "Role": "efficiency_target"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "fact_white_collar_HC_have_efficiency_targets"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "efficiency_target"
-			            },
-			            "Object": {
-			              "Role": "fact_white_collar_HC"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "efficiency_targets_have_fact_white_collar_HC"
-			        }
-			      ]
-			    },
-			    "fact_headcount_has_date_table": {
-			      "Binding": {
-			        "ConceptualEntity": "Fact_Headcount"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "fact_headcount": {
-			          "Target": {
-			            "Entity": "fact_headcount"
-			          }
-			        },
-			        "date_table": {
-			          "Target": {
-			            "Entity": "date_table"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "fact_headcount"
-			            },
-			            "Object": {
-			              "Role": "date_table"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "fact_headcounts_have_date_tables"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "fact_headcount"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_fact_headcounts"
-			        }
-			      ]
-			    },
-			    "fact_headcount_has_efficiency_target": {
-			      "Binding": {
-			        "ConceptualEntity": "Fact_Headcount"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "fact_headcount": {
-			          "Target": {
-			            "Entity": "fact_headcount"
-			          }
-			        },
-			        "efficiency_target": {
-			          "Target": {
-			            "Entity": "efficiency_target"
-			          },
-			          "Nouns": [
-			            {
-			              "year": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "fact_headcount"
-			            },
-			            "Object": {
-			              "Role": "efficiency_target"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "fact_headcounts_have_efficiency_targets"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "efficiency_target"
-			            },
-			            "Object": {
-			              "Role": "fact_headcount"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "efficiency_targets_have_fact_headcounts"
-			        }
-			      ]
-			    },
-			    "stream_forecast_method_has_sub_stream_combiner": {
+			    "stream_forecast_method_has_SDA_row_type_SDA_insight": {
 			      "Binding": {
 			        "ConceptualEntity": "Stream_Forecast_Method"
 			      },
@@ -27672,9 +28967,9 @@ cultureInfo en-US
 			            "Entity": "stream_forecast_method"
 			          }
 			        },
-			        "sub_stream_combiner": {
+			        "SDA_row_type.SDA_insight": {
 			          "Target": {
-			            "Entity": "sub_stream_combiner"
+			            "Entity": "SDA_row_type.SDA_insight"
 			          }
 			        }
 			      },
@@ -27685,49 +28980,16 @@ cultureInfo en-US
 			              "Role": "stream_forecast_method"
 			            },
 			            "Object": {
-			              "Role": "sub_stream_combiner"
+			              "Role": "SDA_row_type.SDA_insight"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "stream_forecast_methods_have_sub_stream_combiners"
+			          "ID": "stream_forecast_methods_have_SDA_insight"
 			        }
 			      ]
 			    },
-			    "sub_stream_combiner_has_stream_forecast_method": {
-			      "Binding": {
-			        "ConceptualEntity": "Sub_stream_combiner"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "sub_stream_combiner": {
-			          "Target": {
-			            "Entity": "sub_stream_combiner"
-			          }
-			        },
-			        "stream_forecast_method": {
-			          "Target": {
-			            "Entity": "stream_forecast_method"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "sub_stream_combiner"
-			            },
-			            "Object": {
-			              "Role": "stream_forecast_method"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "sub_stream_combiners_have_stream_forecast_methods"
-			        }
-			      ]
-			    },
-			    "fact_FTE_has_date_table": {
+			    "fact_FTE_has_SDA_row_type_SDA_insight": {
 			      "Binding": {
 			        "ConceptualEntity": "Fact_FTE"
 			      },
@@ -27738,9 +29000,9 @@ cultureInfo en-US
 			            "Entity": "fact_FTE"
 			          }
 			        },
-			        "date_table": {
+			        "SDA_row_type.SDA_insight": {
 			          "Target": {
-			            "Entity": "date_table"
+			            "Entity": "SDA_row_type.SDA_insight"
 			          }
 			        }
 			      },
@@ -27751,29 +29013,16 @@ cultureInfo en-US
 			              "Role": "fact_FTE"
 			            },
 			            "Object": {
-			              "Role": "date_table"
+			              "Role": "SDA_row_type.SDA_insight"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "fact_FTE_have_date_tables"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "fact_FTE"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_fact_FTE"
+			          "ID": "fact_FTE_have_SDA_insight"
 			        }
 			      ]
 			    },
-			    "fact_actual_has_driver_map": {
+			    "fact_actual_has_SDA_row_type_SDA_insight": {
 			      "Binding": {
 			        "ConceptualEntity": "Fact_Actuals"
 			      },
@@ -27784,9 +29033,9 @@ cultureInfo en-US
 			            "Entity": "fact_actual"
 			          }
 			        },
-			        "driver_map": {
+			        "SDA_row_type.SDA_insight": {
 			          "Target": {
-			            "Entity": "driver_map"
+			            "Entity": "SDA_row_type.SDA_insight"
 			          }
 			        }
 			      },
@@ -27797,252 +29046,16 @@ cultureInfo en-US
 			              "Role": "fact_actual"
 			            },
 			            "Object": {
-			              "Role": "driver_map"
+			              "Role": "SDA_row_type.SDA_insight"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "fact_actuals_have_driver_maps"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "driver_map"
-			            },
-			            "Object": {
-			              "Role": "fact_actual"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "driver_maps_have_fact_actuals"
+			          "ID": "fact_actuals_have_SDA_insight"
 			        }
 			      ]
 			    },
-			    "fact_actual_has_date_table": {
-			      "Binding": {
-			        "ConceptualEntity": "Fact_Actuals"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "fact_actual": {
-			          "Target": {
-			            "Entity": "fact_actual"
-			          }
-			        },
-			        "date_table": {
-			          "Target": {
-			            "Entity": "date_table"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "fact_actual"
-			            },
-			            "Object": {
-			              "Role": "date_table"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "fact_actuals_have_date_tables"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "fact_actual"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_fact_actuals"
-			        }
-			      ]
-			    },
-			    "FTE_data_has_FTE_map": {
-			      "Binding": {
-			        "ConceptualEntity": "FTE Data"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "FTE_data": {
-			          "Target": {
-			            "Entity": "FTE_data"
-			          }
-			        },
-			        "FTE_map": {
-			          "Target": {
-			            "Entity": "FTE_map"
-			          },
-			          "Nouns": [
-			            {
-			              "category": {
-			                "State": "Generated"
-			              }
-			            },
-			            {
-			              "FTE category": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "FTE_data"
-			            },
-			            "Object": {
-			              "Role": "FTE_map"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "FTE_data_have_FTE_maps"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "FTE_map"
-			            },
-			            "Object": {
-			              "Role": "FTE_data"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "FTE_maps_have_FTE_data"
-			        }
-			      ]
-			    },
-			    "FTE_map_has_driver_map": {
-			      "Binding": {
-			        "ConceptualEntity": "FTE Map"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "FTE_map": {
-			          "Target": {
-			            "Entity": "FTE_map"
-			          }
-			        },
-			        "driver_map": {
-			          "Target": {
-			            "Entity": "driver_map"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "FTE_map"
-			            },
-			            "Object": {
-			              "Role": "driver_map"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "FTE_maps_have_driver_maps"
-			        }
-			      ]
-			    },
-			    "FTE_map_has_manual_input_scaling_model": {
-			      "Binding": {
-			        "ConceptualEntity": "FTE Map"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "FTE_map": {
-			          "Target": {
-			            "Entity": "FTE_map"
-			          }
-			        },
-			        "manual_input_scaling_model": {
-			          "Target": {
-			            "Entity": "manual_input_scaling_model"
-			          },
-			          "Nouns": [
-			            {
-			              "substream abbreviation": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "FTE_map"
-			            },
-			            "Object": {
-			              "Role": "manual_input_scaling_model"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "FTE_maps_have_manual_input_scaling_model"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "manual_input_scaling_model"
-			            },
-			            "Object": {
-			              "Role": "FTE_map"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "manual_input_scaling_model_have_FTE_maps"
-			        }
-			      ]
-			    },
-			    "date_table_has_capacity_per_substream_year": {
-			      "Binding": {
-			        "ConceptualEntity": "DateTable"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "date_table": {
-			          "Target": {
-			            "Entity": "date_table"
-			          }
-			        },
-			        "capacity_per_substream_year": {
-			          "Target": {
-			            "Entity": "capacity_per_substream_year"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "date_table"
-			            },
-			            "Object": {
-			              "Role": "capacity_per_substream_year"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "date_tables_have_capacity_per_substream_year"
-			        }
-			      ]
-			    },
-			    "driver_map_has_base_process_weight": {
+			    "driver_map_has_SDA_row_type_SDA_insight": {
 			      "Binding": {
 			        "ConceptualEntity": "Driver Map"
 			      },
@@ -28053,9 +29066,9 @@ cultureInfo en-US
 			            "Entity": "driver_map"
 			          }
 			        },
-			        "base_process_weight": {
+			        "SDA_row_type.SDA_insight": {
 			          "Target": {
-			            "Entity": "base_process_weight"
+			            "Entity": "SDA_row_type.SDA_insight"
 			          }
 			        }
 			      },
@@ -28066,62 +29079,16 @@ cultureInfo en-US
 			              "Role": "driver_map"
 			            },
 			            "Object": {
-			              "Role": "base_process_weight"
+			              "Role": "SDA_row_type.SDA_insight"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "driver_maps_have_base_process_weights"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "base_process_weight"
-			            },
-			            "Object": {
-			              "Role": "driver_map"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "base_process_weights_have_driver_maps"
+			          "ID": "driver_maps_have_SDA_insight"
 			        }
 			      ]
 			    },
-			    "driver_map_has_criterion_for_model": {
-			      "Binding": {
-			        "ConceptualEntity": "Driver Map"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "driver_map": {
-			          "Target": {
-			            "Entity": "driver_map"
-			          }
-			        },
-			        "criterion_for_model": {
-			          "Target": {
-			            "Entity": "criterion_for_model"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "driver_map"
-			            },
-			            "Object": {
-			              "Role": "criterion_for_model"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "driver_maps_have_criterion_for_model"
-			        }
-			      ]
-			    },
-			    "driver_data_has_driver_map": {
+			    "driver_data_has_SDA_row_type_SDA_insight": {
 			      "Binding": {
 			        "ConceptualEntity": "Driver Data"
 			      },
@@ -28132,9 +29099,9 @@ cultureInfo en-US
 			            "Entity": "driver_data"
 			          }
 			        },
-			        "driver_map": {
+			        "SDA_row_type.SDA_insight": {
 			          "Target": {
-			            "Entity": "driver_map"
+			            "Entity": "SDA_row_type.SDA_insight"
 			          }
 			        }
 			      },
@@ -28145,25 +29112,441 @@ cultureInfo en-US
 			              "Role": "driver_data"
 			            },
 			            "Object": {
-			              "Role": "driver_map"
+			              "Role": "SDA_row_type.SDA_insight"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "driver_data_have_driver_maps"
+			          "ID": "driver_data_have_SDA_insight"
+			        }
+			      ]
+			    },
+			    "date_table_has_SDA_row_type_SDA_insight": {
+			      "Binding": {
+			        "ConceptualEntity": "DateTable"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
 			        },
+			        "SDA_row_type.SDA_insight": {
+			          "Target": {
+			            "Entity": "SDA_row_type.SDA_insight"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "SDA_row_type.SDA_insight"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_SDA_insight"
+			        }
+			      ]
+			    },
+			    "capacity_per_substream_year_has_SDA_row_type_SDA_insight": {
+			      "Binding": {
+			        "ConceptualEntity": "Capacity_Per_Substream_Year"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "capacity_per_substream_year": {
+			          "Target": {
+			            "Entity": "capacity_per_substream_year"
+			          }
+			        },
+			        "SDA_row_type.SDA_insight": {
+			          "Target": {
+			            "Entity": "SDA_row_type.SDA_insight"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "capacity_per_substream_year"
+			            },
+			            "Object": {
+			              "Role": "SDA_row_type.SDA_insight"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "capacity_per_substream_year_have_SDA_insight"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_forecast_accuracy_coverage": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "fact_actual.forecast_accuracy_coverage": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_accuracy_coverage"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_accuracy_coverage"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_forecast_accuracy_coverage"
+			        }
+			      ]
+			    },
+			    "driver_map_has_fact_actual_forecast_accuracy_coverage": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "fact_actual.forecast_accuracy_coverage": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_accuracy_coverage"
+			          }
+			        }
+			      },
+			      "Phrasings": [
 			        {
 			          "Attribute": {
 			            "Subject": {
 			              "Role": "driver_map"
 			            },
 			            "Object": {
-			              "Role": "driver_data"
+			              "Role": "fact_actual.forecast_accuracy_coverage"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "driver_maps_have_driver_data"
+			          "ID": "driver_maps_have_forecast_accuracy_coverage"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_fact_actual_forecast_accuracy_": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "fact_actual.forecast_accuracy_": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_accuracy_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_accuracy_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_forecast_accuracy_"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_forecast_accuracy_": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "fact_actual.forecast_accuracy_": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_accuracy_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_accuracy_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_forecast_accuracy_"
+			        }
+			      ]
+			    },
+			    "driver_map_has_fact_actual_forecast_accuracy_": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "fact_actual.forecast_accuracy_": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_accuracy_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_accuracy_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_forecast_accuracy_"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_fact_actual_forecast_variance": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "fact_actual.forecast_variance": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_variance"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_variance"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_forecast_variance"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_forecast_variance": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "fact_actual.forecast_variance": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_variance"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_variance"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_forecast_variance"
+			        }
+			      ]
+			    },
+			    "driver_map_has_fact_actual_forecast_variance": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "fact_actual.forecast_variance": {
+			          "Target": {
+			            "Entity": "fact_actual.forecast_variance"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.forecast_variance"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_forecast_variance"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_actualized_driver_value": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "fact_actual.actualized_driver_value": {
+			          "Target": {
+			            "Entity": "fact_actual.actualized_driver_value"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.actualized_driver_value"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_actualized_driver_value"
+			        }
+			      ]
+			    },
+			    "driver_map_has_fact_actual_actualized_driver_value": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "fact_actual.actualized_driver_value": {
+			          "Target": {
+			            "Entity": "fact_actual.actualized_driver_value"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.actualized_driver_value"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_actualized_driver_value"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_fact_actual_locked_forecast_value": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "fact_actual.locked_forecast_value": {
+			          "Target": {
+			            "Entity": "fact_actual.locked_forecast_value"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.locked_forecast_value"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_locked_forecast_value"
 			        }
 			      ]
 			    },
@@ -40819,6 +42202,72 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
+			    "date_table_has_fact_actual_activity_scaled_FTE_total__eff": {
+			      "Binding": {
+			        "ConceptualEntity": "DateTable"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        },
+			        "fact_actual.activity_scaled_FTE_total__eff": {
+			          "Target": {
+			            "Entity": "fact_actual.activity_scaled_FTE_total__eff"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.activity_scaled_FTE_total__eff"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_activity_scaled_FTE_total__eff"
+			        }
+			      ]
+			    },
+			    "base_process_weight_has_fact_actual_activity_scaled_FTE_total__eff": {
+			      "Binding": {
+			        "ConceptualEntity": "BaseProcessWeights"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "base_process_weight": {
+			          "Target": {
+			            "Entity": "base_process_weight"
+			          }
+			        },
+			        "fact_actual.activity_scaled_FTE_total__eff": {
+			          "Target": {
+			            "Entity": "fact_actual.activity_scaled_FTE_total__eff"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "base_process_weight"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.activity_scaled_FTE_total__eff"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "base_process_weights_have_activity_scaled_FTE_total__eff"
+			        }
+			      ]
+			    },
 			    "fact_FTE_has_fact_actual_avg_monthly_FTE": {
 			      "Binding": {
 			        "ConceptualEntity": "Fact_FTE"
@@ -40948,6 +42397,72 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "fact_actuals_have_activity_scaled_FTE_total"
+			        }
+			      ]
+			    },
+			    "date_table_has_fact_actual_activity_scaled_FTE_total": {
+			      "Binding": {
+			        "ConceptualEntity": "DateTable"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        },
+			        "fact_actual.activity_scaled_FTE_total": {
+			          "Target": {
+			            "Entity": "fact_actual.activity_scaled_FTE_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.activity_scaled_FTE_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_activity_scaled_FTE_total"
+			        }
+			      ]
+			    },
+			    "base_process_weight_has_fact_actual_activity_scaled_FTE_total": {
+			      "Binding": {
+			        "ConceptualEntity": "BaseProcessWeights"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "base_process_weight": {
+			          "Target": {
+			            "Entity": "base_process_weight"
+			          }
+			        },
+			        "fact_actual.activity_scaled_FTE_total": {
+			          "Target": {
+			            "Entity": "fact_actual.activity_scaled_FTE_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "base_process_weight"
+			            },
+			            "Object": {
+			              "Role": "fact_actual.activity_scaled_FTE_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "base_process_weights_have_activity_scaled_FTE_total"
 			        }
 			      ]
 			    },
@@ -45715,6 +47230,90 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
+			    "forecast_snapshot_is_targeted_on_target_month": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "forecast_snapshot.target_month": {
+			          "Target": {
+			            "Entity": "forecast_snapshot.target_month"
+			          }
+			        }
+			      },
+			      "SemanticSlots": {
+			        "When": {
+			          "Role": "forecast_snapshot.target_month"
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Verb": {
+			            "Verbs": [
+			              {
+			                "target": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "forecast_snapshot"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.9,
+			          "ID": "forecast_snapshots_are_targeted_on_target_months"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_is_snapshotted_on_snapshot_date": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "forecast_snapshot.snapshot_date": {
+			          "Target": {
+			            "Entity": "forecast_snapshot.snapshot_date"
+			          }
+			        }
+			      },
+			      "SemanticSlots": {
+			        "When": {
+			          "Role": "forecast_snapshot.snapshot_date"
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Verb": {
+			            "Verbs": [
+			              {
+			                "snapshot": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "forecast_snapshot"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.9,
+			          "ID": "forecast_snapshots_are_snapshotted_on_snapshot_dates"
+			        }
+			      ]
+			    },
 			    "headcount_data_finance_is_hired_on_hire_date": {
 			      "Binding": {
 			        "ConceptualEntity": "Headcount_Data_Finance"
@@ -46070,6 +47669,1165 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.75,
 			          "ID": "sub_stream_combiners_combine"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_forecast_value": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "forecast_snapshot.forecast_value": {
+			          "Target": {
+			            "Entity": "forecast_snapshot.forecast_value"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "forecast_snapshot.forecast_value"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_forecast_values"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_forecast_version": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "forecast_snapshot.forecast_version": {
+			          "Target": {
+			            "Entity": "forecast_snapshot.forecast_version"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "forecast_snapshot.forecast_version"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_forecast_versions"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_source_run_id": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "forecast_snapshot.source_run_id": {
+			          "Target": {
+			            "Entity": "forecast_snapshot.source_run_id"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "forecast_snapshot.source_run_id"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_source_run_ids"
+			        }
+			      ]
+			    },
+			    "driver_data_has_driver_map": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data": {
+			          "Target": {
+			            "Entity": "driver_data"
+			          }
+			        },
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data"
+			            },
+			            "Object": {
+			              "Role": "driver_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_data_have_driver_maps"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "driver_data"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_driver_data"
+			        }
+			      ]
+			    },
+			    "driver_map_has_criterion_for_model": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "criterion_for_model": {
+			          "Target": {
+			            "Entity": "criterion_for_model"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "criterion_for_model"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_criterion_for_model"
+			        }
+			      ]
+			    },
+			    "driver_map_has_base_process_weight": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        },
+			        "base_process_weight": {
+			          "Target": {
+			            "Entity": "base_process_weight"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "base_process_weight"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_base_process_weights"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "base_process_weight"
+			            },
+			            "Object": {
+			              "Role": "driver_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "base_process_weights_have_driver_maps"
+			        }
+			      ]
+			    },
+			    "date_table_has_capacity_per_substream_year": {
+			      "Binding": {
+			        "ConceptualEntity": "DateTable"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        },
+			        "capacity_per_substream_year": {
+			          "Target": {
+			            "Entity": "capacity_per_substream_year"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "capacity_per_substream_year"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_capacity_per_substream_year"
+			        }
+			      ]
+			    },
+			    "FTE_map_has_manual_input_scaling_model": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_map": {
+			          "Target": {
+			            "Entity": "FTE_map"
+			          }
+			        },
+			        "manual_input_scaling_model": {
+			          "Target": {
+			            "Entity": "manual_input_scaling_model"
+			          },
+			          "Nouns": [
+			            {
+			              "substream abbreviation": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_map"
+			            },
+			            "Object": {
+			              "Role": "manual_input_scaling_model"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "FTE_maps_have_manual_input_scaling_model"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "manual_input_scaling_model"
+			            },
+			            "Object": {
+			              "Role": "FTE_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "manual_input_scaling_model_have_FTE_maps"
+			        }
+			      ]
+			    },
+			    "FTE_map_has_driver_map": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Map"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_map": {
+			          "Target": {
+			            "Entity": "FTE_map"
+			          }
+			        },
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_map"
+			            },
+			            "Object": {
+			              "Role": "driver_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "FTE_maps_have_driver_maps"
+			        }
+			      ]
+			    },
+			    "FTE_data_has_FTE_map": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_data": {
+			          "Target": {
+			            "Entity": "FTE_data"
+			          }
+			        },
+			        "FTE_map": {
+			          "Target": {
+			            "Entity": "FTE_map"
+			          },
+			          "Nouns": [
+			            {
+			              "category": {
+			                "State": "Generated"
+			              }
+			            },
+			            {
+			              "FTE category": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_data"
+			            },
+			            "Object": {
+			              "Role": "FTE_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "FTE_data_have_FTE_maps"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_map"
+			            },
+			            "Object": {
+			              "Role": "FTE_data"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "FTE_maps_have_FTE_data"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_date_table": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "date_table"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_date_tables"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "fact_actual"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_fact_actuals"
+			        }
+			      ]
+			    },
+			    "fact_actual_has_driver_map": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Actuals"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_actual": {
+			          "Target": {
+			            "Entity": "fact_actual"
+			          }
+			        },
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_actual"
+			            },
+			            "Object": {
+			              "Role": "driver_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_actuals_have_driver_maps"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "fact_actual"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_fact_actuals"
+			        }
+			      ]
+			    },
+			    "fact_FTE_has_date_table": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_FTE"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_FTE": {
+			          "Target": {
+			            "Entity": "fact_FTE"
+			          }
+			        },
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_FTE"
+			            },
+			            "Object": {
+			              "Role": "date_table"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_FTE_have_date_tables"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "fact_FTE"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_fact_FTE"
+			        }
+			      ]
+			    },
+			    "sub_stream_combiner_has_stream_forecast_method": {
+			      "Binding": {
+			        "ConceptualEntity": "Sub_stream_combiner"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "sub_stream_combiner": {
+			          "Target": {
+			            "Entity": "sub_stream_combiner"
+			          }
+			        },
+			        "stream_forecast_method": {
+			          "Target": {
+			            "Entity": "stream_forecast_method"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "sub_stream_combiner"
+			            },
+			            "Object": {
+			              "Role": "stream_forecast_method"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "sub_stream_combiners_have_stream_forecast_methods"
+			        }
+			      ]
+			    },
+			    "stream_forecast_method_has_sub_stream_combiner": {
+			      "Binding": {
+			        "ConceptualEntity": "Stream_Forecast_Method"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "stream_forecast_method": {
+			          "Target": {
+			            "Entity": "stream_forecast_method"
+			          }
+			        },
+			        "sub_stream_combiner": {
+			          "Target": {
+			            "Entity": "sub_stream_combiner"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "stream_forecast_method"
+			            },
+			            "Object": {
+			              "Role": "sub_stream_combiner"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "stream_forecast_methods_have_sub_stream_combiners"
+			        }
+			      ]
+			    },
+			    "fact_headcount_has_efficiency_target": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Headcount"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_headcount": {
+			          "Target": {
+			            "Entity": "fact_headcount"
+			          }
+			        },
+			        "efficiency_target": {
+			          "Target": {
+			            "Entity": "efficiency_target"
+			          },
+			          "Nouns": [
+			            {
+			              "year": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_headcount"
+			            },
+			            "Object": {
+			              "Role": "efficiency_target"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_headcounts_have_efficiency_targets"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "efficiency_target"
+			            },
+			            "Object": {
+			              "Role": "fact_headcount"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "efficiency_targets_have_fact_headcounts"
+			        }
+			      ]
+			    },
+			    "fact_headcount_has_date_table": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_Headcount"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_headcount": {
+			          "Target": {
+			            "Entity": "fact_headcount"
+			          }
+			        },
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_headcount"
+			            },
+			            "Object": {
+			              "Role": "date_table"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_headcounts_have_date_tables"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "fact_headcount"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_fact_headcounts"
+			        }
+			      ]
+			    },
+			    "fact_white_collar_HC_has_efficiency_target": {
+			      "Binding": {
+			        "ConceptualEntity": "Fact_WhiteCollarHC"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fact_white_collar_HC": {
+			          "Target": {
+			            "Entity": "fact_white_collar_HC"
+			          }
+			        },
+			        "efficiency_target": {
+			          "Target": {
+			            "Entity": "efficiency_target"
+			          },
+			          "Nouns": [
+			            {
+			              "year": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fact_white_collar_HC"
+			            },
+			            "Object": {
+			              "Role": "efficiency_target"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fact_white_collar_HC_have_efficiency_targets"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "efficiency_target"
+			            },
+			            "Object": {
+			              "Role": "fact_white_collar_HC"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "efficiency_targets_have_fact_white_collar_HC"
+			        }
+			      ]
+			    },
+			    "headcount_data_finance_has_date_table": {
+			      "Binding": {
+			        "ConceptualEntity": "Headcount_Data_Finance"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "headcount_data_finance": {
+			          "Target": {
+			            "Entity": "headcount_data_finance"
+			          }
+			        },
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "headcount_data_finance"
+			            },
+			            "Object": {
+			              "Role": "date_table"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "headcount_data_finances_have_date_tables"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "headcount_data_finance"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_headcount_data_finances"
+			        }
+			      ]
+			    },
+			    "OneStopShop_data_has_date_table": {
+			      "Binding": {
+			        "ConceptualEntity": "OneStopShop Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "OneStopShop_data": {
+			          "Target": {
+			            "Entity": "OneStopShop_data"
+			          }
+			        },
+			        "date_table": {
+			          "Target": {
+			            "Entity": "date_table"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "OneStopShop_data"
+			            },
+			            "Object": {
+			              "Role": "date_table"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "OneStopShop_data_have_date_tables"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "date_table"
+			            },
+			            "Object": {
+			              "Role": "OneStopShop_data"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_tables_have_OneStopShop_data"
+			        }
+			      ]
+			    },
+			    "forecast_snapshot_has_driver_map": {
+			      "Binding": {
+			        "ConceptualEntity": "Forecast Snapshots"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "forecast_snapshot": {
+			          "Target": {
+			            "Entity": "forecast_snapshot"
+			          }
+			        },
+			        "driver_map": {
+			          "Target": {
+			            "Entity": "driver_map"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "forecast_snapshot"
+			            },
+			            "Object": {
+			              "Role": "driver_map"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "forecast_snapshots_have_driver_maps"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_map"
+			            },
+			            "Object": {
+			              "Role": "forecast_snapshot"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "driver_maps_have_forecast_snapshots"
+			        }
+			      ]
+			    },
+			    "driver_data_reporting_date_has_date_hierarchy": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data.reporting_date": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date"
+			          }
+			        },
+			        "driver_data.reporting_date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data.reporting_date"
+			            },
+			            "Object": {
+			              "Role": "driver_data.reporting_date.date_hierarchy"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "reporting_dates_have_reporting_date_hierarchies"
+			        }
+			      ]
+			    },
+			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_year": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data.reporting_date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			          }
+			        },
+			        "driver_data.reporting_date.year": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.year"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data.reporting_date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "driver_data.reporting_date.year"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "reporting_date_hierarchies_have_reporting_years"
+			        }
+			      ]
+			    },
+			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_quarter": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data.reporting_date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			          }
+			        },
+			        "driver_data.reporting_date.quarter": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.quarter"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data.reporting_date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "driver_data.reporting_date.quarter"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "reporting_date_hierarchies_have_reporting_quarters"
+			        }
+			      ]
+			    },
+			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_month": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data.reporting_date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			          }
+			        },
+			        "driver_data.reporting_date.month": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.month"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data.reporting_date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "driver_data.reporting_date.month"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "reporting_date_hierarchies_have_reporting_months"
+			        }
+			      ]
+			    },
+			    "driver_data_reporting_date_date_hierarchy_has_driver_data_reporting_date_day": {
+			      "Binding": {
+			        "ConceptualEntity": "Driver Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "driver_data.reporting_date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.date_hierarchy"
+			          }
+			        },
+			        "driver_data.reporting_date.day": {
+			          "Target": {
+			            "Entity": "driver_data.reporting_date.day"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "driver_data.reporting_date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "driver_data.reporting_date.day"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "reporting_date_hierarchies_have_reporting_days"
+			        }
+			      ]
+			    },
+			    "FTE_data_date_has_date_hierarchy": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_data.date": {
+			          "Target": {
+			            "Entity": "FTE_data.date"
+			          }
+			        },
+			        "FTE_data.date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "FTE_data.date.date_hierarchy"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_data.date"
+			            },
+			            "Object": {
+			              "Role": "FTE_data.date.date_hierarchy"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dates_have_date_hierarchies"
+			        }
+			      ]
+			    },
+			    "FTE_data_date_date_hierarchy_has_FTE_data_date_year": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_data.date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "FTE_data.date.date_hierarchy"
+			          }
+			        },
+			        "FTE_data.date.year": {
+			          "Target": {
+			            "Entity": "FTE_data.date.year"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_data.date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "FTE_data.date.year"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_hierarchies_have_years"
+			        }
+			      ]
+			    },
+			    "FTE_data_date_date_hierarchy_has_FTE_data_date_quarter": {
+			      "Binding": {
+			        "ConceptualEntity": "FTE Data"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "FTE_data.date.date_hierarchy": {
+			          "Target": {
+			            "Entity": "FTE_data.date.date_hierarchy"
+			          }
+			        },
+			        "FTE_data.date.quarter": {
+			          "Target": {
+			            "Entity": "FTE_data.date.quarter"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "FTE_data.date.date_hierarchy"
+			            },
+			            "Object": {
+			              "Role": "FTE_data.date.quarter"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "date_hierarchies_have_quarters"
 			        }
 			      ]
 			    },

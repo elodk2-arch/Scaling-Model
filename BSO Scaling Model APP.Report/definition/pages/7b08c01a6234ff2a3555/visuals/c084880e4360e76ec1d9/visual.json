@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "c084880e4360e76ec1d9",
   "position": {
     "x": 437.27619584625506,
@@ -220,6 +220,20 @@
           ]
         },
         "howCreated": "User"
+      },
+      {
+        "name": "4292833c227eed277c19",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_FTE"
+              }
+            },
+            "Property": "SDA FTE Switch Weighted"
+          }
+        },
+        "type": "Advanced"
       }
     ],
     "filterSortOrder": "Custom"

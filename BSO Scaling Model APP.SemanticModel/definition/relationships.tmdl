@@ -19,11 +19,6 @@ relationship bae98b93-1fb0-03e3-8f6e-7af5991b6b10
 	fromColumn: 'Driver Map'.'Substream Abbreviation'
 	toColumn: 'Criteria for model'.Sub-stream
 
-relationship dfc6974a-523a-86aa-d2e9-fdfc38132695
-	crossFilteringBehavior: bothDirections
-	fromColumn: 'Driver Map'.'Driver Name'
-	toColumn: BaseProcessWeights.Driver
-
 relationship AutoDetected_2d4bdcd4-9364-4b16-9ec2-0d41ba001b81
 	fromColumn: Fact_Actuals.'Substream Abbreviation'
 	toColumn: Sub_stream_combiner.'Substream Abbreviation'
@@ -126,4 +121,9 @@ relationship 7fac0b87-f9d7-4081-bcbf-9a7a2170e239
 	isActive: false
 	fromColumn: 'Forecast Snapshots'.TargetMonth
 	toColumn: DateTable.Date
+
+relationship dfc6974a-523a-86aa-d2e9-fdfc38132695
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Driver Map'.'Driver Name'
+	toColumn: BaseProcessWeights.Driver
 

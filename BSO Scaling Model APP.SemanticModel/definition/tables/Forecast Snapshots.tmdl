@@ -55,13 +55,12 @@ table 'Forecast Snapshots'
 
 	column ForecastValue
 		dataType: double
+		formatString: 0.00
 		lineageTag: 11ac13b3-5a63-477b-b44f-0c46f305e25a
 		summarizeBy: sum
 		sourceColumn: ForecastValue
 
 		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column ForecastVersion
 		dataType: string
@@ -103,7 +102,20 @@ table 'Forecast Snapshots'
 					        }
 				    ),
 				    RenamedTitle = Table.RenameColumns(SelectedColumns, {{"Title", "SnapshotId"}}),
-				    ChangedTypes = Table.TransformColumnTypes(RenamedTitle,{{"SnapshotId", type text}, {"SnapshotDate", type datetime}, {"TargetMonth", type date}, {"DriverId", type text}, {"DriverName", type text}, {"Substream", type text}, {"ForecastValue", type number}, {"ForecastVersion", type text}, {"SourceRunId", type text}})
+				    ChangedTypes = Table.TransformColumnTypes(
+					        RenamedTitle,
+					        {
+					            {"SnapshotId", type text},
+					            {"SnapshotDate", type datetime},
+					            {"TargetMonth", type date},
+					            {"DriverId", type text},
+					            {"DriverName", type text},
+					            {"Substream", type text},
+					            {"ForecastValue", type number},
+					            {"ForecastVersion", type text},
+					            {"SourceRunId", type text}
+					        }
+				    )
 				in
 				    ChangedTypes
 
